@@ -5,7 +5,7 @@ interface LayoutProps {
 }
 
 function Layout({ children }: LayoutProps) {
-  return <div className="h-screen bg-blue-50 p-8">{children}</div>
+  return <div className="min-h-screen w-full p-8 lg:w-3xl">{children}</div>
 }
 
 export default Layout

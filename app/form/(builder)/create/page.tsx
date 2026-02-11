@@ -24,7 +24,7 @@ function Create() {
     setFormBlocks((prev) => prev.filter((_, idx) => idx !== index))
   }
 
-  const onBlockUpdate = (index: number, key: string, value: any) => {
+  function onBlockUpdate(index: number, key: string, value: any) {
     setFormBlocks((prev) =>
       prev.map((block, idx) =>
         idx === index ? { ...block, [key]: value } : block
@@ -32,18 +32,27 @@ function Create() {
     )
   }
 
+  function onUndo() {}
+
+  function onRedo() {}
+
   return (
     <form className="flex flex-col items-center gap-8">
-      <Toolbar mode={mode} />
+      <Toolbar
+        totalQuestions={formBlocks.length}
+        onUndo={onUndo}
+        onRedo={onRedo}
+      />
       <Header
         title={title}
         onTitleChange={setTitle}
         description={description}
         onDescriptionChange={setDescription}
       />
-      {formBlocks.map((block) => {
+      {formBlocks.map((block, index) => {
         return (
           <FormBlock
+            key={index}
             block={block}
             onBlockUpdate={onBlockUpdate}
             onBlockRemove={onBlockRemove}

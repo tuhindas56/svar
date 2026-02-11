@@ -2,8 +2,8 @@ import type { Dispatch, SetStateAction } from "react"
 
 interface FormBlockProps {
   block: object
-  onBlockUpdate: Dispatch<SetStateAction<[]>>
-  onBlockRemove: Dispatch<SetStateAction<[]>>
+  onBlockUpdate: (index: number, key: string, value: any) => void
+  onBlockRemove: (index: number) => void
 }
 
 function FormBlock({ block, onBlockUpdate, onBlockRemove }: FormBlockProps) {

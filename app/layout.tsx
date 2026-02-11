@@ -31,7 +31,13 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
-      <body className={cn(noto.variable, notoMono.variable, "antialiased")}>
+      <body
+        className={cn(
+          noto.variable,
+          notoMono.variable,
+          "flex flex-col items-center antialiased"
+        )}
+      >
         {children}
       </body>
     </html>

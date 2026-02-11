@@ -14,20 +14,20 @@ function Header({
   onDescriptionChange = () => {}
 }: HeaderProps) {
   return (
-    <div className="w-full rounded-lg border border-gray-200 bg-white p-4 focus-within:border-blue-200 lg:w-3xl">
+    <div className="focus-within:border-primary/40 w-full rounded-lg border border-gray-200 bg-white p-4">
       <div className="flex flex-col gap-2 p-2">
         <input
           type="text"
           defaultValue={title}
           onBlur={(e) => onTitleChange(e.target.value)}
-          className="text-xl font-medium text-gray-800 placeholder-gray-400 focus:outline-0"
+          className="text-2xl font-medium text-gray-800 placeholder-gray-400 focus:outline-0"
           placeholder="Untitled Form"
           required
         />
         <input
           defaultValue={description}
           onBlur={(e) => onDescriptionChange(e.target.value)}
-          className="text-sm text-gray-600 placeholder-gray-400 focus:outline-0"
+          className="text-md text-gray-600 placeholder-gray-400 focus:outline-0"
           placeholder="Form description (optional)"
         />
       </div>
