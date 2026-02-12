@@ -1,6 +1,8 @@
 import type { MouseEventHandler } from "react"
 import { Eye, FileText, Plane, Redo, Undo } from "lucide-react"
-import Button from "../../button"
+
+import { onFormPublish } from "@/lib/actions"
+import { Button } from "@/components/ui/button"
 
 interface ToolbarProps {
   totalQuestions: number
@@ -28,18 +30,18 @@ export default function Toolbar({
       </div>
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-1">
-          <Button title="Undo" onClick={onUndo} type="button" variant="icon">
+          <Button title="Undo" onClick={onUndo} variant="ghost">
             <Undo size={16} />
           </Button>
-          <Button title="Redo" onClick={onRedo} type="button" variant="icon">
+          <Button title="Redo" onClick={onRedo} variant="ghost">
             <Redo size={16} />
           </Button>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="secondary" type="button">
+          <Button variant="secondary">
             <Eye size={16} /> Preview
           </Button>
-          <Button variant="primary" type="submit">
+          <Button onClick={onFormPublish}>
             <Plane size={16} /> Publish
           </Button>
         </div>
