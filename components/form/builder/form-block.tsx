@@ -1,15 +1,15 @@
 "use client"
 
-import type { ChangeEvent, FocusEvent } from "react"
+import type { FocusEvent } from "react"
 
-import { FormBlockObject } from "@/lib/definitions"
+import { FormField } from "@/lib/definitions"
 import { Input } from "@/components/ui/input"
 import FormBlockCard from "./form-block-card"
 import QuestionTypeSelect from "./question-type-select"
 import { cn } from "@/lib/utils"
 
 interface FormBlockProps {
-  block: FormBlockObject
+  block: FormField
   onBlockUpdate: (id: string, key: string, value: any) => void
   onBlockRemove: (id: string) => void
 }

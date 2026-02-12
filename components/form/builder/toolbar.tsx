@@ -30,19 +30,23 @@ export default function Toolbar({
       </div>
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-1">
-          <Button title="Undo" onClick={onUndo} variant="ghost">
-            <Undo size={16} />
+          <Button title="Undo" onClick={onUndo} variant="ghost" size="icon-sm">
+            <Undo />
           </Button>
-          <Button title="Redo" onClick={onRedo} variant="ghost">
-            <Redo size={16} />
+          <Button title="Redo" onClick={onRedo} variant="ghost" size="icon-sm">
+            <Redo />
           </Button>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="secondary">
-            <Eye size={16} /> Preview
+          <Button variant="outline" size="sm">
+            <Eye /> Preview
           </Button>
-          <Button onClick={onFormPublish}>
-            <Plane size={16} /> Publish
+          <Button
+            onClick={onFormPublish}
+            size="sm"
+            className="bg-primary text-sm"
+          >
+            <Plane /> Publish
           </Button>
         </div>
       </div>
