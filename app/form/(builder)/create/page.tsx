@@ -1,45 +1,125 @@
 "use client"
 
-import { SubmitEvent, useState } from "react"
+import { Fragment, SubmitEvent, useMemo, useState } from "react"
 
 import { QUESTION_TYPE } from "@/lib/constants"
-import type { QuestionType, FormField } from "@/lib/definitions"
+import { Section } from "@/lib/definitions"
 import Toolbar from "@/components/form/builder/toolbar"
-import Header from "@/components/form/builder/header"
-import FormBlock from "@/components/form/builder/form-block"
+import Header, { headerPurpose } from "@/components/form/builder/header"
+import FormField from "@/components/form/builder/form-field"
 
 function Create() {
-  const [mode, setMode] = useState<"create" | "preview">("create")
+  // const [mode, setMode] = useState<"create" | "preview">("create")
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
-  const [formFields, setFormFields] = useState<FormField[]>([
+  const [formSections, setFormSections] = useState<Section[]>([
     {
       id: crypto.randomUUID(),
-      type: QUESTION_TYPE.SHORT_ANSWER.value,
-      question: ""
+      title: "",
+      fields: [
+        {
+          id: crypto.randomUUID(),
+          type: QUESTION_TYPE.SHORT_ANSWER.value,
+          question: "",
+          value: ""
+        }
+      ]
     }
   ])
 
-  function onAddBlock(type: QuestionType) {
-    switch (type) {
-      default:
-        setFormFields((prev) => [
-          ...prev,
-          { id: crypto.randomUUID(), type, question: "" }
-        ])
-    }
+  const totalQuestions = useMemo(
+    () =>
+      formSections.reduce((total, section) => section.fields.length + total, 0),
+    [formSections]
+  )
+
+  function onAddSection() {
+    setFormSections((prev) => [
+      ...prev,
+      {
+        id: crypto.randomUUID(),
+        title: "",
+        fields: []
+      }
+    ])
   }
 
-  function onBlockRemove(id: string) {
-    if (formFields.length === 1) return
-    setFormFields((prev) => prev.filter((block) => block.id !== id))
-  }
-
-  function onBlockUpdate(id: string, key: string, value: any) {
-    setFormFields((prev) =>
-      prev.map((block) =>
-        block.id === id ? { ...block, [key]: value } : block
+  function onAddField(sectionID: string) {
+    setFormSections((prev) =>
+      prev.map((section) =>
+        section.id === sectionID
+          ? {
+              ...section,
+              title: "",
+              fields: [
+                ...section.fields,
+                {
+                  id: crypto.randomUUID(),
+                  type: QUESTION_TYPE.SHORT_ANSWER.value,
+                  question: "",
+                  value: ""
+                }
+              ]
+            }
+          : section
       )
+    )
+  }
+
+  function onFieldDuplicate(sectionID: string, fieldID: string) {
+    setFormSections((prev) =>
+      prev.map((section) =>
+        section.id === sectionID
+          ? {
+              ...section,
+              fields: section.fields.filter((field) => field.id !== fieldID)
+            }
+          : section
+      )
+    )
+  }
+
+  function onFieldRemove(sectionID: string, fieldID: string) {
+    setFormSections((prev) =>
+      prev.map((section) =>
+        section.id === sectionID
+          ? {
+              ...section,
+              fields: section.fields.filter((field) => field.id !== fieldID)
+            }
+          : section
+      )
+    )
+  }
+
+  function onFieldUpdate(
+    sectionID: string,
+    fieldID: string,
+    key: string,
+    value: any
+  ) {
+    // setFormFields((prev) =>
+    //   prev.map((block) =>
+    //     block.id === id ? { ...block, [key]: value } : block
+    //   )
+    // )
+
+    setFormSections((prev) =>
+      prev.map((section) => {
+        return section.id === sectionID
+          ? {
+              ...section,
+              fields: section.fields.map((field) => {
+                return field.id === fieldID
+                  ? {
+                      ...field,
+                      [key]: value
+                    }
+                  : field
+              })
+            }
+          : section
+      })
     )
   }
 
@@ -49,14 +129,12 @@ function Create() {
 
   function onSubmit(e: SubmitEvent<HTMLFormElement>) {
     e.preventDefault()
-
-    console.log(formFields)
   }
 
   return (
     <div className="flex flex-col items-center gap-8">
       <Toolbar
-        totalQuestions={formFields.length}
+        totalQuestions={totalQuestions}
         onUndo={onUndo}
         onRedo={onRedo}
       />
@@ -65,15 +143,35 @@ function Create() {
         onTitleChange={setTitle}
         description={description}
         onDescriptionChange={setDescription}
+        purpose={headerPurpose.form}
       />
-      {formFields.map((block) => {
+      <div className="custom-pattern h-5 w-3xl"></div>
+      {formSections.map((section, index) => {
         return (
-          <FormBlock
-            key={block.id}
-            block={block}
-            onBlockUpdate={onBlockUpdate}
-            onBlockRemove={onBlockRemove}
-          />
+          <Fragment key={section.id}>
+            {/*{index > 0 && <Separator className="my-4 lg:w-3xl!" />}*/}
+            {index > 0 && <div className="custom-pattern h-5 w-3xl"></div>}
+
+            <Header
+              title={title}
+              onTitleChange={setTitle}
+              description={description}
+              onDescriptionChange={setDescription}
+              purpose={headerPurpose.section}
+            />
+            {section.fields.map((field) => {
+              return (
+                <FormField
+                  key={field.id}
+                  field={field}
+                  onFieldUpdate={(key, value) =>
+                    onFieldUpdate(section.id, field.id, key, value)
+                  }
+                  onFieldRemove={() => onFieldRemove(section.id, field.id)}
+                />
+              )
+            })}
+          </Fragment>
         )
       })}
     </div>

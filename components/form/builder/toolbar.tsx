@@ -1,5 +1,5 @@
 import type { MouseEventHandler } from "react"
-import { Eye, FileText, Plane, Redo, Undo } from "lucide-react"
+import { Eye, Plane, Redo, Undo } from "lucide-react"
 
 import { onFormPublish } from "@/lib/actions"
 import { Button } from "@/components/ui/button"
@@ -16,18 +16,16 @@ export default function Toolbar({
   onRedo = () => {}
 }: ToolbarProps) {
   return (
-    <div className="flex w-full items-center justify-between gap-2 rounded-lg border border-gray-200 bg-white p-3">
+    <div className="bg-background sticky top-0 z-50 flex w-full items-center justify-between gap-2 border p-3">
       <div className="flex items-center gap-2">
-        <div className="bg-primary h-fit rounded-md p-2">
-          <FileText size={16} color="white" />
-        </div>
         <div>
-          <p className="text-sm font-medium">Svar</p>
-          <p className="text-sm text-gray-500">
+          <p className="font-lora font-medium">Svar</p>
+          <p className="text-sm text-zinc-500">
             {`${totalQuestions} question${totalQuestions > 1 ? "s" : ""}`}
           </p>
         </div>
       </div>
+
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-1">
           <Button title="Undo" onClick={onUndo} variant="ghost" size="icon-sm">
@@ -44,7 +42,8 @@ export default function Toolbar({
           <Button
             onClick={onFormPublish}
             size="sm"
-            className="bg-primary text-sm"
+            className="text-sm"
+            variant="default"
           >
             <Plane /> Publish
           </Button>

@@ -11,37 +11,33 @@ import {
   SelectValue
 } from "@/components/ui/select"
 import { questionTypes } from "@/lib/constants"
-import { FormField } from "@/lib/definitions"
+import { Field } from "@/lib/definitions"
 
 interface QuestionTypeSelectProps {
-  block: FormField
-  onBlockUpdate: (id: string, key: string, value: any) => void
+  field: Field
+  onFieldUpdate: (id: string, key: string, value: any) => void
 }
 
-function QuestionTypeSelect({ block, onBlockUpdate }: QuestionTypeSelectProps) {
+function QuestionTypeSelect({ field, onFieldUpdate }: QuestionTypeSelectProps) {
   const selectedType = useMemo(
-    () => questionTypes.find((type) => block.type === type.value)!.label,
-    [block.type]
+    () => questionTypes.find((type) => field.type === type.value)!.label,
+    [field.type]
   )
 
   function onQuestionTypeChange(value: string | null) {
-    onBlockUpdate(block.id, "type", value)
+    onFieldUpdate(field.id, "type", value)
   }
 
   return (
-    <Select onValueChange={onQuestionTypeChange} value={block.type}>
-      <SelectTrigger className="outline-primary/40 flex h-fit min-w-40 items-center justify-between gap-2 rounded-lg border border-gray-200 p-2 text-sm focus:outline">
+    <Select onValueChange={onQuestionTypeChange} value={field.type}>
+      <SelectTrigger className="w-50">
         <SelectValue>{selectedType}</SelectValue>
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent position="popper">
         <SelectGroup>
           {questionTypes.map((type) => {
             return (
-              <SelectItem
-                value={type.value}
-                key={type.value}
-                className="outline-primary/40 rounded-md p-2 text-sm hover:bg-gray-100"
-              >
+              <SelectItem value={type.value} key={type.value}>
                 {type.label}
               </SelectItem>
             )

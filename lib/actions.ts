@@ -1,37 +1,17 @@
 "use server"
 
-import { headers } from "next/headers"
-import { redirect } from "next/navigation"
-
-import { auth } from "@/lib/auth"
+import { signIn, signOut, auth } from "@/auth"
 
 export async function login() {
-  const { url, redirect: shouldRedirect } = await auth.api.signInSocial({
-    body: {
-      provider: "google"
-    },
-    headers: await headers()
-  })
-
-  if (shouldRedirect && url) {
-    redirect(url)
-  }
+  await signIn("google")
 }
 
 export async function logout() {
-  const { success } = await auth.api.signOut({
-    headers: await headers()
-  })
-
-  if (success) {
-    redirect("/login")
-  }
+  await signOut({ redirect: "/login" })
 }
 
 export async function getSession() {
-  return await auth.api.getSession({
-    headers: await headers()
-  })
+  return await auth()
 }
 
 export async function onFormPublish() {}

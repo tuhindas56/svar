@@ -1,6 +1,6 @@
 import type { ReactNode } from "react"
 import type { Metadata } from "next"
-import { Noto_Sans, Noto_Sans_Mono } from "next/font/google"
+import { Inter, Lora } from "next/font/google"
 
 import { cn } from "@/lib/utils"
 import "./globals.css"
@@ -9,14 +9,15 @@ interface RootLayoutProps {
   children: ReactNode
 }
 
-const noto = Noto_Sans({
-  variable: "--font-noto-sans",
+const lora = Lora({
+  variable: "--font-lora",
   preload: true,
   subsets: ["latin"]
 })
 
-const notoMono = Noto_Sans_Mono({
-  variable: "--font-noto-sans-mono",
+const inter = Inter({
+  variable: "--font-inter",
+  preload: true,
   subsets: ["latin"]
 })
 
@@ -30,12 +31,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          noto.variable,
-          notoMono.variable,
-          "flex flex-col items-center antialiased"
+          lora.variable,
+          inter.variable,
+          "flex flex-col items-center font-sans antialiased"
         )}
       >
         {children}

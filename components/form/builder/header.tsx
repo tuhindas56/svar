@@ -1,36 +1,49 @@
+"use client"
+
 import type { Dispatch, SetStateAction } from "react"
-import FormBlockCard from "./form-block-card"
+
+import { cn } from "@/lib/utils"
+import ContentEditable from "@/components/ui/content-editable"
+import FormBlockCard from "./form-field-card"
 
 interface HeaderProps {
+  purpose: (typeof headerPurpose)[keyof typeof headerPurpose]
   title: string
   onTitleChange: Dispatch<SetStateAction<string>>
   description: string
   onDescriptionChange: Dispatch<SetStateAction<string>>
 }
 
+export const headerPurpose = {
+  form: "form",
+  section: "section"
+} as const
+
 function Header({
   title = "",
   onTitleChange = () => {},
   description = "",
-  onDescriptionChange = () => {}
+  onDescriptionChange = () => {},
+  purpose = headerPurpose.section
 }: HeaderProps) {
   return (
     <FormBlockCard>
-      <div
-        defaultValue={title}
-        onBlur={(e) => onTitleChange(e.target.textContent)}
-        className="text-2xl font-medium text-gray-800 placeholder-gray-400 focus:outline-0"
-        // placeholder="Untitled Form"
-        contentEditable
-        suppressContentEditableWarning
+      <ContentEditable
+        value={title}
+        onChange={onTitleChange}
+        placeholder={`Untitled ${headerPurpose[purpose]}`}
+        className={cn("font-lora", {
+          "text-2xl font-medium": purpose === headerPurpose.form,
+          "text-md": purpose === headerPurpose.section
+        })}
+        placeholderClassName={cn("font-lora", {
+          "text-2xl": purpose === headerPurpose.form
+        })}
       />
-      <div
-        defaultValue={description}
-        onBlur={(e) => onDescriptionChange(e.target.textContent)}
-        className="text-md text-gray-600 placeholder-gray-400 focus:outline-0"
-        // placeholder="Form description (optional)"
-        contentEditable
-        suppressContentEditableWarning
+      <ContentEditable
+        value={description}
+        onChange={onDescriptionChange}
+        placeholder="Description (optional)"
       />
     </FormBlockCard>
   )

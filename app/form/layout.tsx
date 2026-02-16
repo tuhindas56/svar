@@ -5,7 +5,7 @@ interface LayoutProps {
 }
 
 function Layout({ children }: LayoutProps) {
-  return <div className="min-h-screen w-full p-8 lg:w-3xl">{children}</div>
+  return <div className="relative min-h-screen w-full">{children}</div>
 }
 
 export default Layout

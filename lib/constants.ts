@@ -4,7 +4,7 @@ export const QUESTION_TYPE = {
     value: "short"
   },
   LONG_ANSWER: {
-    label: "Long Answer",
+    label: "Paragraph",
     value: "long"
   },
   MULTI_CHOICE: {
@@ -15,25 +15,29 @@ export const QUESTION_TYPE = {
     label: "Checkboxes",
     value: "checkbox"
   },
-  NUMBER: {
-    label: "Number",
-    value: "number"
-  },
-  EMAIL: {
-    label: "Email",
-    value: "mail"
-  },
-  PHONE: {
-    label: "Phone",
-    value: "phone"
-  },
-  LINK: {
-    label: "Link",
-    value: "link"
+  DROPDOWN: {
+    label: "Dropdown",
+    value: "select"
   },
   FILE: {
     label: "File Upload",
     value: "file"
+  },
+  LINEAR_SCALE: {
+    label: "Linear scale",
+    value: "linear"
+  },
+  RATING: {
+    label: "Rating",
+    value: "rating"
+  },
+  MULTI_CHOICE_GRID: {
+    label: "Muiltple choice grid",
+    value: "multi_choice_grid"
+  },
+  CHECKBOX_GRID: {
+    label: "Checkbox grid",
+    value: "checkbox_grid"
   },
   DATE: {
     label: "Date",

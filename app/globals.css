@@ -43,6 +43,8 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  --font-sans: var(--font-inter);
+  --font-lora: var(--font-lora);
 }
 
 :root {
@@ -53,8 +55,8 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: var(--user-choice-primary, oklch(0.205 0 0));
-  --primary-foreground: var(--user-choice-primary-fg, oklch(0.985 0 0));
+  --primary: oklch(62.3% 0.214 259.815);
+  --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
@@ -123,4 +125,11 @@
     @apply bg-background text-foreground;
     @apply bg-background text-foreground;
   }
+}
+
+.custom-pattern {
+  background:
+    linear-gradient(135deg, #0000 18.75%, #ffffff 0 31.25%, #0000 0),
+    repeating-linear-gradient(45deg, #ffffff -6.25% 6.25%, #f9f9f9 0 18.75%);
+  background-size: 130px 130px;
 }
