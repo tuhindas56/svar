@@ -6,7 +6,7 @@ interface LayoutProps {
 }
 
 export const metadata: Metadata = {
-  title: "Form Builder"
+  title: "Create Form"
 }
 
 function Layout({ children }: LayoutProps) {

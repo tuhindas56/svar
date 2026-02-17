@@ -4,6 +4,7 @@ import { Inter, Lora } from "next/font/google"
 
 import { cn } from "@/lib/utils"
 import "./globals.css"
+import { TooltipProvider } from "@/components/ui/tooltip"
 
 interface RootLayoutProps {
   children: ReactNode
@@ -23,7 +24,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    template: "%s - Svar",
+    template: "%s - svar",
     default: "Svar"
   },
   description: "Form builder"
@@ -36,10 +37,12 @@ export default function RootLayout({ children }: RootLayoutProps) {
         className={cn(
           lora.variable,
           inter.variable,
-          "flex flex-col items-center font-sans antialiased"
+          "custom-pattern flex w-full flex-col items-center font-sans antialiased"
         )}
       >
-        {children}
+        <TooltipProvider>
+          <div className="md:max-w-6xl">{children}</div>
+        </TooltipProvider>
       </body>
     </html>
   )

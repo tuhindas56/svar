@@ -1,21 +1,20 @@
-import { QUESTION_TYPE } from "./constants"
+import { fieldType } from "./constants"
 
-export type QuestionType =
-  (typeof QUESTION_TYPE)[keyof typeof QUESTION_TYPE]["value"]
+export type FieldType = (typeof fieldType)[keyof typeof fieldType]["value"]
 
-type FieldValue = string | number | File | string[] | number[]
+export type FieldValue = string | number | File | string[] | number[]
 
-export interface Field {
+export interface FormField {
   id: string
-  type: QuestionType
+  type: FieldType
   question: string
   value: FieldValue
 }
 
-export interface Section {
+export interface FormSection {
   id: string
   title: string
-  fields: Field[]
+  fields: FormField[]
   description?: string
   fromSection?: string
   toSection?: string

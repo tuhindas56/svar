@@ -1,52 +1,52 @@
-export const QUESTION_TYPE = {
-  SHORT_ANSWER: {
+export const fieldType = {
+  shortAnswer: {
     label: "Short Answer",
     value: "short"
   },
-  LONG_ANSWER: {
+  longAnswer: {
     label: "Paragraph",
     value: "long"
   },
-  MULTI_CHOICE: {
+  multiChoice: {
     label: "Multiple Choice",
     value: "radio"
   },
-  CHECKBOXES: {
+  checkbox: {
     label: "Checkboxes",
     value: "checkbox"
   },
-  DROPDOWN: {
+  select: {
     label: "Dropdown",
     value: "select"
   },
-  FILE: {
+  fileUpload: {
     label: "File Upload",
     value: "file"
   },
-  LINEAR_SCALE: {
+  linearScale: {
     label: "Linear scale",
     value: "linear"
   },
-  RATING: {
+  rating: {
     label: "Rating",
     value: "rating"
   },
-  MULTI_CHOICE_GRID: {
+  multiChoiceGrid: {
     label: "Muiltple choice grid",
     value: "multi_choice_grid"
   },
-  CHECKBOX_GRID: {
+  checkboxGrid: {
     label: "Checkbox grid",
     value: "checkbox_grid"
   },
-  DATE: {
+  date: {
     label: "Date",
     value: "date"
   },
-  TIME: {
+  time: {
     label: "Time",
     value: "time"
   }
 } as const
 
-export const questionTypes = Object.values(QUESTION_TYPE)
+export const fieldTypes = Object.values(fieldType)

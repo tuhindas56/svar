@@ -60,7 +60,7 @@ const ContentEditable = ({
   return (
     <div className="relative">
       <div
-        className={cn("text-md min-w-24 text-wrap focus:outline-0", className)}
+        className={cn("min-w-24 text-sm text-wrap focus:outline-0", className)}
         onBlur={onBlur}
         onFocus={() => setIsFocused(true)}
         ref={ref}
@@ -70,7 +70,7 @@ const ContentEditable = ({
       {!value && !isFocused && (
         <span
           className={cn(
-            "text-foreground/30 bg-background pointer-events-none absolute top-0 left-0 z-10 min-w-24",
+            "text-foreground/30 bg-background pointer-events-none absolute top-0 left-0 z-10 min-w-24 text-sm",
             placeholderClassName
           )}
         >

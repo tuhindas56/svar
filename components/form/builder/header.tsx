@@ -1,7 +1,5 @@
 "use client"
 
-import type { Dispatch, SetStateAction } from "react"
-
 import { cn } from "@/lib/utils"
 import ContentEditable from "@/components/ui/content-editable"
 import FormBlockCard from "./form-field-card"
@@ -9,9 +7,9 @@ import FormBlockCard from "./form-field-card"
 interface HeaderProps {
   purpose: (typeof headerPurpose)[keyof typeof headerPurpose]
   title: string
-  onTitleChange: Dispatch<SetStateAction<string>>
-  description: string
-  onDescriptionChange: Dispatch<SetStateAction<string>>
+  onTitleChange: (value: string) => void
+  description?: string
+  onDescriptionChange?: (value: string) => void
 }
 
 export const headerPurpose = {
@@ -33,11 +31,12 @@ function Header({
         onChange={onTitleChange}
         placeholder={`Untitled ${headerPurpose[purpose]}`}
         className={cn("font-lora", {
-          "text-2xl font-medium": purpose === headerPurpose.form,
-          "text-md": purpose === headerPurpose.section
+          "text-2xl font-bold": purpose === headerPurpose.form,
+          "text-lg font-bold": purpose === headerPurpose.section
         })}
         placeholderClassName={cn("font-lora", {
-          "text-2xl": purpose === headerPurpose.form
+          "text-2xl": purpose === headerPurpose.form,
+          "text-lg": purpose === headerPurpose.section
         })}
       />
       <ContentEditable

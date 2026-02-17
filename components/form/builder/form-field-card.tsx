@@ -10,7 +10,7 @@ function FormBlockCard({ children, className, ...props }: FormBlockCardProps) {
   return (
     <div
       className={cn(
-        "flex w-10/12 flex-col gap-4 rounded-lg border p-6 lg:w-3xl",
+        "bg-background flex w-10/12 flex-col gap-4 rounded border p-6 lg:w-3xl",
         className
       )}
       {...props}

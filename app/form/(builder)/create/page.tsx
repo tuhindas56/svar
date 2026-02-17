@@ -1,177 +1,202 @@
 "use client"
 
-import { Fragment, SubmitEvent, useMemo, useState } from "react"
+import { useState, useReducer, useEffect } from "react"
 
-import { QUESTION_TYPE } from "@/lib/constants"
-import { Section } from "@/lib/definitions"
-import Toolbar from "@/components/form/builder/toolbar"
+import { fieldType } from "@/lib/constants"
+import { FormField, FieldType, FormSection as Section } from "@/lib/definitions"
 import Header, { headerPurpose } from "@/components/form/builder/header"
-import FormField from "@/components/form/builder/form-field"
+import FormSection from "@/components/form/builder/form-section"
+import Toolbar from "@/components/form/builder/toolbar"
 
-function Create() {
-  // const [mode, setMode] = useState<"create" | "preview">("create")
-  const [title, setTitle] = useState("")
-  const [description, setDescription] = useState("")
-  const [formSections, setFormSections] = useState<Section[]>([
-    {
-      id: crypto.randomUUID(),
-      title: "",
-      fields: [
-        {
-          id: crypto.randomUUID(),
-          type: QUESTION_TYPE.SHORT_ANSWER.value,
-          question: "",
-          value: ""
-        }
-      ]
+type Action =
+  | {
+      type: "add_section"
     }
-  ])
-
-  const totalQuestions = useMemo(
-    () =>
-      formSections.reduce((total, section) => section.fields.length + total, 0),
-    [formSections]
-  )
-
-  function onAddSection() {
-    setFormSections((prev) => [
-      ...prev,
-      {
-        id: crypto.randomUUID(),
-        title: "",
-        fields: []
+  | {
+      type: "remove_section"
+      payload: {
+        sectionID: string
       }
-    ])
-  }
+    }
+  | {
+      type: "update_section_title" | "update_section_description"
+      payload: {
+        sectionID: string
+        value: string
+      }
+    }
+  | {
+      type: "add_field"
+      payload: {
+        sectionID: string
+        fieldID: string
+        type: FieldType
+      }
+    }
+  | {
+      type: "update_field"
+      payload: {
+        sectionID: string
+        field: FormField
+      }
+    }
+  | {
+      type: "remove_field"
+      payload: {
+        sectionID: string
+        fieldID: string
+      }
+    }
 
-  function onAddField(sectionID: string) {
-    setFormSections((prev) =>
-      prev.map((section) =>
-        section.id === sectionID
+function addSection() {
+  return {
+    id: crypto.randomUUID(),
+    title: "",
+    fields: []
+  }
+}
+
+function addField(type: FieldType) {
+  switch (type) {
+    case fieldType.shortAnswer.value:
+    default:
+      return {
+        id: crypto.randomUUID(),
+        type: fieldType.shortAnswer.value,
+        question: "",
+        value: ""
+      }
+  }
+}
+
+function formSectionReducer(state: Section[], action: Action) {
+  switch (action.type) {
+    case "add_section":
+      return [...state, addSection()]
+
+    case "remove_section":
+      return state.filter((section) => section.id !== action.payload.sectionID)
+
+    case "update_section_title":
+      return state.map((section) => {
+        return section.id === action.payload.sectionID
           ? {
               ...section,
-              title: "",
-              fields: [
-                ...section.fields,
-                {
-                  id: crypto.randomUUID(),
-                  type: QUESTION_TYPE.SHORT_ANSWER.value,
-                  question: "",
-                  value: ""
-                }
-              ]
-            }
-          : section
-      )
-    )
-  }
-
-  function onFieldDuplicate(sectionID: string, fieldID: string) {
-    setFormSections((prev) =>
-      prev.map((section) =>
-        section.id === sectionID
-          ? {
-              ...section,
-              fields: section.fields.filter((field) => field.id !== fieldID)
-            }
-          : section
-      )
-    )
-  }
-
-  function onFieldRemove(sectionID: string, fieldID: string) {
-    setFormSections((prev) =>
-      prev.map((section) =>
-        section.id === sectionID
-          ? {
-              ...section,
-              fields: section.fields.filter((field) => field.id !== fieldID)
-            }
-          : section
-      )
-    )
-  }
-
-  function onFieldUpdate(
-    sectionID: string,
-    fieldID: string,
-    key: string,
-    value: any
-  ) {
-    // setFormFields((prev) =>
-    //   prev.map((block) =>
-    //     block.id === id ? { ...block, [key]: value } : block
-    //   )
-    // )
-
-    setFormSections((prev) =>
-      prev.map((section) => {
-        return section.id === sectionID
-          ? {
-              ...section,
-              fields: section.fields.map((field) => {
-                return field.id === fieldID
-                  ? {
-                      ...field,
-                      [key]: value
-                    }
-                  : field
-              })
+              title: action.payload.value
             }
           : section
       })
-    )
+
+    case "update_section_description":
+      return state.map((section) => {
+        return section.id === action.payload.sectionID
+          ? {
+              ...section,
+              description: action.payload.value
+            }
+          : section
+      })
+
+    case "add_field":
+      return state.map((section) => {
+        return section.id === action.payload.sectionID
+          ? {
+              ...section,
+              fields: [...section.fields, addField(action.payload.type)]
+            }
+          : section
+      })
+
+    case "update_field":
+      return state.map((section) => {
+        return section.id === action.payload.sectionID
+          ? {
+              ...section,
+              fields: section.fields.map((field) =>
+                field.id === action.payload.field.id
+                  ? action.payload.field
+                  : field
+              )
+            }
+          : section
+      })
+
+    case "remove_field":
+      return state.map((section) => {
+        return section.id === action.payload.sectionID
+          ? {
+              ...section,
+              fields: section.fields.filter(
+                (field) => field.id !== action.payload.fieldID
+              )
+            }
+          : section
+      })
+
+    default:
+      return state
   }
+}
+
+function Create() {
+  const [formTitle, setFormTitle] = useState("")
+  const [formDescription, setFormDescription] = useState("")
+  const [formSections, dispatch] = useReducer(formSectionReducer, [
+    {
+      id: crypto.randomUUID(),
+      title: "",
+      fields: [addField(fieldType.shortAnswer.value)]
+    }
+  ])
 
   function onUndo() {}
 
   function onRedo() {}
 
-  function onSubmit(e: SubmitEvent<HTMLFormElement>) {
-    e.preventDefault()
-  }
+  useEffect(() => console.log(formSections), [formSections])
 
   return (
     <div className="flex flex-col items-center gap-8">
-      <Toolbar
-        totalQuestions={totalQuestions}
-        onUndo={onUndo}
-        onRedo={onRedo}
-      />
+      <Toolbar onUndo={onUndo} onRedo={onRedo} />
+
       <Header
-        title={title}
-        onTitleChange={setTitle}
-        description={description}
-        onDescriptionChange={setDescription}
+        title={formTitle}
+        onTitleChange={setFormTitle}
+        description={formDescription}
+        onDescriptionChange={setFormDescription}
         purpose={headerPurpose.form}
       />
-      <div className="custom-pattern h-5 w-3xl"></div>
-      {formSections.map((section, index) => {
-        return (
-          <Fragment key={section.id}>
-            {/*{index > 0 && <Separator className="my-4 lg:w-3xl!" />}*/}
-            {index > 0 && <div className="custom-pattern h-5 w-3xl"></div>}
 
-            <Header
-              title={title}
-              onTitleChange={setTitle}
-              description={description}
-              onDescriptionChange={setDescription}
-              purpose={headerPurpose.section}
-            />
-            {section.fields.map((field) => {
-              return (
-                <FormField
-                  key={field.id}
-                  field={field}
-                  onFieldUpdate={(key, value) =>
-                    onFieldUpdate(section.id, field.id, key, value)
-                  }
-                  onFieldRemove={() => onFieldRemove(section.id, field.id)}
-                />
-              )
-            })}
-          </Fragment>
+      {formSections.map((section) => {
+        return (
+          <FormSection
+            key={section.id}
+            section={section}
+            onTitleChange={(value: string) => {
+              dispatch({
+                type: "update_section_title",
+                payload: { sectionID: section.id, value }
+              })
+            }}
+            onDescriptionChange={(value: string) => {
+              dispatch({
+                type: "update_section_description",
+                payload: { sectionID: section.id, value }
+              })
+            }}
+            onFieldUpdate={(field) => {
+              dispatch({
+                type: "update_field",
+                payload: { sectionID: section.id, field }
+              })
+            }}
+            onFieldRemove={(fieldID: string) => {
+              dispatch({
+                type: "remove_field",
+                payload: { sectionID: section.id, fieldID }
+              })
+            }}
+          />
         )
       })}
     </div>
