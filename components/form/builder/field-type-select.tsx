@@ -9,23 +9,20 @@ import {
   SelectValue
 } from "@/components/ui/select"
 import { fieldTypes } from "@/lib/constants"
-import { FieldType, FormField } from "@/lib/definitions"
+import { FieldType } from "@/lib/definitions"
 
 interface FieldTypeSelectProps {
-  field: FormField
-  onFieldUpdate: (field: FormField) => void
+  selectedType: FieldType
+  onFieldUpdate: (selectedType: FieldType) => void
 }
 
-function FieldTypeSelect({ field, onFieldUpdate }: FieldTypeSelectProps) {
-  function onValueChange(type: FieldType) {
-    const next = { ...field, type } satisfies FormField
-
-    onFieldUpdate(next)
-  }
-
+function FieldTypeSelect({
+  selectedType,
+  onFieldUpdate
+}: FieldTypeSelectProps) {
   return (
-    <Select onValueChange={onValueChange} value={field.type}>
-      <SelectTrigger className="w-50">
+    <Select onValueChange={onFieldUpdate} value={selectedType}>
+      <SelectTrigger className="min-w-50">
         <SelectValue />
       </SelectTrigger>
       <SelectContent position="popper">

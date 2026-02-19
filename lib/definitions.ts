@@ -8,7 +8,8 @@ export interface FormField {
   id: string
   type: FieldType
   question: string
-  value: FieldValue
+  required?: boolean
+  options?: string[]
 }
 
 export interface FormSection {

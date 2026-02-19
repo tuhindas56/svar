@@ -2,47 +2,42 @@
 
 import { cn } from "@/lib/utils"
 import ContentEditable from "@/components/ui/content-editable"
-import FormBlockCard from "./form-field-card"
+import FormBlockCard from "./form-card"
 
 interface HeaderProps {
-  purpose: (typeof headerPurpose)[keyof typeof headerPurpose]
   title: string
   onTitleChange: (value: string) => void
   description?: string
   onDescriptionChange?: (value: string) => void
+  childOfFirstSection: boolean
 }
-
-export const headerPurpose = {
-  form: "form",
-  section: "section"
-} as const
 
 function Header({
   title = "",
   onTitleChange = () => {},
   description = "",
   onDescriptionChange = () => {},
-  purpose = headerPurpose.section
+  childOfFirstSection
 }: HeaderProps) {
   return (
     <FormBlockCard>
       <ContentEditable
         value={title}
         onChange={onTitleChange}
-        placeholder={`Untitled ${headerPurpose[purpose]}`}
-        className={cn("font-lora", {
-          "text-2xl font-bold": purpose === headerPurpose.form,
-          "text-lg font-bold": purpose === headerPurpose.section
+        placeholder={`Untitled ${childOfFirstSection ? "form" : "section"}`}
+        className={cn("font-lora text-lg font-bold", {
+          "text-3xl": childOfFirstSection
         })}
-        placeholderClassName={cn("font-lora", {
-          "text-2xl": purpose === headerPurpose.form,
-          "text-lg": purpose === headerPurpose.section
+        placeholderClassName={cn("font-lora font-bold text-lg", {
+          "text-3xl": childOfFirstSection
         })}
+        width="100%"
       />
       <ContentEditable
         value={description}
         onChange={onDescriptionChange}
         placeholder="Description (optional)"
+        width="100%"
       />
     </FormBlockCard>
   )

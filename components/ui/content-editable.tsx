@@ -1,6 +1,6 @@
 "use client"
 
-import type { FocusEvent } from "react"
+import type { CSSProperties, FocusEvent } from "react"
 import { useEffect, useRef, useState } from "react"
 
 import { cn } from "@/lib/utils"
@@ -11,6 +11,7 @@ interface ContentEditableProps {
   className?: string
   placeholder?: string
   placeholderClassName?: string
+  width?: string
 }
 
 const ContentEditable = ({
@@ -18,7 +19,8 @@ const ContentEditable = ({
   value,
   className,
   placeholder,
-  placeholderClassName
+  placeholderClassName,
+  width = "100px"
 }: ContentEditableProps) => {
   const [isFocused, setIsFocused] = useState(false)
 
@@ -58,24 +60,29 @@ const ContentEditable = ({
   }, [])
 
   return (
-    <div className="relative">
+    <div
+      className={cn(
+        "bg-background border-border/0 hover:border-border focus-within:border-border relative h-fit overflow-hidden rounded-xs border p-2 duration-100 ease-out"
+      )}
+      style={{ width }}
+    >
       <div
-        className={cn("min-w-24 text-sm text-wrap focus:outline-0", className)}
+        className={cn("text-md w-full text-pretty focus:outline-0", className)}
         onBlur={onBlur}
         onFocus={() => setIsFocused(true)}
         ref={ref}
         contentEditable
         suppressContentEditableWarning
       />
-      {!value && !isFocused && (
-        <span
+      {!(value || isFocused) && (
+        <div
           className={cn(
-            "text-foreground/30 bg-background pointer-events-none absolute top-0 left-0 z-10 min-w-24 text-sm",
+            "text-foreground/30 bg-background text-md pointer-events-none absolute top-2 left-2 z-10 h-full w-full",
             placeholderClassName
           )}
         >
           {placeholder}
-        </span>
+        </div>
       )}
     </div>
   )

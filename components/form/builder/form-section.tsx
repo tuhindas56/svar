@@ -1,33 +1,47 @@
 "use client"
 
-import { FormField as Field, FormSection as Section } from "@/lib/definitions"
+import {
+  FormField as Field,
+  FieldType,
+  FormSection as Section
+} from "@/lib/definitions"
 import FormField from "./form-field"
-import Header, { headerPurpose } from "./header"
+import Header from "./header"
+import { Button } from "@/components/ui/button"
+import { Plus, Rows } from "lucide-react"
+import FormCard from "./form-card"
+import { fieldTypes } from "@/lib/constants"
 
 interface SectionProps {
   section: Section
-  onTitleChange: (value: string) => void
   description?: string
+  isFirstSection: boolean
+  onSectionAdd: () => void
+  onTitleChange: (value: string) => void
   onDescriptionChange?: (value: string) => void
+  onFieldAdd: (type: FieldType) => void
   onFieldUpdate: (field: Field) => void
   onFieldRemove: (fieldID: string) => void
 }
 
 function FormSection({
   section,
+  isFirstSection,
+  onSectionAdd,
   onTitleChange,
   onDescriptionChange,
+  onFieldAdd,
   onFieldUpdate,
   onFieldRemove
 }: SectionProps) {
   return (
     <>
       <Header
+        childOfFirstSection={isFirstSection}
         title={section.title}
-        onTitleChange={onTitleChange}
         description={section.description}
+        onTitleChange={onTitleChange}
         onDescriptionChange={onDescriptionChange}
-        purpose={headerPurpose.section}
       />
 
       {section.fields.map((field) => {
@@ -35,11 +49,25 @@ function FormSection({
           <FormField
             key={field.id}
             field={field}
-            onFieldUpdate={(field) => onFieldUpdate(field)}
+            onFieldUpdate={onFieldUpdate}
             onFieldRemove={() => onFieldRemove(field.id)}
           />
         )
       })}
+
+      <FormCard className="flex-row flex-wrap justify-center">
+        {fieldTypes.map((type) => {
+          return (
+            <Button variant="outline" onClick={() => onFieldAdd(type.value)}>
+              <Plus /> {type.label}
+            </Button>
+          )
+        })}
+      </FormCard>
+
+      <Button variant="ghost" className="mt-8 w-full" onClick={onSectionAdd}>
+        <Plus /> Section
+      </Button>
     </>
   )
 }

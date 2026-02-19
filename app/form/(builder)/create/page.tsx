@@ -1,16 +1,20 @@
 "use client"
 
-import { useState, useReducer, useEffect } from "react"
+import { useReducer, useEffect } from "react"
 
 import { fieldType } from "@/lib/constants"
+import { addAt } from "@/lib/utils"
+import { addField, addSection } from "@/lib/form/builder/utils"
 import { FormField, FieldType, FormSection as Section } from "@/lib/definitions"
-import Header, { headerPurpose } from "@/components/form/builder/header"
 import FormSection from "@/components/form/builder/form-section"
 import Toolbar from "@/components/form/builder/toolbar"
 
 type Action =
   | {
       type: "add_section"
+      payload?: {
+        at: number
+      }
     }
   | {
       type: "remove_section"
@@ -29,8 +33,8 @@ type Action =
       type: "add_field"
       payload: {
         sectionID: string
-        fieldID: string
         type: FieldType
+        options?: string[]
       }
     }
   | {
@@ -48,31 +52,12 @@ type Action =
       }
     }
 
-function addSection() {
-  return {
-    id: crypto.randomUUID(),
-    title: "",
-    fields: []
-  }
-}
-
-function addField(type: FieldType) {
-  switch (type) {
-    case fieldType.shortAnswer.value:
-    default:
-      return {
-        id: crypto.randomUUID(),
-        type: fieldType.shortAnswer.value,
-        question: "",
-        value: ""
-      }
-  }
-}
-
-function formSectionReducer(state: Section[], action: Action) {
+function formSectionsReducer(state: Section[], action: Action) {
   switch (action.type) {
     case "add_section":
-      return [...state, addSection()]
+      return action?.payload?.at !== undefined
+        ? addAt(state, action.payload.at, addSection())
+        : [...state, addSection()]
 
     case "remove_section":
       return state.filter((section) => section.id !== action.payload.sectionID)
@@ -139,9 +124,7 @@ function formSectionReducer(state: Section[], action: Action) {
 }
 
 function Create() {
-  const [formTitle, setFormTitle] = useState("")
-  const [formDescription, setFormDescription] = useState("")
-  const [formSections, dispatch] = useReducer(formSectionReducer, [
+  const [formSections, dispatch] = useReducer(formSectionsReducer, [
     {
       id: crypto.randomUUID(),
       title: "",
@@ -156,50 +139,62 @@ function Create() {
   useEffect(() => console.log(formSections), [formSections])
 
   return (
-    <div className="flex flex-col items-center gap-8">
+    <>
       <Toolbar onUndo={onUndo} onRedo={onRedo} />
 
-      <Header
-        title={formTitle}
-        onTitleChange={setFormTitle}
-        description={formDescription}
-        onDescriptionChange={setFormDescription}
-        purpose={headerPurpose.form}
-      />
-
-      {formSections.map((section) => {
-        return (
-          <FormSection
-            key={section.id}
-            section={section}
-            onTitleChange={(value: string) => {
-              dispatch({
-                type: "update_section_title",
-                payload: { sectionID: section.id, value }
-              })
-            }}
-            onDescriptionChange={(value: string) => {
-              dispatch({
-                type: "update_section_description",
-                payload: { sectionID: section.id, value }
-              })
-            }}
-            onFieldUpdate={(field) => {
-              dispatch({
-                type: "update_field",
-                payload: { sectionID: section.id, field }
-              })
-            }}
-            onFieldRemove={(fieldID: string) => {
-              dispatch({
-                type: "remove_field",
-                payload: { sectionID: section.id, fieldID }
-              })
-            }}
-          />
-        )
-      })}
-    </div>
+      <div className="mx-auto flex flex-col gap-8 px-4 py-8 md:w-10/12 lg:w-3xl">
+        {formSections.map((section, index) => {
+          return (
+            <FormSection
+              key={section.id}
+              section={section}
+              isFirstSection={index === 0}
+              onTitleChange={(value: string) => {
+                dispatch({
+                  type: "update_section_title",
+                  payload: { sectionID: section.id, value }
+                })
+              }}
+              onDescriptionChange={(value: string) => {
+                dispatch({
+                  type: "update_section_description",
+                  payload: { sectionID: section.id, value }
+                })
+              }}
+              onSectionAdd={() => {
+                dispatch({
+                  type: "add_section",
+                  payload: {
+                    at: index + 1
+                  }
+                })
+              }}
+              onFieldAdd={(type: FieldType) => {
+                dispatch({
+                  type: "add_field",
+                  payload: {
+                    sectionID: section.id,
+                    type
+                  }
+                })
+              }}
+              onFieldUpdate={(field) => {
+                dispatch({
+                  type: "update_field",
+                  payload: { sectionID: section.id, field }
+                })
+              }}
+              onFieldRemove={(fieldID: string) => {
+                dispatch({
+                  type: "remove_field",
+                  payload: { sectionID: section.id, fieldID }
+                })
+              }}
+            />
+          )
+        })}
+      </div>
+    </>
   )
 }
 

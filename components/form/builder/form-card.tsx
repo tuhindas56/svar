@@ -6,11 +6,11 @@ interface FormBlockCardProps extends ComponentProps<"div"> {
   children: ReactNode
 }
 
-function FormBlockCard({ children, className, ...props }: FormBlockCardProps) {
+function FormCard({ children, className, ...props }: FormBlockCardProps) {
   return (
     <div
       className={cn(
-        "bg-background flex w-10/12 flex-col gap-4 rounded border p-6 lg:w-3xl",
+        "bg-background flex w-full flex-col gap-4 rounded border p-6",
         className
       )}
       {...props}
@@ -20,4 +20,4 @@ function FormBlockCard({ children, className, ...props }: FormBlockCardProps) {
   )
 }
 
-export default FormBlockCard
+export default FormCard

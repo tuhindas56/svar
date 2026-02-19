@@ -37,11 +37,11 @@ export default function RootLayout({ children }: RootLayoutProps) {
         className={cn(
           lora.variable,
           inter.variable,
-          "custom-pattern flex w-full flex-col items-center font-sans antialiased"
+          "custom-pattern font-sans antialiased"
         )}
       >
         <TooltipProvider>
-          <div className="md:max-w-6xl">{children}</div>
+          <div className="mx-auto w-full">{children}</div>
         </TooltipProvider>
       </body>
     </html>

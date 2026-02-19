@@ -1,6 +1,6 @@
 export const fieldType = {
   shortAnswer: {
-    label: "Short Answer",
+    label: "Short answer",
     value: "short"
   },
   longAnswer: {
@@ -8,36 +8,16 @@ export const fieldType = {
     value: "long"
   },
   multiChoice: {
-    label: "Multiple Choice",
+    label: "Multiple choice",
     value: "radio"
   },
   checkbox: {
     label: "Checkboxes",
     value: "checkbox"
   },
-  select: {
-    label: "Dropdown",
-    value: "select"
-  },
   fileUpload: {
-    label: "File Upload",
+    label: "File upload",
     value: "file"
-  },
-  linearScale: {
-    label: "Linear scale",
-    value: "linear"
-  },
-  rating: {
-    label: "Rating",
-    value: "rating"
-  },
-  multiChoiceGrid: {
-    label: "Muiltple choice grid",
-    value: "multi_choice_grid"
-  },
-  checkboxGrid: {
-    label: "Checkbox grid",
-    value: "checkbox_grid"
   },
   date: {
     label: "Date",

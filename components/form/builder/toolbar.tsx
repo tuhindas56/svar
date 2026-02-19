@@ -19,12 +19,12 @@ export default function Toolbar({
   onRedo = () => {}
 }: ToolbarProps) {
   return (
-    <div className="bg-background sticky top-0 z-50 mt-5 flex w-full items-center justify-between gap-2 border px-2 py-2">
+    <div className="bg-background sticky top-0 z-50 flex w-full items-center justify-between gap-2 rounded-xs border px-2 py-2">
       <div className="flex items-center gap-1">
         <p className="font-lora w-max rounded px-2 text-xl font-medium">svar</p>
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-5 md:gap-2">
         <Tooltip>
           <TooltipTrigger asChild>
             <Button onClick={onUndo} variant="ghost" size="icon-sm">
