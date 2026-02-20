@@ -1,4 +1,5 @@
-import type { MouseEventHandler } from "react"
+"use client"
+
 import { Eye, Redo, Undo } from "lucide-react"
 
 import { onFormPublish } from "@/lib/actions"
@@ -9,15 +10,11 @@ import {
   TooltipTrigger
 } from "@/components/ui/tooltip"
 
-interface ToolbarProps {
-  onUndo: MouseEventHandler<HTMLButtonElement>
-  onRedo: MouseEventHandler<HTMLButtonElement>
-}
+export default function Toolbar() {
+  function onUndo() {}
 
-export default function Toolbar({
-  onUndo = () => {},
-  onRedo = () => {}
-}: ToolbarProps) {
+  function onRedo() {}
+
   return (
     <div className="bg-background sticky top-0 z-50 flex w-full items-center justify-between gap-2 rounded-xs border px-2 py-2">
       <div className="flex items-center gap-1">

@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: "Create Form"
 }
 
-function Layout({ children }: LayoutProps) {
+async function Layout({ children }: LayoutProps) {
   return children
 }
 

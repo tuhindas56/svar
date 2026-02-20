@@ -1,6 +1,6 @@
 "use client"
 
-import type { CSSProperties, FocusEvent } from "react"
+import type { FocusEvent } from "react"
 import { useEffect, useRef, useState } from "react"
 
 import { cn } from "@/lib/utils"

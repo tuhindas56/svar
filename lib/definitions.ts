@@ -8,15 +8,17 @@ export interface FormField {
   id: string
   type: FieldType
   question: string
-  required?: boolean
-  options?: string[]
+  options: string[]
+  maxAllowedFiles: number
+  required: boolean
+  allowCustomAnswer: boolean
 }
 
 export interface FormSection {
   id: string
   title: string
   fields: FormField[]
-  description?: string
-  fromSection?: string
-  toSection?: string
+  description: string
+  fromSection: string
+  toSection: string
 }

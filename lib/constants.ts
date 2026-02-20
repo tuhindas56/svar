@@ -1,13 +1,13 @@
 export const fieldType = {
-  shortAnswer: {
+  short: {
     label: "Short answer",
     value: "short"
   },
-  longAnswer: {
+  long: {
     label: "Paragraph",
     value: "long"
   },
-  multiChoice: {
+  radio: {
     label: "Multiple choice",
     value: "radio"
   },
@@ -15,7 +15,7 @@ export const fieldType = {
     label: "Checkboxes",
     value: "checkbox"
   },
-  fileUpload: {
+  file: {
     label: "File upload",
     value: "file"
   },

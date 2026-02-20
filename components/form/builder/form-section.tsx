@@ -1,37 +1,39 @@
 "use client"
 
+import { Plus } from "lucide-react"
+
 import {
   FormField as Field,
   FieldType,
   FormSection as Section
 } from "@/lib/definitions"
-import FormField from "./form-field"
-import Header from "./header"
-import { Button } from "@/components/ui/button"
-import { Plus, Rows } from "lucide-react"
-import FormCard from "./form-card"
 import { fieldTypes } from "@/lib/constants"
+import { Button } from "@/components/ui/button"
+import FormField from "./form-field"
+import FormCard from "./form-card"
+import Header from "./header"
 
 interface SectionProps {
   section: Section
-  description?: string
   isFirstSection: boolean
-  onSectionAdd: () => void
   onTitleChange: (value: string) => void
-  onDescriptionChange?: (value: string) => void
-  onFieldAdd: (type: FieldType) => void
+  onDescriptionChange: (value: string) => void
+  onAddSection: () => void
+  onAddField: (type: FieldType) => void
   onFieldUpdate: (field: Field) => void
+  onFieldDuplicate: (field: Field, at: number) => void
   onFieldRemove: (fieldID: string) => void
 }
 
 function FormSection({
   section,
   isFirstSection,
-  onSectionAdd,
   onTitleChange,
   onDescriptionChange,
-  onFieldAdd,
+  onAddSection,
+  onAddField,
   onFieldUpdate,
+  onFieldDuplicate,
   onFieldRemove
 }: SectionProps) {
   return (
@@ -44,28 +46,33 @@ function FormSection({
         onDescriptionChange={onDescriptionChange}
       />
 
-      {section.fields.map((field) => {
+      {section.fields.map((field, index) => {
         return (
           <FormField
             key={field.id}
             field={field}
             onFieldUpdate={onFieldUpdate}
+            onFieldDuplicate={() => onFieldDuplicate(field, index)}
             onFieldRemove={() => onFieldRemove(field.id)}
           />
         )
       })}
 
       <FormCard className="flex-row flex-wrap justify-center">
-        {fieldTypes.map((type) => {
+        {fieldTypes.map((type, index) => {
           return (
-            <Button variant="outline" onClick={() => onFieldAdd(type.value)}>
+            <Button
+              key={index}
+              variant="outline"
+              onClick={() => onAddField(type.value)}
+            >
               <Plus /> {type.label}
             </Button>
           )
         })}
       </FormCard>
 
-      <Button variant="ghost" className="mt-8 w-full" onClick={onSectionAdd}>
+      <Button variant="ghost" className="mt-8 w-full" onClick={onAddSection}>
         <Plus /> Section
       </Button>
     </>

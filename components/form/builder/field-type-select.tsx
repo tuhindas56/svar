@@ -1,5 +1,7 @@
 "use client"
 
+import { fieldTypes } from "@/lib/constants"
+import { FieldType } from "@/lib/definitions"
 import {
   Select,
   SelectContent,
@@ -8,8 +10,6 @@ import {
   SelectTrigger,
   SelectValue
 } from "@/components/ui/select"
-import { fieldTypes } from "@/lib/constants"
-import { FieldType } from "@/lib/definitions"
 
 interface FieldTypeSelectProps {
   selectedType: FieldType
