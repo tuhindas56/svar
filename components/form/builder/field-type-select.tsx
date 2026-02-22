@@ -1,5 +1,3 @@
-"use client"
-
 import { fieldTypes } from "@/lib/constants"
 import { FieldType } from "@/lib/definitions"
 import {
@@ -13,15 +11,15 @@ import {
 
 interface FieldTypeSelectProps {
   selectedType: FieldType
-  onFieldUpdate: (selectedType: FieldType) => void
+  onUpdateField: (selectedType: FieldType) => void
 }
 
 function FieldTypeSelect({
   selectedType,
-  onFieldUpdate
+  onUpdateField
 }: FieldTypeSelectProps) {
   return (
-    <Select onValueChange={onFieldUpdate} value={selectedType}>
+    <Select onValueChange={onUpdateField} value={selectedType}>
       <SelectTrigger className="min-w-50">
         <SelectValue />
       </SelectTrigger>

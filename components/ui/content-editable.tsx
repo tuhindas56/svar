@@ -10,8 +10,8 @@ interface ContentEditableProps {
   value: string
   className?: string
   placeholder?: string
-  placeholderClassName?: string
   width?: string
+  disableNewLine?: boolean
 }
 
 const ContentEditable = ({
@@ -19,8 +19,8 @@ const ContentEditable = ({
   value,
   className,
   placeholder,
-  placeholderClassName,
-  width = "100px"
+  width = "100px",
+  disableNewLine = false
 }: ContentEditableProps) => {
   const [isFocused, setIsFocused] = useState(false)
 
@@ -47,7 +47,9 @@ const ContentEditable = ({
           break
 
         case "Enter":
-          e.preventDefault()
+          if (disableNewLine) {
+            e.preventDefault()
+          }
           break
       }
     }
@@ -62,7 +64,7 @@ const ContentEditable = ({
   return (
     <div
       className={cn(
-        "bg-background border-border/0 hover:border-border focus-within:border-border relative h-fit overflow-hidden rounded-xs border p-2 duration-100 ease-out"
+        "bg-background border-border/0 hover:border-border/50 focus-within:border-border! relative h-fit overflow-hidden rounded-xs border p-2 duration-100 ease-out"
       )}
       style={{ width }}
     >
@@ -78,7 +80,7 @@ const ContentEditable = ({
         <div
           className={cn(
             "text-foreground/30 bg-background text-md pointer-events-none absolute top-2 left-2 z-10 h-full w-full",
-            placeholderClassName
+            className
           )}
         >
           {placeholder}

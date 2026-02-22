@@ -19,6 +19,5 @@ export interface FormSection {
   title: string
   fields: FormField[]
   description: string
-  fromSection: string
-  toSection: string
+  nextSectionBasedOnAnswer: boolean
 }

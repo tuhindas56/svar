@@ -15,21 +15,21 @@ import { fieldType } from "@/lib/constants"
 export type Action =
   | {
       type: "add_section"
-      payload?: {
-        at: number
+      payload: {
+        after: number
+      }
+    }
+  | {
+      type: "update_section"
+      payload: {
+        sectionID: string
+        section: FormSectionType
       }
     }
   | {
       type: "remove_section"
       payload: {
         sectionID: string
-      }
-    }
-  | {
-      type: "update_section_title" | "update_section_description"
-      payload: {
-        sectionID: string
-        value: string
       }
     }
   | {
@@ -69,8 +69,7 @@ function addSection(): FormSectionType {
     title: "",
     fields: [],
     description: "",
-    fromSection: "",
-    toSection: ""
+    nextSectionBasedOnAnswer: false
   }
 }
 
@@ -89,32 +88,22 @@ function addField(type: FieldType = fieldType.short.value): FormField {
 function formSectionsReducer(state: FormSectionType[], action: Action) {
   switch (action.type) {
     case "add_section":
-      return action?.payload?.at !== undefined
-        ? addAt(state, action.payload.at, addSection())
+      return action.payload.after !== undefined
+        ? addAt(state, action.payload.after + 1, addSection())
         : [...state, addSection()]
+
+    case "update_section":
+      return state.map((section) => {
+        return section.id === action.payload.sectionID
+          ? {
+              ...section,
+              ...action.payload.section
+            }
+          : section
+      })
 
     case "remove_section":
       return state.filter((section) => section.id !== action.payload.sectionID)
-
-    case "update_section_title":
-      return state.map((section) => {
-        return section.id === action.payload.sectionID
-          ? {
-              ...section,
-              title: action.payload.value
-            }
-          : section
-      })
-
-    case "update_section_description":
-      return state.map((section) => {
-        return section.id === action.payload.sectionID
-          ? {
-              ...section,
-              description: action.payload.value
-            }
-          : section
-      })
 
     case "add_field":
       return state.map((section) => {
@@ -171,20 +160,27 @@ function formSectionsReducer(state: FormSectionType[], action: Action) {
 }
 
 function Builder() {
-  const [formSections, dispatch] = useReducer(formSectionsReducer, [
+  const [formSections, dispatch] = useReducer(formSectionsReducer, null, () => [
     {
       id: crypto.randomUUID(),
       title: "",
       fields: [addField(fieldType.short.value)],
       description: "",
-      fromSection: "",
-      toSection: ""
+      nextSectionBasedOnAnswer: false
     }
   ])
 
   return (
     <>
-      <Toolbar />
+      <Toolbar
+        sections={formSections}
+        onUpdateSection={(section: FormSectionType) => {
+          dispatch({
+            type: "update_section",
+            payload: { sectionID: section.id, section }
+          })
+        }}
+      />
 
       <div className="mx-auto flex flex-col gap-8 px-4 py-8 md:w-10/12 lg:w-3xl">
         {formSections.map((section, index) => {
@@ -193,22 +189,23 @@ function Builder() {
               key={section.id}
               section={section}
               isFirstSection={index === 0}
-              onTitleChange={(value: string) => {
-                dispatch({
-                  type: "update_section_title",
-                  payload: { sectionID: section.id, value }
-                })
-              }}
-              onDescriptionChange={(value: string) => {
-                dispatch({
-                  type: "update_section_description",
-                  payload: { sectionID: section.id, value }
-                })
-              }}
+              showDeleteSection={formSections.length > 1}
               onAddSection={() => {
                 dispatch({
                   type: "add_section",
-                  payload: { at: index + 1 }
+                  payload: { after: index }
+                })
+              }}
+              onUpdateSection={(s: FormSectionType) => {
+                dispatch({
+                  type: "update_section",
+                  payload: { sectionID: section.id, section: s }
+                })
+              }}
+              onRemoveSection={() => {
+                dispatch({
+                  type: "remove_section",
+                  payload: { sectionID: section.id }
                 })
               }}
               onAddField={(type: FieldType) => {
@@ -217,19 +214,19 @@ function Builder() {
                   payload: { sectionID: section.id, type }
                 })
               }}
-              onFieldUpdate={(field) => {
+              onUpdateField={(field: FormField) => {
                 dispatch({
                   type: "update_field",
                   payload: { sectionID: section.id, field }
                 })
               }}
-              onFieldDuplicate={(field: FormField, at: number) => {
+              onDuplicateField={(field: FormField, after: number) => {
                 dispatch({
                   type: "duplicate_field",
-                  payload: { sectionID: section.id, field, after: at }
+                  payload: { sectionID: section.id, field, after }
                 })
               }}
-              onFieldRemove={(fieldID: string) => {
+              onRemoveField={(fieldID: string) => {
                 dispatch({
                   type: "remove_field",
                   payload: { sectionID: section.id, fieldID }

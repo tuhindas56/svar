@@ -1,11 +1,9 @@
-"use client"
-
 import { Plus } from "lucide-react"
 
 import {
   FormField as Field,
   FieldType,
-  FormSection as Section
+  FormSection as FormSectionType
 } from "@/lib/definitions"
 import { fieldTypes } from "@/lib/constants"
 import { Button } from "@/components/ui/button"
@@ -14,36 +12,44 @@ import FormCard from "./form-card"
 import Header from "./header"
 
 interface SectionProps {
-  section: Section
+  section: FormSectionType
   isFirstSection: boolean
-  onTitleChange: (value: string) => void
-  onDescriptionChange: (value: string) => void
   onAddSection: () => void
+  onUpdateSection: (section: FormSectionType) => void
+  onRemoveSection: () => void
+  showDeleteSection: boolean
   onAddField: (type: FieldType) => void
-  onFieldUpdate: (field: Field) => void
-  onFieldDuplicate: (field: Field, at: number) => void
-  onFieldRemove: (fieldID: string) => void
+  onUpdateField: (field: Field) => void
+  onDuplicateField: (field: Field, after: number) => void
+  onRemoveField: (fieldID: string) => void
 }
 
 function FormSection({
   section,
   isFirstSection,
-  onTitleChange,
-  onDescriptionChange,
   onAddSection,
+  onUpdateSection,
+  onRemoveSection,
+  showDeleteSection = false,
   onAddField,
-  onFieldUpdate,
-  onFieldDuplicate,
-  onFieldRemove
+  onUpdateField,
+  onDuplicateField,
+  onRemoveField
 }: SectionProps) {
   return (
     <>
       <Header
         childOfFirstSection={isFirstSection}
         title={section.title}
+        onTitleChange={(title: string) => {
+          onUpdateSection({ ...section, title })
+        }}
         description={section.description}
-        onTitleChange={onTitleChange}
-        onDescriptionChange={onDescriptionChange}
+        onDescriptionChange={(description: string) => {
+          onUpdateSection({ ...section, description })
+        }}
+        showDeleteSection={showDeleteSection}
+        onRemoveSection={onRemoveSection}
       />
 
       {section.fields.map((field, index) => {
@@ -51,9 +57,9 @@ function FormSection({
           <FormField
             key={field.id}
             field={field}
-            onFieldUpdate={onFieldUpdate}
-            onFieldDuplicate={() => onFieldDuplicate(field, index)}
-            onFieldRemove={() => onFieldRemove(field.id)}
+            onUpdateField={onUpdateField}
+            onDuplicateField={() => onDuplicateField(field, index)}
+            onRemoveField={() => onRemoveField(field.id)}
           />
         )
       })}

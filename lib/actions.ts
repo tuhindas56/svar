@@ -7,7 +7,7 @@ export async function login() {
 }
 
 export async function logout() {
-  await signOut({ redirect: "/login" })
+  await signOut({ redirectTo: "/login" })
 }
 
 export async function getSession() {

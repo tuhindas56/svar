@@ -3,8 +3,8 @@ import type { Metadata } from "next"
 import { Inter, Lora } from "next/font/google"
 
 import { cn } from "@/lib/utils"
-import "./globals.css"
 import { TooltipProvider } from "@/components/ui/tooltip"
+import "./globals.css"
 
 interface RootLayoutProps {
   children: ReactNode
