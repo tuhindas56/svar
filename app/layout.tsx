@@ -4,6 +4,7 @@ import { Inter, Lora } from "next/font/google"
 
 import { cn } from "@/lib/utils"
 import { TooltipProvider } from "@/components/ui/tooltip"
+import { Toaster } from "@/components/ui/sonner"
 import "./globals.css"
 
 interface RootLayoutProps {
@@ -43,6 +44,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <TooltipProvider>
           <div className="mx-auto w-full">{children}</div>
         </TooltipProvider>
+        <Toaster position="top-center" />
       </body>
     </html>
   )

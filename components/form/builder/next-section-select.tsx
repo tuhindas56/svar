@@ -1,5 +1,4 @@
-import { fieldTypes } from "@/lib/constants"
-import { FieldType, FormSection } from "@/lib/definitions"
+import { FormSection } from "@/lib/definitions"
 import {
   Select,
   SelectContent,

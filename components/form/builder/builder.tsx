@@ -5,14 +5,16 @@ import { useReducer } from "react"
 import {
   FieldType,
   FormField,
+  FormSectionsSchema,
   FormSection as FormSectionType
 } from "@/lib/definitions"
 import { addAt } from "@/lib/utils"
 import Toolbar from "./toolbar"
 import FormSection from "./form-section"
-import { fieldType } from "@/lib/constants"
+import { FIELD_TYPE } from "@/lib/constants"
+import { publishForm, saveForm } from "@/lib/actions"
 
-export type Action =
+type Action =
   | {
       type: "add_section"
       payload: {
@@ -24,6 +26,13 @@ export type Action =
       payload: {
         sectionID: string
         section: FormSectionType
+      }
+    }
+  | {
+      type: "duplicate_section"
+      payload: {
+        section: FormSectionType
+        after: number
       }
     }
   | {
@@ -68,21 +77,34 @@ function addSection(): FormSectionType {
     id: crypto.randomUUID(),
     title: "",
     fields: [],
-    description: "",
-    nextSectionBasedOnAnswer: false
+    description: ""
   }
 }
 
-function addField(type: FieldType = fieldType.short.value): FormField {
-  return {
+function addField(type: FieldType): FormField {
+  const base = {
     id: crypto.randomUUID(),
-    type,
     question: "",
-    maxAllowedFiles: 1,
-    options: ["Option 1"],
-    required: false,
-    allowCustomAnswer: false
+    required: false
   }
+
+  if (type === FIELD_TYPE.FILE) {
+    return {
+      ...base,
+      type,
+      maxAllowedFiles: 1
+    }
+  }
+
+  if (type === FIELD_TYPE.CHECKBOX || type === FIELD_TYPE.RADIO) {
+    return {
+      ...base,
+      type,
+      options: [{ value: "Option 1" }]
+    }
+  }
+
+  return { ...base, type }
 }
 
 function formSectionsReducer(state: FormSectionType[], action: Action) {
@@ -100,6 +122,13 @@ function formSectionsReducer(state: FormSectionType[], action: Action) {
               ...action.payload.section
             }
           : section
+      })
+
+    case "duplicate_section":
+      return addAt(state, action.payload.after + 1, {
+        ...action.payload.section,
+        id: crypto.randomUUID(),
+        title: `Copy of ${action.payload.section.title || "untitled section"}`
       })
 
     case "remove_section":
@@ -136,7 +165,11 @@ function formSectionsReducer(state: FormSectionType[], action: Action) {
               ...section,
               fields: addAt(section.fields, action.payload.after + 1, {
                 ...action.payload.field,
-                id: crypto.randomUUID()
+                id: crypto.randomUUID(),
+                question: `Copy of ${
+                  action.payload.field.question ||
+                  "question" + (action.payload.after + 1)
+                }`
               })
             }
           : section
@@ -164,16 +197,33 @@ function Builder() {
     {
       id: crypto.randomUUID(),
       title: "",
-      fields: [addField(fieldType.short.value)],
-      description: "",
-      nextSectionBasedOnAnswer: false
+      fields: [addField(FIELD_TYPE.SHORT)],
+      description: ""
     }
   ])
+
+  function onSaveForm() {
+    saveForm(formSections)
+  }
+
+  function onPublishForm() {
+    const { data, error, success } = FormSectionsSchema.safeParse(formSections)
+    if (success) {
+      publishForm(FormSectionsSchema.safeParse(formSections).data!)
+      return
+    }
+
+    for (const e of error.issues) {
+      console.log(e)
+    }
+  }
 
   return (
     <>
       <Toolbar
         sections={formSections}
+        onSaveForm={onSaveForm}
+        onPublishForm={onPublishForm}
         onUpdateSection={(section: FormSectionType) => {
           dispatch({
             type: "update_section",
@@ -200,6 +250,12 @@ function Builder() {
                 dispatch({
                   type: "update_section",
                   payload: { sectionID: section.id, section: s }
+                })
+              }}
+              onDuplicateSection={() => {
+                dispatch({
+                  type: "duplicate_section",
+                  payload: { section, after: index }
                 })
               }}
               onRemoveSection={() => {

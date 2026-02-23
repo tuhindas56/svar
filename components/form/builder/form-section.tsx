@@ -14,10 +14,11 @@ import Header from "./header"
 interface SectionProps {
   section: FormSectionType
   isFirstSection: boolean
+  showDeleteSection: boolean
   onAddSection: () => void
   onUpdateSection: (section: FormSectionType) => void
+  onDuplicateSection: () => void
   onRemoveSection: () => void
-  showDeleteSection: boolean
   onAddField: (type: FieldType) => void
   onUpdateField: (field: Field) => void
   onDuplicateField: (field: Field, after: number) => void
@@ -27,10 +28,11 @@ interface SectionProps {
 function FormSection({
   section,
   isFirstSection,
+  showDeleteSection,
   onAddSection,
   onUpdateSection,
+  onDuplicateSection,
   onRemoveSection,
-  showDeleteSection = false,
   onAddField,
   onUpdateField,
   onDuplicateField,
@@ -49,6 +51,7 @@ function FormSection({
           onUpdateSection({ ...section, description })
         }}
         showDeleteSection={showDeleteSection}
+        onDuplicateSection={onDuplicateSection}
         onRemoveSection={onRemoveSection}
       />
 

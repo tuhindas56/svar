@@ -1,13 +1,27 @@
+"use client"
+
+import { useState } from "react"
+import { Copy, Trash2 } from "lucide-react"
+
 import { cn } from "@/lib/utils"
 import ContentEditable from "@/components/ui/content-editable"
-import FormBlockCard from "./form-card"
-import { Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger
 } from "@/components/ui/tooltip"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle
+} from "@/components/ui/alert-dialog"
+import FormBlockCard from "./form-card"
 
 interface HeaderProps {
   title: string
@@ -15,6 +29,7 @@ interface HeaderProps {
   description?: string
   onDescriptionChange?: (value: string) => void
   childOfFirstSection: boolean
+  onDuplicateSection: () => void
   onRemoveSection: () => void
   showDeleteSection: boolean
 }
@@ -24,10 +39,25 @@ function Header({
   onTitleChange = () => {},
   description = "",
   onDescriptionChange = () => {},
+  onDuplicateSection,
+  onRemoveSection,
   childOfFirstSection,
-  showDeleteSection = false,
-  onRemoveSection
+  showDeleteSection
 }: HeaderProps) {
+  const [alertDialogOpen, setAlertDialogOpen] = useState(false)
+
+  function confirmDeleteSection() {
+    setAlertDialogOpen(true)
+  }
+
+  function onCancel() {
+    setAlertDialogOpen(false)
+  }
+
+  function onConfirm() {
+    onRemoveSection()
+  }
+
   return (
     <FormBlockCard className="gap-1">
       <ContentEditable
@@ -46,18 +76,50 @@ function Header({
         placeholder="Description (optional)"
         width="100%"
       />
-      {showDeleteSection && (
-        <div className="flex justify-end">
+
+      <div className="flex flex-wrap items-center justify-end gap-5 md:gap-2">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="ghost" size="icon-sm" onClick={onDuplicateSection}>
+              <Copy />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Duplicate section</TooltipContent>
+        </Tooltip>
+
+        {showDeleteSection && (
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon-sm" onClick={onRemoveSection}>
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                onClick={confirmDeleteSection}
+              >
                 <Trash2 />
               </Button>
             </TooltipTrigger>
             <TooltipContent>Delete section</TooltipContent>
           </Tooltip>
-        </div>
-      )}
+        )}
+
+        <AlertDialog open={alertDialogOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete this section?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This section and all its questions will be permanently deleted.
+                This action can’t be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={onCancel}>Cancel</AlertDialogCancel>
+              <AlertDialogAction variant="destructive" onClick={onConfirm}>
+                Delete section
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
     </FormBlockCard>
   )
 }

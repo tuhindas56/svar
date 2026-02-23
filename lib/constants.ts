@@ -1,32 +1,24 @@
-export const fieldType = {
-  short: {
-    label: "Short answer",
-    value: "short"
-  },
-  long: {
-    label: "Paragraph",
-    value: "long"
-  },
-  radio: {
-    label: "Multiple choice",
-    value: "radio"
-  },
-  checkbox: {
-    label: "Checkboxes",
-    value: "checkbox"
-  },
-  file: {
-    label: "File upload",
-    value: "file"
-  },
-  date: {
-    label: "Date",
-    value: "date"
-  },
-  time: {
-    label: "Time",
-    value: "time"
-  }
+export const FIELD_TYPE = {
+  SHORT: "short",
+  LONG: "long",
+  RADIO: "radio",
+  CHECKBOX: "checkbox",
+  FILE: "file",
+  DATE: "date",
+  TIME: "time"
 } as const
 
-export const fieldTypes = Object.values(fieldType)
+const FIELD_LABEL = {
+  short: "Short answer",
+  long: "Paragraph",
+  radio: "Multiple choice",
+  checkbox: "Checkboxes",
+  file: "File upload",
+  date: "Date",
+  time: "Time"
+}
+
+export const fieldTypes = Object.values(FIELD_TYPE).map((value) => ({
+  label: FIELD_LABEL[value],
+  value
+}))

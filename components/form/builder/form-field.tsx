@@ -1,7 +1,10 @@
+"use client"
+
+import { useState } from "react"
 import { Copy, Plus, Trash2, X } from "lucide-react"
 
-import { fieldType } from "@/lib/constants"
-import { FormField as Field } from "@/lib/definitions"
+import { FIELD_TYPE } from "@/lib/constants"
+import { FormField as FormFieldType } from "@/lib/definitions"
 import ContentEditable from "@/components/ui/content-editable"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -18,10 +21,20 @@ import {
 import { Slider } from "@/components/ui/slider"
 import FormCard from "./form-card"
 import FieldTypeSelect from "./field-type-select"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle
+} from "@/components/ui/alert-dialog"
 
 interface FormFieldProps {
-  field: Field
-  onUpdateField: (field: Field) => void
+  field: FormFieldType
+  onUpdateField: (field: FormFieldType) => void
   onDuplicateField: () => void
   onRemoveField: () => void
 }
@@ -32,18 +45,23 @@ function FormField({
   onDuplicateField = () => {},
   onRemoveField = () => {}
 }: FormFieldProps) {
-  function onChange<T>(key: string, value?: T) {
-    const next: Field = { ...field, [key]: value }
+  const [alertDialogOpen, setAlertDialogOpen] = useState(false)
+
+  function onChange<T>(key: string, value: T) {
+    const next: FormFieldType = { ...field, [key]: value }
     onUpdateField(next)
   }
 
-  function onOptionAdd() {
-    const next: Field = {
-      ...field,
-      options: [...field.options, `Option ${field.options.length + 1}`]
-    }
+  function confirmDeleteSection() {
+    setAlertDialogOpen(true)
+  }
 
-    onUpdateField(next)
+  function onCancel() {
+    setAlertDialogOpen(false)
+  }
+
+  function onConfirm() {
+    onRemoveField()
   }
 
   return (
@@ -57,6 +75,7 @@ function FormField({
           width="100%"
           disableNewLine
         />
+
         <FieldTypeSelect
           selectedType={field.type}
           onUpdateField={(selectedType) => onChange("type", selectedType)}
@@ -64,9 +83,9 @@ function FormField({
       </div>
 
       <div>
-        {(field.type === fieldType.short.value ||
-          field.type === fieldType.date.value ||
-          field.type === fieldType.time.value) && (
+        {(field.type === FIELD_TYPE.SHORT ||
+          field.type === FIELD_TYPE.DATE ||
+          field.type === FIELD_TYPE.TIME) && (
           <Input
             className="w-2/3 rounded-lg border-2 border-dotted border-gray-200 bg-gray-50 p-1"
             disabled
@@ -74,30 +93,31 @@ function FormField({
           />
         )}
 
-        {field.type === fieldType.long.value && (
+        {field.type === FIELD_TYPE.LONG && (
           <Textarea
             className="w-2/3 resize-none rounded-lg border-2 border-dotted border-gray-200 bg-gray-50 p-1"
             disabled
           />
         )}
 
-        {(field.type === fieldType.radio.value ||
-          field.type === fieldType.checkbox.value) && (
+        {(field.type === FIELD_TYPE.RADIO ||
+          field.type === FIELD_TYPE.CHECKBOX) && (
           <>
             <RadioGroup>
               {Array.isArray(field.options) &&
                 field.options.map((option, index) => {
                   return (
                     <div className="flex items-center gap-2" key={index}>
-                      {field.type === fieldType.radio.value && (
-                        <RadioGroupItem value={option} disabled />
+                      {field.type === FIELD_TYPE.RADIO && (
+                        <RadioGroupItem value={option.value} disabled />
                       )}
-                      {field.type === fieldType.checkbox.value && (
+
+                      {field.type === FIELD_TYPE.CHECKBOX && (
                         <Checkbox disabled />
                       )}
 
                       <ContentEditable
-                        value={option}
+                        value={option.value}
                         placeholder="Option"
                         className="text-sm"
                         width="160px"
@@ -105,7 +125,7 @@ function FormField({
                           onChange(
                             "options",
                             field.options.map((opt, idx) =>
-                              idx === index ? value.trim() : opt
+                              idx === index ? { value: value.trim() } : opt
                             )
                           )
                         }
@@ -133,14 +153,19 @@ function FormField({
               variant="ghost"
               size="sm"
               className="mt-4"
-              onClick={onOptionAdd}
+              onClick={() => {
+                onChange("options", [
+                  ...field.options,
+                  { value: `Option ${field.options.length + 1}` }
+                ])
+              }}
             >
               <Plus /> Add option
             </Button>
           </>
         )}
 
-        {field.type === fieldType.file.value && (
+        {field.type === FIELD_TYPE.FILE && (
           <>
             <div>
               <div
@@ -160,8 +185,8 @@ function FormField({
 
       <div className="mt-4 flex items-center justify-between gap-2">
         <div className="flex flex-wrap items-center gap-6">
-          {(field.type === fieldType.radio.value ||
-            field.type === fieldType.checkbox.value) && (
+          {(field.type === FIELD_TYPE.RADIO ||
+            field.type === FIELD_TYPE.CHECKBOX) && (
             <>
               <Switch
                 onCheckedChange={(checked) => {
@@ -171,14 +196,14 @@ function FormField({
                 label="Allow custom answer"
               />
 
-              <Switch
-                // checked={field.allowCustomAnswer}
+              {/* <Switch
+                checked={field.allowCustomAnswer}
                 label="Go to section based on answer"
-              />
+              /> */}
             </>
           )}
 
-          {field.type === fieldType.file.value && (
+          {field.type === FIELD_TYPE.FILE && (
             <div className="flex w-54 gap-4">
               <Label>Max no. of files: {field.maxAllowedFiles}</Label>
               <Slider
@@ -186,7 +211,9 @@ function FormField({
                 max={5}
                 step={1}
                 className="w-20"
-                onValueChange={(count) => onChange("maxAllowedFiles", count)}
+                onValueChange={([count]) => {
+                  onChange("maxAllowedFiles", count)
+                }}
               />
             </div>
           )}
@@ -212,7 +239,11 @@ function FormField({
 
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button onClick={onRemoveField} variant="ghost" size="icon-sm">
+              <Button
+                onClick={confirmDeleteSection}
+                variant="ghost"
+                size="icon-sm"
+              >
                 <Trash2 />
               </Button>
             </TooltipTrigger>
@@ -220,6 +251,23 @@ function FormField({
           </Tooltip>
         </div>
       </div>
+
+      <AlertDialog open={alertDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete this question?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This question will be permanently deleted.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={onCancel}>Cancel</AlertDialogCancel>
+            <AlertDialogAction variant="destructive" onClick={onConfirm}>
+              Delete question
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </FormCard>
   )
 }
