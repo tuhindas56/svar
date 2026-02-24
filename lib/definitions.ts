@@ -50,7 +50,11 @@ const FormFieldSchema = z.discriminatedUnion("type", [
 
 const FormSectionSchema = z.object({
   id: z.uuid(),
-  title: z.string().min(1, "Please supply a title").max(200).trim(),
+  title: z
+    .string()
+    .min(1, "Please supply a title")
+    .max(200, "Title cannot exceed 200 characters")
+    .trim(),
   description: z.string().optional(),
   fields: z.array(FormFieldSchema).min(1)
 })

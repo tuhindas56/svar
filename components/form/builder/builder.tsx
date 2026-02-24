@@ -2,17 +2,21 @@
 
 import { useReducer } from "react"
 
+import { publishForm, saveForm } from "@/lib/actions/form"
+import { FIELD_TYPE } from "@/lib/constants"
 import {
   FieldType,
   FormField,
-  FormSectionsSchema,
   FormSection as FormSectionType
 } from "@/lib/definitions"
 import { addAt } from "@/lib/utils"
 import Toolbar from "./toolbar"
 import FormSection from "./form-section"
-import { FIELD_TYPE } from "@/lib/constants"
-import { publishForm, saveForm } from "@/lib/actions"
+
+interface BuilderProps {
+  id: string
+  formName: string | null
+}
 
 type Action =
   | {
@@ -192,45 +196,27 @@ function formSectionsReducer(state: FormSectionType[], action: Action) {
   }
 }
 
-function Builder() {
+function Builder({ id, formName }: BuilderProps) {
   const [formSections, dispatch] = useReducer(formSectionsReducer, null, () => [
     {
       id: crypto.randomUUID(),
-      title: "",
+      title: formName || "",
       fields: [addField(FIELD_TYPE.SHORT)],
       description: ""
     }
   ])
 
   function onSaveForm() {
-    saveForm(formSections)
+    saveForm(id, formSections)
   }
 
-  function onPublishForm() {
-    const { data, error, success } = FormSectionsSchema.safeParse(formSections)
-    if (success) {
-      publishForm(FormSectionsSchema.safeParse(formSections).data!)
-      return
-    }
-
-    for (const e of error.issues) {
-      console.log(e)
-    }
+  async function onPublishForm() {
+    publishForm(id, formSections)
   }
 
   return (
     <>
-      <Toolbar
-        sections={formSections}
-        onSaveForm={onSaveForm}
-        onPublishForm={onPublishForm}
-        onUpdateSection={(section: FormSectionType) => {
-          dispatch({
-            type: "update_section",
-            payload: { sectionID: section.id, section }
-          })
-        }}
-      />
+      <Toolbar onSaveForm={onSaveForm} onPublishForm={onPublishForm} />
 
       <div className="mx-auto flex flex-col gap-8 px-4 py-8 md:w-10/12 lg:w-3xl">
         {formSections.map((section, index) => {

@@ -66,12 +66,12 @@ function FormField({
 
   return (
     <FormCard>
-      <div className="flex flex-wrap justify-between gap-5 md:flex-nowrap">
+      <div className="grid grid-cols-[2fr_max-content] gap-5 md:flex-nowrap">
         <ContentEditable
           value={field.question}
           onChange={(value) => onChange("question", value)}
           placeholder="Question"
-          className="w-full font-medium"
+          className="font-medium"
           width="100%"
           disableNewLine
         />

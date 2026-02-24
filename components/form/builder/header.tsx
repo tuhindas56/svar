@@ -70,6 +70,7 @@ function Header({
         width="100%"
         disableNewLine
       />
+
       <ContentEditable
         value={description}
         onChange={onDescriptionChange}

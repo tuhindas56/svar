@@ -10,3 +10,7 @@ export function addAt<T>(arr: T[], index: number, item: T) {
   next.splice(index, 0, item)
   return next
 }
+
+export async function wait(duration = 1000) {
+  await new Promise((r) => setTimeout(r, duration))
+}

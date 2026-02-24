@@ -63,13 +63,14 @@ const ContentEditable = ({
 
   return (
     <div
-      className={cn(
-        "bg-background border-border/0 hover:border-border/50 focus-within:border-border! relative h-fit overflow-hidden rounded-xs border p-2 duration-100 ease-out"
-      )}
+      className={cn("bg-background relative h-fit overflow-hidden")}
       style={{ width }}
     >
       <div
-        className={cn("text-md w-full text-pretty focus:outline-0", className)}
+        className={cn(
+          "text-md border-border/0 hover:border-border/50 focus:border-border w-full rounded-xs border p-2 text-pretty duration-100 ease-out focus:outline-0",
+          className
+        )}
         onBlur={onBlur}
         onFocus={() => setIsFocused(true)}
         ref={ref}
@@ -79,7 +80,7 @@ const ContentEditable = ({
       {!(value || isFocused) && (
         <div
           className={cn(
-            "text-foreground/30 bg-background text-md pointer-events-none absolute top-2 left-2 z-10 h-full w-full",
+            "text-foreground/30 text-md pointer-events-none absolute top-2 left-2 z-10 w-full border-0! outline-0!",
             className
           )}
         >
