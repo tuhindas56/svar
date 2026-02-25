@@ -10,6 +10,7 @@
     "db:push": "drizzle-kit push && tsx ./lib/db/triggers.ts"
   },
   "dependencies": {
+    "@auth/drizzle-adapter": "^1.11.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.19",

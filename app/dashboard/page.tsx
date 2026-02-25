@@ -1,5 +1,6 @@
 import { Suspense } from "react"
 import { redirect } from "next/navigation"
+import { LogOut } from "lucide-react"
 
 import { getSession, logout } from "@/lib/actions/auth"
 import { Button } from "@/components/ui/button"
@@ -13,7 +14,6 @@ import {
   TooltipContent,
   TooltipTrigger
 } from "@/components/ui/tooltip"
-import { LogOut } from "lucide-react"
 
 async function Dashboard() {
   const session = await getSession()
@@ -26,7 +26,7 @@ async function Dashboard() {
 
         {session?.user?.image && session.user?.name && (
           <Tooltip>
-            <TooltipTrigger>
+            <TooltipTrigger asChild>
               <Image
                 src={session.user.image}
                 alt=""
@@ -42,7 +42,7 @@ async function Dashboard() {
         )}
 
         <Tooltip>
-          <TooltipTrigger>
+          <TooltipTrigger asChild>
             <Button onClick={logout} variant="ghost">
               <LogOut />
             </Button>

@@ -10,12 +10,18 @@ import {
   TableCell,
   TableRow
 } from "@/components/ui/table"
-import { getAllForms } from "@/lib/db/data"
-import { wait } from "@/lib/utils"
+import { getAllForms, deleteForm } from "@/lib/db/data"
+import { Trash2 } from "lucide-react"
+import { Button } from "../ui/button"
+import { getSession } from "@/lib/actions/auth"
+import { redirect } from "next/navigation"
 
 async function FormsList() {
-  await wait()
-  const formsList = await getAllForms()
+  const session = await getSession()
+
+  if (!session) redirect("/")
+
+  const formsList = await getAllForms(session.user.id)
 
   return (
     <div className="mx-auto p-4 py-4 md:w-10/12 lg:w-3xl">
@@ -31,19 +37,30 @@ async function FormsList() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {formsList.map((item, index) => {
+              {formsList.map((form, index) => {
                 return (
                   <TableRow key={index}>
                     <TableCell>
-                      <Link href={`/form/create/${item.id}`}>{item.name}</Link>
+                      <Link href={`/form/create/${form.id}`}>{form.name}</Link>
                     </TableCell>
                     <TableCell>
-                      {dayjs(item.created).format("DD MMM YYYY, hh:mm a")}
+                      {dayjs(form.created).format("DD MMM YYYY, hh:mm a")}
                     </TableCell>
                     <TableCell>
-                      {dayjs(item.modified).format("DD MMM YYYY, hh:mm a")}
+                      {dayjs(form.modified).format("DD MMM YYYY, hh:mm a")}
                     </TableCell>
-                    <TableCell>-</TableCell>
+                    <TableCell>
+                      <Button
+                        size="icon-sm"
+                        variant="ghost"
+                        onClick={async () => {
+                          "use server"
+                          deleteForm(form.id, session.user.id)
+                        }}
+                      >
+                        <Trash2 />
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 )
               })}
