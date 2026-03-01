@@ -14,7 +14,9 @@ import { Button } from "@/components/ui/button"
 export default async function Home() {
   const session = await getSession()
 
-  if (session) redirect("/dashboard")
+  if (session) {
+    redirect("/dashboard")
+  }
 
   return (
     <div>

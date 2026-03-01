@@ -64,3 +64,13 @@ export const FormSectionsSchema = z.array(FormSectionSchema)
 export type FormSection = z.infer<typeof FormSectionSchema>
 export type FormField = z.infer<typeof FormFieldSchema>
 export type FieldType = (typeof FIELD_TYPE)[keyof typeof FIELD_TYPE]
+
+export interface FormSchema {
+  id: string
+  name: string
+  userId: string
+  created: Date
+  modified: Date
+  sections: FormSection[]
+  published: boolean
+}

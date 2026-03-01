@@ -1,6 +1,6 @@
 import type { ReactNode } from "react"
 import type { Metadata } from "next"
-import { Inter, Lora } from "next/font/google"
+import { Lora, Instrument_Sans } from "next/font/google"
 
 import { cn } from "@/lib/utils"
 import { TooltipProvider } from "@/components/ui/tooltip"
@@ -17,8 +17,8 @@ const lora = Lora({
   subsets: ["latin"]
 })
 
-const inter = Inter({
-  variable: "--font-inter",
+const inter = Instrument_Sans({
+  variable: "--font-instrument-sans",
   preload: true,
   subsets: ["latin"]
 })

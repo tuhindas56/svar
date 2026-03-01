@@ -1,20 +1,29 @@
 import { drizzle } from "drizzle-orm/node-postgres"
 import {
-  jsonb,
   pgTable,
   text,
-  uuid,
+  primaryKey,
   timestamp,
   integer,
   boolean,
-  primaryKey
+  jsonb,
+  uuid
 } from "drizzle-orm/pg-core"
 import type { AdapterAccountType } from "next-auth/adapters"
+import { FieldType, FormSection } from "../definitions"
 
-export const db = drizzle(process.env.DATABASE_URL as string)
+const url = process.env.DATABASE_URL
+
+if (!url) {
+  throw new Error("DATABASE_URL environment variable was not provided")
+}
+
+export const db = drizzle(url)
 
 export const users = pgTable("user", {
-  id: uuid().primaryKey().defaultRandom(),
+  id: uuid("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   name: text("name"),
   email: text("email").unique(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
@@ -95,10 +104,26 @@ export const authenticators = pgTable(
 )
 
 export const formsTable = pgTable("forms", {
-  id: uuid().primaryKey().defaultRandom(),
-  name: text().default("Untitled form").notNull(),
-  schema: jsonb(),
-  created: timestamp({ withTimezone: true }).defaultNow(),
-  modified: timestamp({ withTimezone: true }).defaultNow(),
-  user_id: uuid().references(() => users.id)
+  id: uuid("id").primaryKey().defaultRandom(),
+  name: text("name").notNull(),
+  created: timestamp("created").default(new Date()),
+  modified: timestamp("modified").$onUpdateFn(() => new Date()),
+  sections: jsonb("sections").notNull().$type<FormSection[]>(),
+  published: boolean().default(false),
+  userId: uuid("userId")
+    .references(() => users.id)
+    .notNull()
+})
+
+export const submissionsTable = pgTable("submissions", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  submitted: timestamp("submitted").default(new Date()),
+  modified: timestamp("modified").$onUpdateFn(() => new Date()),
+  field_id: uuid("field_id").notNull(),
+  field_type: text("field_type").$type<FieldType>().notNull(),
+  value: text("value").notNull(),
+  form_id: uuid("form_id")
+    .references(() => formsTable.id)
+    .notNull(),
+  is_custom_answer: boolean().default(false)
 })

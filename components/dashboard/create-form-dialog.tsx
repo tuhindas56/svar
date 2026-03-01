@@ -2,7 +2,7 @@
 
 import { useActionState, useId } from "react"
 
-import { submitCreateForm } from "@/lib/actions/form"
+import { submitCreateFormAction } from "@/lib/actions/form"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "../ui/label"
 
 function CreateFormDialog() {
-  const [state, action, pending] = useActionState(submitCreateForm, {
+  const [state, action, pending] = useActionState(submitCreateFormAction, {
     name: ""
   })
 

@@ -34,12 +34,16 @@ const ContentEditable = ({
   }
 
   useEffect(() => {
-    if (ref.current && ref.current.textContent !== value) {
-      ref.current.textContent = value
+    const element = ref.current
+
+    if (element && element.textContent !== value) {
+      element.textContent = value
     }
   }, [value])
 
   useEffect(() => {
+    const element = ref.current
+
     function onKeyDown(e: KeyboardEvent) {
       switch (e.key) {
         case "Escape":
@@ -54,12 +58,14 @@ const ContentEditable = ({
       }
     }
 
-    ref.current?.addEventListener("keydown", onKeyDown)
+    if (element) {
+      element.addEventListener("keydown", onKeyDown)
 
-    return () => {
-      ref.current?.removeEventListener("keydown", onKeyDown)
+      return () => {
+        element.removeEventListener("keydown", onKeyDown)
+      }
     }
-  }, [])
+  }, [disableNewLine])
 
   return (
     <div
@@ -74,7 +80,7 @@ const ContentEditable = ({
         onBlur={onBlur}
         onFocus={() => setIsFocused(true)}
         ref={ref}
-        contentEditable
+        contentEditable="plaintext-only"
         suppressContentEditableWarning
       />
       {!(value || isFocused) && (

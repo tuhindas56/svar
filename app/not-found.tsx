@@ -4,31 +4,19 @@ import { Button } from "@/components/ui/button"
 import { AlertCircle } from "lucide-react"
 import { redirect } from "next/navigation"
 
-export default function Error({
-  error,
-  reset
-}: {
-  error: Error
-  reset: () => void
-}) {
+export default function Error() {
   return (
     <div className="grid h-dvh place-content-center">
       <div className="flex items-center justify-center gap-4">
         <div>
-          <h1 className="text-foreground text-xl font-semibold">
-            Something went wrong
-          </h1>
+          <h1 className="text-foreground text-xl font-semibold">404</h1>
           <p className="text-muted-foreground leading-relaxed">
-            {error.message ||
-              "We encountered an unexpected error. Please try again."}
+            The page you tried to visit does not exist
           </p>
         </div>
       </div>
 
-      <div className="mt-2 flex justify-start gap-4">
-        <Button onClick={reset} size="lg" className="p-0!" variant="link">
-          Reload
-        </Button>
+      <div className="mt-2 flex justify-start">
         <Button
           onClick={() => redirect("/")}
           size="lg"

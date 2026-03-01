@@ -1,7 +1,17 @@
+"use client"
+
+import { useState } from "react"
 import Link from "next/link"
 import dayjs from "dayjs"
+import { Form, Trash2 } from "lucide-react"
 
-import { Card, CardContent } from "@/components/ui/card"
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle
+} from "@/components/ui/card"
 import {
   Table,
   TableHead,
@@ -10,63 +20,143 @@ import {
   TableCell,
   TableRow
 } from "@/components/ui/table"
-import { getAllForms, deleteForm } from "@/lib/db/data"
-import { Trash2 } from "lucide-react"
 import { Button } from "../ui/button"
-import { getSession } from "@/lib/actions/auth"
-import { redirect } from "next/navigation"
+import { Badge } from "../ui/badge"
+import { deleteFormAction } from "@/lib/actions/form"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger
+} from "../ui/alert-dialog"
 
-async function FormsList() {
-  const session = await getSession()
+interface FormType {
+  id: string
+  name: string
+  created: Date
+  modified: Date
+  published: boolean
+}
 
-  if (!session) redirect("/")
+interface Props {
+  forms: FormType[]
+  total: number
+}
 
-  const formsList = await getAllForms(session.user.id)
+function FormsList({ forms = [], total = 0 }: Props) {
+  const [deleting, setDeleting] = useState(false)
 
   return (
-    <div className="mx-auto p-4 py-4 md:w-10/12 lg:w-3xl">
-      <Card className="rounded-xs shadow-none">
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Form</TableHead>
-                <TableHead>Created at</TableHead>
-                <TableHead>Modified at</TableHead>
-                <TableHead>Options</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {formsList.map((form, index) => {
-                return (
-                  <TableRow key={index}>
-                    <TableCell>
-                      <Link href={`/form/create/${form.id}`}>{form.name}</Link>
-                    </TableCell>
-                    <TableCell>
-                      {dayjs(form.created).format("DD MMM YYYY, hh:mm a")}
-                    </TableCell>
-                    <TableCell>
-                      {dayjs(form.modified).format("DD MMM YYYY, hh:mm a")}
-                    </TableCell>
-                    <TableCell>
-                      <Button
-                        size="icon-sm"
-                        variant="ghost"
-                        onClick={async () => {
-                          "use server"
-                          deleteForm(form.id, session.user.id)
-                        }}
-                      >
-                        <Trash2 />
-                      </Button>
-                    </TableCell>
+    <div className="mx-auto w-full p-4 lg:w-3/4">
+      <Card className="rounded-md p-6 shadow-none">
+        {!forms.length && (
+          <div className="flex flex-col items-center justify-center px-4 py-24 text-center">
+            <div className="text-muted-foreground mb-4 text-4xl">
+              <Form size={40} strokeWidth={1} color="var(--primary)" />
+            </div>
+            <h3 className="text-foreground text-lg font-semibold">
+              You don&rsquo;t have any forms yet
+            </h3>
+            <p className="text-muted-foreground mt-1 max-w-xs text-sm">
+              Start creating some forms to see them here!
+            </p>
+          </div>
+        )}
+
+        {forms.length > 0 && (
+          <>
+            <CardHeader className="p-0">
+              <CardTitle>Your Forms</CardTitle>
+            </CardHeader>
+            <CardContent className="p-0">
+              <Table className="border">
+                <TableHeader>
+                  <TableRow className="bg-zinc-100">
+                    <TableHead className="font-semibold">Form</TableHead>
+                    <TableHead className="font-semibold">Created at</TableHead>
+                    <TableHead className="font-semibold">Modified at</TableHead>
+                    <TableHead className="font-semibold">Status</TableHead>
+                    <TableHead className="flex items-center justify-center font-semibold">
+                      Options
+                    </TableHead>
                   </TableRow>
-                )
-              })}
-            </TableBody>
-          </Table>
-        </CardContent>
+                </TableHeader>
+                <TableBody>
+                  {forms.map((form, index) => {
+                    return (
+                      <TableRow key={index}>
+                        <TableCell>
+                          <Link href={`/form/create/${form.id}`}>
+                            {form.name}
+                          </Link>
+                        </TableCell>
+                        <TableCell>
+                          {dayjs(form.created).format("DD MMM YYYY, hh:mm a")}
+                        </TableCell>
+                        <TableCell>
+                          {dayjs(form.modified).format("DD MMM YYYY, hh:mm a")}
+                        </TableCell>
+                        <TableCell>
+                          <Badge
+                            variant={form.published ? "default" : "outline"}
+                          >
+                            {form.published ? "Published" : "Not published"}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="flex items-center justify-center">
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button
+                                size="icon-sm"
+                                variant="ghost"
+                                disabled={deleting}
+                              >
+                                <Trash2 />
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>
+                                  Delete this form?
+                                </AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  This form and all associated submissions will
+                                  be permanently deleted. This action can’t be
+                                  undone.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction
+                                  variant="destructive"
+                                  onClick={async () => {
+                                    setDeleting(true)
+                                    await deleteFormAction(form.id)
+                                    setDeleting(false)
+                                  }}
+                                >
+                                  Delete form
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </TableCell>
+                      </TableRow>
+                    )
+                  })}
+                </TableBody>
+              </Table>
+            </CardContent>
+            <CardFooter className="p-0">
+              <Badge variant="outline">{total} forms</Badge>
+            </CardFooter>
+          </>
+        )}
       </Card>
     </div>
   )
