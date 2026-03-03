@@ -1,7 +1,8 @@
-import { and, count, eq } from "drizzle-orm"
+import { and, count, desc, eq } from "drizzle-orm"
 
-import { db, formsTable } from "./schema"
-import { FormSection } from "../definitions"
+import { db, formsTable, submissionsTable } from "./schema"
+import { FormField, FormSection } from "../definitions"
+import { FIELD_TYPE } from "../constants"
 
 export async function createForm({
   name,
@@ -84,6 +85,7 @@ export async function getForms({
       })
       .from(formsTable)
       .where(eq(formsTable.userId, userId))
+      .orderBy(desc(formsTable.modified))
       .limit(pageSize)
       .offset(page * pageSize)
 
@@ -117,6 +119,8 @@ export async function updateFormSections({
     await db
       .update(formsTable)
       .set({
+        name: sections?.[0]?.title,
+        description: sections?.[0]?.description,
         sections
       })
       .where(and(eq(formsTable.id, id), eq(formsTable.userId, userId)))
@@ -187,4 +191,35 @@ export async function deleteForm({
   }
 }
 
-export async function updateFormPublicationStatus() {}
+export async function receiveSubmission({
+  id,
+  fields
+}: {
+  id: string
+  fields: FormField[]
+}) {
+  try {
+    const values = fields.map((field) => ({
+      form_id: id,
+      field_id: field.id,
+      field_type: field.type,
+      value: String(field.value),
+      is_custom_answer:
+        (field.type === FIELD_TYPE.CHECKBOX ||
+          field.type === FIELD_TYPE.RADIO) &&
+        field?.allowCustomAnswer
+    }))
+
+    await db.insert(submissionsTable).values(values)
+
+    return {
+      success: true
+    }
+  } catch (err) {
+    console.error(err)
+    return {
+      success: false,
+      error: "Failed to submit form"
+    }
+  }
+}

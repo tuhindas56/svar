@@ -8,7 +8,7 @@ import {
 import { fieldTypes } from "@/lib/constants"
 import { Button } from "@/components/ui/button"
 import FormField from "./form-field"
-import FormCard from "./form-card"
+import FormCard from "../form-card"
 import Header from "./header"
 
 interface SectionProps {

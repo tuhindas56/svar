@@ -27,7 +27,7 @@ function CreateFormDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>Create form</Button>
+        <Button size="sm">Create form</Button>
       </DialogTrigger>
 
       <DialogContent>
@@ -49,13 +49,9 @@ function CreateFormDialog() {
               defaultValue={state.name}
             />
           </Label>
-          {state?.errors?.map((err, index) => {
-            return (
-              <p key={index} className="mt-2 text-xs text-red-400">
-                {err}
-              </p>
-            )
-          })}
+          {state?.error && (
+            <p className="mt-2 text-xs text-red-400">{state.error}</p>
+          )}
         </form>
 
         <DialogFooter>

@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import dayjs from "dayjs"
-import { Form, Trash2 } from "lucide-react"
+import { Form, Share, Trash2 } from "lucide-react"
 
 import {
   Card,
@@ -34,6 +34,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger
 } from "../ui/alert-dialog"
+import { toast } from "sonner"
 
 interface FormType {
   id: string
@@ -109,6 +110,24 @@ function FormsList({ forms = [], total = 0 }: Props) {
                           </Badge>
                         </TableCell>
                         <TableCell className="flex items-center justify-center">
+                          {form.published && (
+                            <Button
+                              size="icon-sm"
+                              variant="ghost"
+                              onClick={async () => {
+                                const shareData = {
+                                  title: form.name,
+                                  text: `${form.name} | svar`,
+                                  url: `${window.location.origin}/form/${form.id}`
+                                }
+
+                                await navigator.share(shareData)
+                              }}
+                            >
+                              <Share />
+                            </Button>
+                          )}
+
                           <AlertDialog>
                             <AlertDialogTrigger asChild>
                               <Button

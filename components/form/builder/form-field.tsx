@@ -19,7 +19,7 @@ import {
   TooltipTrigger
 } from "@/components/ui/tooltip"
 import { Slider } from "@/components/ui/slider"
-import FormCard from "./form-card"
+import FormCard from "../form-card"
 import FieldTypeSelect from "./field-type-select"
 import {
   AlertDialog,
@@ -49,6 +49,13 @@ function FormField({
 
   function onChange<T>(key: string, value: T) {
     const next: FormFieldType = { ...field, [key]: value }
+
+    if (next.type === FIELD_TYPE.CHECKBOX || next.type === FIELD_TYPE.RADIO) {
+      if (!Array.isArray(next.options) || !next.options.length) {
+        next.options = [{ toSection: "", value: "Option 1" }]
+      }
+    }
+
     onUpdateField(next)
   }
 
@@ -60,7 +67,7 @@ function FormField({
     setAlertDialogOpen(false)
   }
 
-  function onConfirm() {
+  function onConfirmDeleteField() {
     onRemoveField()
   }
 
@@ -121,6 +128,7 @@ function FormField({
                         placeholder="Option"
                         className="text-sm"
                         width="160px"
+                        disableNewLine
                         onChange={(value) =>
                           onChange(
                             "options",
@@ -262,7 +270,10 @@ function FormField({
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel onClick={onCancel}>Cancel</AlertDialogCancel>
-            <AlertDialogAction variant="destructive" onClick={onConfirm}>
+            <AlertDialogAction
+              variant="destructive"
+              onClick={onConfirmDeleteField}
+            >
               Delete question
             </AlertDialogAction>
           </AlertDialogFooter>

@@ -2,24 +2,19 @@
 
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
-import z from "zod"
 
 import {
   createForm,
   deleteForm,
   publishForm,
+  receiveSubmission,
   updateFormSections
 } from "@/lib/db/data"
 import { FormSection } from "../definitions"
 import { auth } from "@/auth"
 
-const createFormSchema = z
-  .string()
-  .trim()
-  .nonempty("Please provide a valid name for the form")
-
 export type CreateFormState = {
-  errors?: string[]
+  error?: string
   name?: string
 }
 
@@ -34,18 +29,17 @@ export async function submitCreateFormAction(
   }
 
   const name = formData.get("name") as string
+  const trimmed = name.trim()
 
-  const validated = createFormSchema.safeParse(name)
-
-  if (!validated.success) {
+  if (!trimmed.length) {
     return {
-      errors: z.treeifyError(validated.error).errors,
+      error: "Please provide a valid name for the form",
       name
     }
   }
 
   const result = await createForm({
-    name: validated.data,
+    name: trimmed,
     userId: session.user.id as string
   })
 
@@ -59,7 +53,8 @@ export async function submitCreateFormAction(
 
 export async function saveFormSectionsAction(
   id: string,
-  sections: FormSection[]
+  sections: FormSection[],
+  pathname: string
 ) {
   const session = await auth()
 
@@ -73,22 +68,33 @@ export async function saveFormSectionsAction(
     userId: session.user.id as string
   })
 
+  if (result.success) {
+    revalidatePath("/dashboard")
+    revalidatePath(pathname)
+  }
+
   return result
 }
 
-export async function publishFormAction(id: string) {
+export async function publishFormAction(id: string, sections: FormSection[]) {
   const session = await auth()
 
   if (!session || !session.user) {
     redirect("/")
   }
 
-  const { success } = await publishForm({
+  const saveResult = await updateFormSections({
+    id,
+    sections,
+    userId: session.user.id as string
+  })
+
+  const publishResult = await publishForm({
     id,
     userId: session.user.id as string
   })
 
-  if (success) {
+  if (saveResult.success && publishResult.success) {
     revalidatePath("/dashboard")
     redirect("/dashboard")
   }
@@ -111,4 +117,11 @@ export async function deleteFormAction(id: string) {
   } else {
     throw new Error(error)
   }
+}
+
+export async function submitFormAction(id: string, sections: FormSection[]) {
+  return await receiveSubmission({
+    id,
+    fields: sections.flatMap((section) => section.fields)
+  })
 }

@@ -1,5 +1,3 @@
-import { Eye } from "lucide-react"
-
 import { Button } from "@/components/ui/button"
 import PageHeader from "@/components/ui/page-header"
 
@@ -21,10 +19,6 @@ export default function Toolbar({
       <p className="bg-primary/10 text-primary ring-primary/20 inline-flex items-center rounded-xs px-3 py-1 text-xs font-semibold ring-1">
         You are editing:&nbsp; {formName}
       </p>
-
-      <Button variant="ghost" size="sm">
-        <Eye /> Preview
-      </Button>
 
       <Button onClick={onSaveForm} size="sm" variant="outline">
         Save

@@ -106,6 +106,7 @@ export const authenticators = pgTable(
 export const formsTable = pgTable("forms", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: text("name").notNull(),
+  description: text("description"),
   created: timestamp("created").default(new Date()),
   modified: timestamp("modified").$onUpdateFn(() => new Date()),
   sections: jsonb("sections").notNull().$type<FormSection[]>(),

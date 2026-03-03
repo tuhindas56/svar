@@ -21,7 +21,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle
 } from "@/components/ui/alert-dialog"
-import FormBlockCard from "./form-card"
+import FormBlockCard from "../form-card"
 
 interface HeaderProps {
   title: string

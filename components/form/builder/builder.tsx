@@ -14,6 +14,7 @@ import { addAt } from "@/lib/utils"
 import Toolbar from "./toolbar"
 import FormSection from "./form-section"
 import { toast } from "sonner"
+import { usePathname } from "next/navigation"
 
 interface BuilderProps {
   form: FormSchema
@@ -205,17 +206,20 @@ function Builder({ form }: BuilderProps) {
       : [
           {
             id: crypto.randomUUID(),
-            title: "",
+            title: form.name,
             fields: [addField(FIELD_TYPE.SHORT)],
             description: ""
           }
         ]
   )
 
+  const pathname = usePathname()
+
   async function onSaveForm() {
     const { success, error } = await saveFormSectionsAction(
       form.id,
-      formSections
+      formSections,
+      pathname
     )
 
     if (success) {
@@ -227,7 +231,7 @@ function Builder({ form }: BuilderProps) {
   }
 
   async function onPublishForm() {
-    await publishFormAction(form.id)
+    await publishFormAction(form.id, formSections)
     setModified(false)
   }
 

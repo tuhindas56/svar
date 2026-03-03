@@ -53,8 +53,8 @@ async function Dashboard() {
               <Image
                 src={session.user.image}
                 alt=""
-                height={36}
-                width={36}
+                height={32}
+                width={32}
                 className="rounded-full"
               />
             </TooltipTrigger>

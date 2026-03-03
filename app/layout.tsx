@@ -44,7 +44,12 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <TooltipProvider>
           <div className="mx-auto w-full">{children}</div>
         </TooltipProvider>
-        <Toaster position="top-center" />
+        <Toaster
+          position="top-right"
+          richColors
+          theme="light"
+          visibleToasts={1}
+        />
       </body>
     </html>
   )
