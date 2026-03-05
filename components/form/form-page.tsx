@@ -31,7 +31,7 @@ function FormPage({ form }: Props) {
           return {
             ...section,
             fields: section.fields.map((field) => {
-              if (field.required && !field?.value?.length) {
+              if (field.required && field?.value?.length === 0) {
                 return { ...field, error: "This is a required question" }
               }
               return { ...field, error: null }

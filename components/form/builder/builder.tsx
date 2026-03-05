@@ -134,7 +134,11 @@ function formSectionsReducer(state: FormSectionType[], action: Action) {
       return addAt(state, action.payload.after + 1, {
         ...action.payload.section,
         id: crypto.randomUUID(),
-        title: `Copy of ${action.payload.section.title || "untitled section"}`
+        title: `Copy of ${action.payload.section.title || "untitled section"}`,
+        fields: action.payload.section.fields.map((field) => ({
+          ...field,
+          id: crypto.randomUUID()
+        }))
       })
 
     case "remove_section":
