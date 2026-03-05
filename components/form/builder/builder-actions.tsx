@@ -4,7 +4,8 @@ import { useBuilderMode } from "@/lib/contexts/builder-mode"
 import { Button } from "@/components/ui/button"
 
 function BuilderActions() {
-  const { formName, actions, isPublished, isBuilderMode } = useBuilderMode()
+  const { formName, actions, isPublished, isBuilderMode, saving, publishing } =
+    useBuilderMode()
 
   if (!isBuilderMode) {
     return null
@@ -16,16 +17,21 @@ function BuilderActions() {
         You are editing:&nbsp; {formName}
       </p>
 
-      <Button onClick={actions?.save} size="sm" variant="outline">
-        Save
+      <Button
+        onClick={actions?.save}
+        size="sm"
+        variant="outline"
+        disabled={saving || publishing}
+      >
+        {saving ? "Saving.." : "Save"}
       </Button>
       <Button
         onClick={actions?.publish}
         size="sm"
         variant="default"
-        disabled={isPublished}
+        disabled={isPublished || publishing}
       >
-        {isPublished ? "Published" : "Publish"}
+        {isPublished ? "Published" : publishing ? "Publishing.." : "Publish"}
       </Button>
     </>
   )

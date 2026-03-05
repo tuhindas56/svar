@@ -21,6 +21,10 @@ interface ContextValue {
   setFormName: Dispatch<SetStateAction<string | null>>
   actions: Actions
   setActions: Dispatch<SetStateAction<Actions>>
+  saving: boolean
+  setSaving: Dispatch<SetStateAction<boolean>>
+  publishing: boolean
+  setPublishing: Dispatch<SetStateAction<boolean>>
 }
 
 const BuilderModeContext = createContext<ContextValue>({
@@ -31,7 +35,11 @@ const BuilderModeContext = createContext<ContextValue>({
   formName: null,
   setFormName: () => {},
   actions: null,
-  setActions: () => {}
+  setActions: () => {},
+  saving: false,
+  setSaving: () => {},
+  publishing: false,
+  setPublishing: () => {}
 })
 
 export function useBuilderMode() {
@@ -43,6 +51,8 @@ export function BuilderModeProvider({ children }: Props) {
   const [isPublished, setIsPublished] = useState(false)
   const [actions, setActions] = useState<Actions>(null)
   const [formName, setFormName] = useState<string | null>(null)
+  const [saving, setSaving] = useState(false)
+  const [publishing, setPublishing] = useState(false)
 
   const value = useMemo(
     () => ({
@@ -53,9 +63,13 @@ export function BuilderModeProvider({ children }: Props) {
       isBuilderMode,
       setIsBuilderMode,
       isPublished,
-      setIsPublished
+      setIsPublished,
+      saving,
+      setSaving,
+      publishing,
+      setPublishing
     }),
-    [actions, formName, isBuilderMode, isPublished]
+    [actions, formName, isBuilderMode, isPublished, saving, publishing]
   )
 
   return (

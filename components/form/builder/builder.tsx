@@ -199,8 +199,14 @@ function formSectionsReducer(state: FormSectionType[], action: Action) {
 }
 
 function Builder({ form }: BuilderProps) {
-  const { setActions, setIsPublished, setIsBuilderMode, setFormName } =
-    useBuilderMode()
+  const {
+    setActions,
+    setIsPublished,
+    setIsBuilderMode,
+    setFormName,
+    setSaving,
+    setPublishing
+  } = useBuilderMode()
 
   const [modified, setModified] = useState(false)
   const [formSections, dispatch] = useReducer(formSectionsReducer, null, () =>
@@ -217,10 +223,14 @@ function Builder({ form }: BuilderProps) {
   )
 
   const onSaveForm = useCallback(async () => {
+    setSaving(true)
+
     const { success, error } = await saveFormSectionsAction(
       form.id,
       formSections
     )
+
+    setSaving(false)
 
     if (success) {
       setModified(false)
@@ -228,12 +238,14 @@ function Builder({ form }: BuilderProps) {
     } else {
       toast.error(error)
     }
-  }, [form.id, formSections])
+  }, [form.id, formSections, setSaving])
 
   const onPublishForm = useCallback(async () => {
+    setPublishing(true)
     await publishFormAction(form.id, formSections)
     setModified(false)
-  }, [form.id, formSections])
+    setPublishing(false)
+  }, [form.id, formSections, setPublishing])
 
   useEffect(() => {
     function beforeUnload(e: BeforeUnloadEvent) {
