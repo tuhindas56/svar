@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { deleteFormAction } from "@/lib/actions/form"
 import { convertDate } from "@/lib/utils"
+import Link from "next/link"
 
 interface Props {
   params: Promise<{ id: string }>
@@ -54,9 +55,11 @@ async function ViewForm(props: Props) {
           <CardTitle className="text-2xl">{data.name}</CardTitle>
         </CardHeader>
         <CardFooter className="gap-4">
-          <Button variant="outline" size="sm" className="ml-auto">
-            Open in builder
-          </Button>
+          <Link href={`/form/create/${id}`} className="ml-auto">
+            <Button variant="outline" size="sm">
+              Open in builder
+            </Button>
+          </Link>
 
           <AlertDialog>
             <AlertDialogTrigger asChild>

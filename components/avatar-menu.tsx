@@ -1,9 +1,3 @@
-"use client"
-
-import { use } from "react"
-import type { Usable } from "react"
-import type { Session } from "next-auth"
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   DropdownMenu,
@@ -11,15 +5,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
-import { deleteAccount, logout } from "@/lib/actions/auth"
+import { deleteAccount, getSession, logout } from "@/lib/actions/auth"
 import { getInitials } from "@/lib/utils"
 
-interface Props {
-  sessionPromise: Usable<Session | null>
-}
-
-function AvatarMenu({ sessionPromise }: Props) {
-  const session = use(sessionPromise)
+async function AvatarMenu() {
+  const session = await getSession()
 
   return (
     <DropdownMenu>

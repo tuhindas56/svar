@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useReducer, useState } from "react"
+import { useCallback, useEffect, useReducer, useState } from "react"
 import { toast } from "sonner"
 
 import { publishFormAction, saveFormSectionsAction } from "@/lib/actions/form"
@@ -12,8 +12,8 @@ import {
   FormSection as FormSectionType
 } from "@/lib/definitions"
 import { addAt } from "@/lib/utils"
-import Toolbar from "./toolbar"
 import FormSection from "./form-section"
+import { useBuilderMode } from "@/lib/contexts/builder-mode"
 
 interface BuilderProps {
   form: FormSchema
@@ -199,6 +199,9 @@ function formSectionsReducer(state: FormSectionType[], action: Action) {
 }
 
 function Builder({ form }: BuilderProps) {
+  const { setActions, setIsPublished, setIsBuilderMode, setFormName } =
+    useBuilderMode()
+
   const [modified, setModified] = useState(false)
   const [formSections, dispatch] = useReducer(formSectionsReducer, null, () =>
     form.sections.length > 0
@@ -213,7 +216,7 @@ function Builder({ form }: BuilderProps) {
         ]
   )
 
-  async function onSaveForm() {
+  const onSaveForm = useCallback(async () => {
     const { success, error } = await saveFormSectionsAction(
       form.id,
       formSections
@@ -225,12 +228,12 @@ function Builder({ form }: BuilderProps) {
     } else {
       toast.error(error)
     }
-  }
+  }, [form.id, formSections])
 
-  async function onPublishForm() {
+  const onPublishForm = useCallback(async () => {
     await publishFormAction(form.id, formSections)
     setModified(false)
-  }
+  }, [form.id, formSections])
 
   useEffect(() => {
     function beforeUnload(e: BeforeUnloadEvent) {
@@ -246,83 +249,100 @@ function Builder({ form }: BuilderProps) {
     }
   }, [modified])
 
+  useEffect(() => {
+    setFormName(form.name)
+    setIsPublished(form.published)
+    setIsBuilderMode(true)
+    setActions((prev) => ({
+      ...prev,
+      save: onSaveForm,
+      publish: onPublishForm
+    }))
+
+    return () => {
+      setFormName(null)
+      setIsPublished(false)
+      setIsBuilderMode(false)
+      setActions(null)
+    }
+  }, [
+    form,
+    onPublishForm,
+    onSaveForm,
+    setActions,
+    setFormName,
+    setIsBuilderMode,
+    setIsPublished
+  ])
+
   return (
     <>
-      <Toolbar
-        formName={form.name}
-        onSaveForm={onSaveForm}
-        onPublishForm={onPublishForm}
-        isPublished={form.published}
-      />
-
-      <div className="mx-auto flex flex-col gap-8 px-4 py-8 md:w-10/12 lg:w-3xl">
-        {formSections.map((section, index) => {
-          return (
-            <FormSection
-              key={section.id}
-              section={section}
-              isFirstSection={index === 0}
-              showDeleteSection={formSections.length > 1}
-              onAddSection={() => {
-                dispatch({
-                  type: "add_section",
-                  payload: { after: index }
-                })
-                setModified(true)
-              }}
-              onUpdateSection={(s: FormSectionType) => {
-                dispatch({
-                  type: "update_section",
-                  payload: { sectionID: section.id, section: s }
-                })
-                setModified(true)
-              }}
-              onDuplicateSection={() => {
-                dispatch({
-                  type: "duplicate_section",
-                  payload: { section, after: index }
-                })
-                setModified(true)
-              }}
-              onRemoveSection={() => {
-                dispatch({
-                  type: "remove_section",
-                  payload: { sectionID: section.id }
-                })
-                setModified(true)
-              }}
-              onAddField={(type: FieldType) => {
-                dispatch({
-                  type: "add_field",
-                  payload: { sectionID: section.id, type }
-                })
-                setModified(true)
-              }}
-              onUpdateField={(field: FormField) => {
-                dispatch({
-                  type: "update_field",
-                  payload: { sectionID: section.id, field }
-                })
-                setModified(true)
-              }}
-              onDuplicateField={(field: FormField, after: number) => {
-                dispatch({
-                  type: "duplicate_field",
-                  payload: { sectionID: section.id, field, after }
-                })
-                setModified(true)
-              }}
-              onRemoveField={(fieldID: string) => {
-                dispatch({
-                  type: "remove_field",
-                  payload: { sectionID: section.id, fieldID }
-                })
-                setModified(true)
-              }}
-            />
-          )
-        })}
-      </div>
+      {formSections.map((section, index) => {
+        return (
+          <FormSection
+            key={section.id}
+            section={section}
+            isFirstSection={index === 0}
+            showDeleteSection={formSections.length > 1}
+            onAddSection={() => {
+              dispatch({
+                type: "add_section",
+                payload: { after: index }
+              })
+              setModified(true)
+            }}
+            onUpdateSection={(s: FormSectionType) => {
+              dispatch({
+                type: "update_section",
+                payload: { sectionID: section.id, section: s }
+              })
+              setModified(true)
+            }}
+            onDuplicateSection={() => {
+              dispatch({
+                type: "duplicate_section",
+                payload: { section, after: index }
+              })
+              setModified(true)
+            }}
+            onRemoveSection={() => {
+              dispatch({
+                type: "remove_section",
+                payload: { sectionID: section.id }
+              })
+              setModified(true)
+            }}
+            onAddField={(type: FieldType) => {
+              dispatch({
+                type: "add_field",
+                payload: { sectionID: section.id, type }
+              })
+              setModified(true)
+            }}
+            onUpdateField={(field: FormField) => {
+              dispatch({
+                type: "update_field",
+                payload: { sectionID: section.id, field }
+              })
+              setModified(true)
+            }}
+            onDuplicateField={(field: FormField, after: number) => {
+              dispatch({
+                type: "duplicate_field",
+                payload: { sectionID: section.id, field, after }
+              })
+              setModified(true)
+            }}
+            onRemoveField={(fieldID: string) => {
+              dispatch({
+                type: "remove_field",
+                payload: { sectionID: section.id, fieldID }
+              })
+              setModified(true)
+            }}
+          />
+        )
+      })}
     </>
   )
 }
