@@ -19,6 +19,7 @@ interface TextField extends BaseField {
 interface CheckboxOrRadioField extends BaseField {
   type: typeof FIELD_TYPE.CHECKBOX | typeof FIELD_TYPE.RADIO
   allowCustomAnswer: boolean
+  customAnswer?: string
   options: {
     value: string
     toSection?: string

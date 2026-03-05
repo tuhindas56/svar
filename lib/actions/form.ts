@@ -10,8 +10,8 @@ import {
   receiveSubmission,
   updateFormSections
 } from "@/lib/db/data"
+import { getSession } from "./auth"
 import { FormSection } from "../definitions"
-import { auth } from "@/auth"
 
 export type CreateFormState = {
   error?: string
@@ -22,9 +22,9 @@ export async function submitCreateFormAction(
   _: CreateFormState,
   formData: FormData
 ): Promise<CreateFormState> {
-  const session = await auth()
+  const session = await getSession()
 
-  if (!session || !session.user) {
+  if (!session?.user) {
     redirect("/")
   }
 
@@ -53,12 +53,11 @@ export async function submitCreateFormAction(
 
 export async function saveFormSectionsAction(
   id: string,
-  sections: FormSection[],
-  pathname: string
+  sections: FormSection[]
 ) {
-  const session = await auth()
+  const session = await getSession()
 
-  if (!session || !session.user) {
+  if (!session?.user) {
     redirect("/")
   }
 
@@ -70,16 +69,15 @@ export async function saveFormSectionsAction(
 
   if (result.success) {
     revalidatePath("/dashboard")
-    revalidatePath(pathname)
   }
 
   return result
 }
 
 export async function publishFormAction(id: string, sections: FormSection[]) {
-  const session = await auth()
+  const session = await getSession()
 
-  if (!session || !session.user) {
+  if (!session?.user) {
     redirect("/")
   }
 
@@ -101,9 +99,9 @@ export async function publishFormAction(id: string, sections: FormSection[]) {
 }
 
 export async function deleteFormAction(id: string) {
-  const session = await auth()
+  const session = await getSession()
 
-  if (!session || !session.user) {
+  if (!session?.user) {
     redirect("/")
   }
 

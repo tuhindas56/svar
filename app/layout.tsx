@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { Toaster } from "@/components/ui/sonner"
 import "./globals.css"
+import { SessionProvider } from "next-auth/react"
 
 interface RootLayoutProps {
   children: ReactNode
@@ -41,9 +42,11 @@ export default function RootLayout({ children }: RootLayoutProps) {
           "custom-pattern font-sans antialiased"
         )}
       >
-        <TooltipProvider>
-          <div className="mx-auto w-full">{children}</div>
-        </TooltipProvider>
+        <SessionProvider>
+          <TooltipProvider>
+            <div className="mx-auto w-full">{children}</div>
+          </TooltipProvider>
+        </SessionProvider>
         <Toaster
           position="top-right"
           richColors

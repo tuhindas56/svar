@@ -1,6 +1,6 @@
 "use client"
 
-import { FIELD_TYPE } from "@/lib/constants"
+import { CUSTOM_ANSWER, FIELD_TYPE } from "@/lib/constants"
 import { FormField as FormFieldType } from "@/lib/definitions"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -12,7 +12,16 @@ import { Badge } from "../ui/badge"
 
 interface FormFieldProps {
   field: FormFieldType
-  onUpdateField: (fieldId: string, value: string | string[]) => void
+  onUpdateField: ({
+    fieldId,
+    value,
+    isCustomAnswer
+  }: {
+    fieldId: string
+    value?: string | string[]
+    isCustomAnswer?: boolean
+    customAnswer?: string
+  }) => void
 }
 
 function FormField({ field, onUpdateField = () => {} }: FormFieldProps) {
@@ -30,7 +39,9 @@ function FormField({ field, onUpdateField = () => {} }: FormFieldProps) {
             required={field.required}
             defaultValue={field.value}
             aria-invalid={Boolean(field.error)}
-            onBlur={(e) => onUpdateField(field.id, e.target.value)}
+            onBlur={(e) =>
+              onUpdateField({ fieldId: field.id, value: e.target.value })
+            }
           />
         )}
 
@@ -39,7 +50,9 @@ function FormField({ field, onUpdateField = () => {} }: FormFieldProps) {
             className="w-1/2 resize-none rounded-xs border p-1"
             required={field.required}
             defaultValue={field.value}
-            onBlur={(e) => onUpdateField(field.id, e.target.value)}
+            onBlur={(e) =>
+              onUpdateField({ fieldId: field.id, value: e.target.value })
+            }
           />
         )}
 
@@ -49,7 +62,9 @@ function FormField({ field, onUpdateField = () => {} }: FormFieldProps) {
             <RadioGroup
               required={field.required}
               defaultValue={field.value as string}
-              onValueChange={(v) => onUpdateField(field.id, v)}
+              onValueChange={(value) =>
+                onUpdateField({ fieldId: field.id, value })
+              }
             >
               {Array.isArray(field.options) &&
                 field.options.map((option, index) => {
@@ -65,21 +80,21 @@ function FormField({ field, onUpdateField = () => {} }: FormFieldProps) {
                             defaultChecked={field.value?.includes(option.value)}
                             onCheckedChange={(checked) => {
                               if (checked) {
-                                onUpdateField(
-                                  field.id,
-                                  Array.isArray(field.value)
+                                onUpdateField({
+                                  fieldId: field.id,
+                                  value: Array.isArray(field.value)
                                     ? [...field.value, option.value]
                                     : [option.value]
-                                )
+                                })
                               } else {
-                                onUpdateField(
-                                  field.id,
-                                  Array.isArray(field.value)
+                                onUpdateField({
+                                  fieldId: field.id,
+                                  value: Array.isArray(field.value)
                                     ? field.value.filter(
                                         (a) => a !== option.value
                                       )
                                     : []
-                                )
+                                })
                               }
                             }}
                           />
@@ -90,45 +105,56 @@ function FormField({ field, onUpdateField = () => {} }: FormFieldProps) {
                     </div>
                   )
                 })}
-              <div className="flex items-center gap-2">
-                <Label className="text-sm">
-                  {field.type === FIELD_TYPE.RADIO && (
-                    <RadioGroupItem value="other" />
-                  )}
-                  {field.type === FIELD_TYPE.CHECKBOX && (
-                    <Checkbox
-                      defaultChecked={field.value?.includes("other")}
-                      onCheckedChange={(checked) => {
-                        if (checked) {
-                          onUpdateField(
-                            field.id,
-                            Array.isArray(field.value)
-                              ? [...field.value, "other"]
-                              : ["other"]
-                          )
-                        } else {
-                          onUpdateField(
-                            field.id,
-                            Array.isArray(field.value)
-                              ? field.value.filter((a) => a !== "other")
-                              : []
-                          )
-                        }
-                      }}
-                    />
-                  )}
-                  Other
-                </Label>
-              </div>
+
+              {field.allowCustomAnswer && (
+                <div className="flex items-center gap-2">
+                  <Label className="text-sm">
+                    {field.type === FIELD_TYPE.RADIO && (
+                      <RadioGroupItem value={CUSTOM_ANSWER} />
+                    )}
+                    {field.type === FIELD_TYPE.CHECKBOX && (
+                      <Checkbox
+                        defaultChecked={field.value?.includes(CUSTOM_ANSWER)}
+                        onCheckedChange={(checked) => {
+                          if (checked) {
+                            onUpdateField({
+                              fieldId: field.id,
+                              value: Array.isArray(field.value)
+                                ? [...field.value, CUSTOM_ANSWER]
+                                : [CUSTOM_ANSWER]
+                            })
+                          } else {
+                            onUpdateField({
+                              fieldId: field.id,
+                              value: Array.isArray(field.value)
+                                ? field.value.filter((a) => a !== CUSTOM_ANSWER)
+                                : []
+                            })
+                          }
+                        }}
+                      />
+                    )}
+                    Other
+                  </Label>
+                </div>
+              )}
             </RadioGroup>
 
-            {field.allowCustomAnswer && field.value === "other" && (
-              <Input
-                // defaultValue={field.value}
-                onBlur={(e) => onUpdateField(field.id, e.target.value)}
-                className="mt-6"
-              />
-            )}
+            {field.allowCustomAnswer &&
+              (field.value === CUSTOM_ANSWER ||
+                field.value?.includes(CUSTOM_ANSWER)) && (
+                <Input
+                  defaultValue={field.customAnswer}
+                  onBlur={(e) =>
+                    onUpdateField({
+                      fieldId: field.id,
+                      customAnswer: e.target.value,
+                      isCustomAnswer: true
+                    })
+                  }
+                  className="mt-6"
+                />
+              )}
           </>
         )}
 

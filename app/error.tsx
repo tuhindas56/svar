@@ -1,8 +1,16 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
-import { AlertCircle } from "lucide-react"
 import { redirect } from "next/navigation"
+
+import { Button } from "@/components/ui/button"
+import {
+  Card,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle
+} from "@/components/ui/card"
+import { Home, RefreshCw } from "lucide-react"
 
 export default function Error({
   error,
@@ -11,33 +19,29 @@ export default function Error({
   error: Error
   reset: () => void
 }) {
-  return (
-    <div className="grid h-dvh place-content-center">
-      <div className="flex items-center justify-center gap-4">
-        <div>
-          <h1 className="text-foreground text-xl font-semibold">
-            Something went wrong
-          </h1>
-          <p className="text-muted-foreground leading-relaxed">
-            {error.message ||
-              "We encountered an unexpected error. Please try again."}
-          </p>
-        </div>
-      </div>
+  console.error(error)
 
-      <div className="mt-2 flex justify-start gap-4">
-        <Button onClick={reset} size="lg" className="p-0!" variant="link">
-          Reload
-        </Button>
-        <Button
-          onClick={() => redirect("/")}
-          size="lg"
-          className="p-0!"
-          variant="link"
-        >
-          Go home
-        </Button>
-      </div>
+  return (
+    <div className="flex h-dvh w-full justify-center">
+      <Card className="bg-background mt-24 h-max w-xs rounded-sm shadow-none sm:w-md">
+        <CardHeader className="">
+          <CardTitle className="font-lora text-2xl">
+            Something went wrong
+          </CardTitle>
+          <CardDescription>
+            We encountered an unexpected error. Please try again.
+          </CardDescription>
+        </CardHeader>
+
+        <CardFooter className="gap-4">
+          <Button onClick={reset} size="lg" variant="outline">
+            <RefreshCw /> Reload
+          </Button>
+          <Button onClick={() => redirect("/")} size="lg" variant="outline">
+            <Home /> Go home
+          </Button>
+        </CardFooter>
+      </Card>
     </div>
   )
 }

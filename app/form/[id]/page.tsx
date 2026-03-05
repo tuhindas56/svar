@@ -12,15 +12,8 @@ interface FormProps {
 async function Form({ params }: FormProps) {
   const { id } = await params
 
-  const session = await auth()
-
-  if (!session || !session.user) {
-    redirect("/")
-  }
-
   const { success, data, error } = await getFormSchema({
-    id,
-    userId: session.user.id as string
+    id
   })
 
   if (!success || !data) {

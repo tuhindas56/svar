@@ -1,12 +1,13 @@
 "use client"
 
-import { SubmitEvent, useEffect, useState } from "react"
+import { SubmitEvent, useState } from "react"
+import { toast } from "sonner"
 
+import { submitFormAction } from "@/lib/actions/form"
 import { FormSchema, FormSection as FormSectionType } from "@/lib/definitions"
 import Header from "./header"
 import FormSection from "./form-section"
-import { submitFormAction } from "@/lib/actions/form"
-import { toast } from "sonner"
+import SubmissionSuccess from "./submission-success"
 
 interface Props {
   form: FormSchema
@@ -15,6 +16,7 @@ interface Props {
 function FormPage({ form }: Props) {
   const [activeSection, setActiveSection] = useState(0)
   const [sections, setSections] = useState<FormSectionType[]>(form.sections)
+  const [submitted, setSubmitted] = useState(false)
 
   function validate() {
     const validated = sections[activeSection].fields
@@ -65,12 +67,24 @@ function FormPage({ form }: Props) {
     setActiveSection((prev) => prev - 1)
   }
 
-  function onUpdateField(fieldId: string, value: string | string[]) {
+  function onUpdateField({
+    fieldId,
+    value,
+    isCustomAnswer,
+    customAnswer
+  }: {
+    fieldId: string
+    value?: string | string[]
+    isCustomAnswer?: boolean
+    customAnswer?: string
+  }) {
     setSections((prev) => {
       return prev.map((section) => ({
         ...section,
         fields: section.fields.map((field) => {
           if (field.id !== fieldId) return field
+          if (isCustomAnswer) return { ...field, customAnswer }
+
           return { ...field, value }
         })
       }))
@@ -85,15 +99,11 @@ function FormPage({ form }: Props) {
     const result = await submitFormAction(form.id, sections)
 
     if (result.success) {
-      toast.success("Form submitted!")
+      setSubmitted(true)
     } else {
       toast.error("Failed to submit")
     }
   }
-
-  useEffect(() => {
-    console.log(sections[activeSection])
-  }, [sections, activeSection])
 
   return (
     <form
@@ -102,14 +112,18 @@ function FormPage({ form }: Props) {
     >
       <Header title={form.name} description={form.description} isFormHeader />
 
-      <FormSection
-        section={sections[activeSection]}
-        onUpdateField={onUpdateField}
-        isFirstSection={activeSection === 0}
-        isLastSection={activeSection === form.sections.length - 1}
-        onNextClick={onNextClick}
-        onPreviousClick={onPreviousClick}
-      />
+      {!submitted && (
+        <FormSection
+          section={sections[activeSection]}
+          onUpdateField={onUpdateField}
+          isFirstSection={activeSection === 0}
+          isLastSection={activeSection === form.sections.length - 1}
+          onNextClick={onNextClick}
+          onPreviousClick={onPreviousClick}
+        />
+      )}
+
+      {submitted && <SubmissionSuccess />}
     </form>
   )
 }

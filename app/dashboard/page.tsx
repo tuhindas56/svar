@@ -1,20 +1,10 @@
 import { Suspense } from "react"
 import { redirect } from "next/navigation"
-import { LogOut } from "lucide-react"
-import Image from "next/image"
 
-import { getSession, logout } from "@/lib/actions/auth"
-import { Button } from "@/components/ui/button"
-import CreateFormDialog from "@/components/dashboard/create-form-dialog"
+import { getSession } from "@/lib/actions/auth"
+import { getForms } from "@/lib/db/data"
 import FormsList from "@/components/dashboard/forms-list"
 import FormsListSkeleton from "@/components/dashboard/forms-list-skeleton"
-import PageHeader from "@/components/ui/page-header"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger
-} from "@/components/ui/tooltip"
-import { getForms } from "@/lib/db/data"
 
 interface FormType {
   id: string
@@ -27,7 +17,7 @@ interface FormType {
 async function Dashboard() {
   const session = await getSession()
 
-  if (!session || !session.user) {
+  if (!session?.user) {
     redirect("/")
   }
 
@@ -46,36 +36,6 @@ async function Dashboard() {
 
   return (
     <div className="flex flex-col gap-2">
-      <PageHeader>
-        {session?.user?.image && session.user?.name && (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Image
-                src={session.user.image}
-                alt=""
-                height={32}
-                width={32}
-                className="rounded-full"
-              />
-            </TooltipTrigger>
-            <TooltipContent>
-              <span>Logged in as {session.user.name}</span>
-            </TooltipContent>
-          </Tooltip>
-        )}
-
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button onClick={logout} variant="ghost" size="icon-sm">
-              <LogOut />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Logout</TooltipContent>
-        </Tooltip>
-
-        <CreateFormDialog />
-      </PageHeader>
-
       <Suspense fallback={<FormsListSkeleton />}>
         <FormsList forms={forms as FormType[]} total={total} />
       </Suspense>

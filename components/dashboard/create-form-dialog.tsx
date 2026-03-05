@@ -16,13 +16,19 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "../ui/label"
+import { usePathname } from "next/navigation"
 
 function CreateFormDialog() {
+  const pathname = usePathname()
+  const formId = useId()
+
   const [state, action, pending] = useActionState(submitCreateFormAction, {
     name: ""
   })
 
-  const formId = useId()
+  if (!pathname.endsWith("dashboard")) {
+    return null
+  }
 
   return (
     <Dialog>

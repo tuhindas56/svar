@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useReducer, useState } from "react"
+import { toast } from "sonner"
 
 import { publishFormAction, saveFormSectionsAction } from "@/lib/actions/form"
 import { FIELD_TYPE } from "@/lib/constants"
@@ -13,8 +14,6 @@ import {
 import { addAt } from "@/lib/utils"
 import Toolbar from "./toolbar"
 import FormSection from "./form-section"
-import { toast } from "sonner"
-import { usePathname } from "next/navigation"
 
 interface BuilderProps {
   form: FormSchema
@@ -106,6 +105,7 @@ export function addField(type: FieldType): FormField {
     return {
       ...base,
       type,
+      allowCustomAnswer: false,
       options: [{ value: "Option 1" }]
     }
   }
@@ -213,13 +213,10 @@ function Builder({ form }: BuilderProps) {
         ]
   )
 
-  const pathname = usePathname()
-
   async function onSaveForm() {
     const { success, error } = await saveFormSectionsAction(
       form.id,
-      formSections,
-      pathname
+      formSections
     )
 
     if (success) {

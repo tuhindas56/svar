@@ -18,6 +18,8 @@ const FIELD_LABEL = {
   time: "Time"
 }
 
+export const CUSTOM_ANSWER = "custom-answer"
+
 export const fieldTypes = Object.values(FIELD_TYPE).map((value) => ({
   label: FIELD_LABEL[value],
   value

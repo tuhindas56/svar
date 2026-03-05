@@ -112,7 +112,7 @@ export const formsTable = pgTable("forms", {
   sections: jsonb("sections").notNull().$type<FormSection[]>(),
   published: boolean().default(false),
   userId: uuid("userId")
-    .references(() => users.id)
+    .references(() => users.id, { onDelete: "cascade" })
     .notNull()
 })
 
@@ -120,11 +120,11 @@ export const submissionsTable = pgTable("submissions", {
   id: uuid("id").primaryKey().defaultRandom(),
   submitted: timestamp("submitted").default(new Date()),
   modified: timestamp("modified").$onUpdateFn(() => new Date()),
-  field_id: uuid("field_id").notNull(),
-  field_type: text("field_type").$type<FieldType>().notNull(),
+  fieldId: uuid("fieldId").notNull(),
+  fieldType: text("fieldType").$type<FieldType>().notNull(),
   value: text("value").notNull(),
-  form_id: uuid("form_id")
-    .references(() => formsTable.id)
+  formId: uuid("formId")
+    .references(() => formsTable.id, { onDelete: "cascade" })
     .notNull(),
-  is_custom_answer: boolean().default(false)
+  isCustomAnswer: boolean().default(false)
 })

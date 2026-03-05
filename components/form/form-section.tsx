@@ -7,7 +7,16 @@ interface SectionProps {
   section: FormSectionType
   isFirstSection: boolean
   isLastSection: boolean
-  onUpdateField: (fieldId: string, value: string | string[]) => void
+  onUpdateField: ({
+    fieldId,
+    value,
+    isCustomAnswer
+  }: {
+    fieldId: string
+    value?: string | string[]
+    isCustomAnswer?: boolean
+    customAnswer?: string
+  }) => void
   onNextClick: () => void
   onPreviousClick: () => void
 }

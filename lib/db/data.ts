@@ -1,6 +1,6 @@
 import { and, count, desc, eq } from "drizzle-orm"
 
-import { db, formsTable, submissionsTable } from "./schema"
+import { db, formsTable, submissionsTable, users } from "./schema"
 import { FormField, FormSection } from "../definitions"
 import { FIELD_TYPE } from "../constants"
 
@@ -34,7 +34,7 @@ export async function createForm({
   }
 }
 
-export async function getFormSchema({
+export async function getFormDetails({
   id,
   userId
 }: {
@@ -43,9 +43,43 @@ export async function getFormSchema({
 }) {
   try {
     const result = await db
-      .select()
+      .select({
+        name: formsTable.name,
+        created: formsTable.created,
+        modified: formsTable.modified,
+        published: formsTable.published
+      })
       .from(formsTable)
       .where(and(eq(formsTable.id, id), eq(formsTable.userId, userId)))
+
+    const submissions = await db
+      .select()
+      .from(submissionsTable)
+      .where(eq(submissionsTable.formId, id))
+
+    return {
+      success: true,
+      data: {
+        ...result[0],
+        submissions
+      }
+    }
+  } catch (err) {
+    console.error(err)
+
+    return {
+      success: false,
+      error: "Failed to fetch form details"
+    }
+  }
+}
+
+export async function getFormSchema({ id }: { id: string; userId?: string }) {
+  try {
+    const result = await db
+      .select()
+      .from(formsTable)
+      .where(and(eq(formsTable.id, id)))
 
     return {
       success: true,
@@ -200,11 +234,17 @@ export async function receiveSubmission({
 }) {
   try {
     const values = fields.map((field) => ({
-      form_id: id,
-      field_id: field.id,
-      field_type: field.type,
-      value: String(field.value),
-      is_custom_answer:
+      formId: id,
+      fieldId: field.id,
+      fieldType: field.type,
+      value: String(
+        (field.type === FIELD_TYPE.CHECKBOX ||
+          field.type === FIELD_TYPE.RADIO) &&
+          field.allowCustomAnswer
+          ? field.customAnswer
+          : field.value
+      ),
+      isCustomAnswer:
         (field.type === FIELD_TYPE.CHECKBOX ||
           field.type === FIELD_TYPE.RADIO) &&
         field?.allowCustomAnswer
@@ -222,4 +262,8 @@ export async function receiveSubmission({
       error: "Failed to submit form"
     }
   }
+}
+
+export async function deleteUserData({ id }: { id: string }) {
+  await db.delete(users).where(eq(users.id, id))
 }

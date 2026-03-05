@@ -1,8 +1,9 @@
-import { auth } from "@/auth"
-import Builder from "@/components/form/builder/builder"
+import { redirect } from "next/navigation"
+
+import { getSession } from "@/lib/actions/auth"
 import { getFormSchema } from "@/lib/db/data"
 import { FormSchema } from "@/lib/definitions"
-import { redirect } from "next/navigation"
+import Builder from "@/components/form/builder/builder"
 
 interface Props {
   params: Promise<{ id: string }>
@@ -10,9 +11,9 @@ interface Props {
 
 async function Create(props: Props) {
   const { id } = await props.params
-  const session = await auth()
+  const session = await getSession()
 
-  if (!session || !session.user) {
+  if (!session?.user) {
     redirect("/")
   }
 
