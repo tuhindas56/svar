@@ -49,6 +49,10 @@ export default function RootLayout({ children }: RootLayoutProps) {
         </SessionProvider>
         <Toaster
           position="top-right"
+          offset={{
+            top: 60,
+            right: 8
+          }}
           richColors
           theme="light"
           visibleToasts={1}
