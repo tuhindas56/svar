@@ -1,8 +1,13 @@
 import { and, count, desc, eq } from "drizzle-orm"
 
-import { db, formsTable, submissionsTable, users } from "./schema"
-import { FormField, FormSection } from "../definitions"
-import { FIELD_TYPE } from "../constants"
+import {
+  db,
+  formsTable,
+  responsesTable,
+  submissionsTable,
+  users
+} from "./schema"
+import { FormFieldResponses, FormSection } from "../definitions"
 
 export async function createForm({
   name,
@@ -115,7 +120,8 @@ export async function getForms({
         name: formsTable.name,
         created: formsTable.created,
         modified: formsTable.modified,
-        published: formsTable.published
+        published: formsTable.published,
+        allowAnonymousSubmissions: formsTable.allowAnonymousSubmissions
       })
       .from(formsTable)
       .where(eq(formsTable.userId, userId))
@@ -227,30 +233,33 @@ export async function deleteForm({
 
 export async function receiveSubmission({
   id,
-  fields
+  responses,
+  respondantEmail,
+  respondantName
 }: {
   id: string
-  fields: FormField[]
+  responses: FormFieldResponses
+  respondantEmail: string | null
+  respondantName: string | null
 }) {
   try {
-    const values = fields.map((field) => ({
-      formId: id,
-      fieldId: field.id,
-      fieldType: field.type,
-      value: String(
-        (field.type === FIELD_TYPE.CHECKBOX ||
-          field.type === FIELD_TYPE.RADIO) &&
-          field.allowCustomAnswer
-          ? field.customAnswer
-          : field.value
-      ),
-      isCustomAnswer:
-        (field.type === FIELD_TYPE.CHECKBOX ||
-          field.type === FIELD_TYPE.RADIO) &&
-        field?.allowCustomAnswer
+    const submissionResult = await db
+      .insert(submissionsTable)
+      .values({
+        formId: id,
+        respondantEmail,
+        respondantName
+      })
+      .returning({ id: submissionsTable.id })
+
+    const values = Object.entries(responses).map(([fieldId, response]) => ({
+      submissionId: submissionResult[0].id,
+      fieldId,
+      value: response.value,
+      customAnswer: response.customAnswer
     }))
 
-    await db.insert(submissionsTable).values(values)
+    await db.insert(responsesTable).values(values)
 
     return {
       success: true

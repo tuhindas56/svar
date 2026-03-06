@@ -1,6 +1,13 @@
 "use client"
 
-import { SubmitEvent, useCallback, useEffect, useMemo, useState } from "react"
+import {
+  SubmitEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState
+} from "react"
 import { toast } from "sonner"
 
 import { submitFormAction } from "@/lib/actions/form"
@@ -45,6 +52,10 @@ function prepareErrors(sections: FormSectionType[]) {
 
 function FormPage({ form }: Props) {
   const [activeSection, setActiveSection] = useState(0)
+  const [respondantInfo] = useState({
+    respondantEmail: null,
+    respondantName: null
+  })
   const [responses, setResponses] = useState<FormFieldResponses>(() =>
     prepareResponses(form.sections)
   )
@@ -52,6 +63,8 @@ function FormPage({ form }: Props) {
     prepareErrors(form.sections)
   )
   const [submitted, setSubmitted] = useState(false)
+
+  const initialRenderOfSection = useRef(true)
 
   const requiredFieldsInSection = useMemo(
     () =>
@@ -91,6 +104,7 @@ function FormPage({ form }: Props) {
     if (!validate()) return
 
     setActiveSection((prev) => prev + 1)
+    initialRenderOfSection.current = true
   }
 
   function onPreviousClick() {
@@ -102,7 +116,12 @@ function FormPage({ form }: Props) {
 
     if (!validate()) return
 
-    const result = await submitFormAction(form.id, form.sections)
+    const result = await submitFormAction({
+      id: form.id,
+      responses,
+      respondantEmail: respondantInfo.respondantEmail,
+      respondantName: respondantInfo.respondantName
+    })
 
     if (result.success) {
       setSubmitted(true)
@@ -112,7 +131,12 @@ function FormPage({ form }: Props) {
   }
 
   useEffect(() => {
-    const timeout = setTimeout(validate, 200)
+    if (initialRenderOfSection.current) {
+      initialRenderOfSection.current = false
+      return
+    }
+
+    const timeout = setTimeout(validate, 100)
 
     return () => {
       clearTimeout(timeout)

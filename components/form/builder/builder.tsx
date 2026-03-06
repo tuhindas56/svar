@@ -229,10 +229,10 @@ function Builder({ form }: BuilderProps) {
   const onSaveForm = useCallback(async () => {
     setSaving(true)
 
-    const { success, error } = await saveFormSectionsAction(
-      form.id,
-      formSections
-    )
+    const { success, error } = await saveFormSectionsAction({
+      id: form.id,
+      sections: formSections
+    })
 
     setSaving(false)
 
@@ -246,7 +246,7 @@ function Builder({ form }: BuilderProps) {
 
   const onPublishForm = useCallback(async () => {
     setPublishing(true)
-    await publishFormAction(form.id, formSections)
+    await publishFormAction({ id: form.id, sections: formSections })
     setModified(false)
     setPublishing(false)
   }, [form.id, formSections, setPublishing])

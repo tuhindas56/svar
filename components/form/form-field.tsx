@@ -37,7 +37,6 @@ function FormField({ field, responses, setResponses, errors }: FormFieldProps) {
           <Input
             className="w-1/2 rounded-xs border p-1"
             type={field.type}
-            required={field.required}
             aria-invalid={Boolean(error)}
             value={response.value ?? ""}
             onChange={(e) =>
@@ -55,7 +54,6 @@ function FormField({ field, responses, setResponses, errors }: FormFieldProps) {
         {field.type === FIELD_TYPE.LONG && (
           <Textarea
             className="w-1/2 resize-none rounded-xs border p-1"
-            required={field.required}
             value={response.value ?? ""}
             aria-invalid={Boolean(error)}
             onChange={(e) =>

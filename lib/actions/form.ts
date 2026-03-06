@@ -11,7 +11,7 @@ import {
   updateFormSections
 } from "@/lib/db/data"
 import { getSession } from "./auth"
-import { FormSection } from "../definitions"
+import { FormFieldResponses, FormSection } from "../definitions"
 
 export type CreateFormState = {
   error?: string
@@ -51,10 +51,13 @@ export async function submitCreateFormAction(
   }
 }
 
-export async function saveFormSectionsAction(
-  id: string,
+export async function saveFormSectionsAction({
+  id,
+  sections
+}: {
+  id: string
   sections: FormSection[]
-) {
+}) {
   const session = await getSession()
 
   if (!session?.user) {
@@ -74,7 +77,13 @@ export async function saveFormSectionsAction(
   return result
 }
 
-export async function publishFormAction(id: string, sections: FormSection[]) {
+export async function publishFormAction({
+  id,
+  sections
+}: {
+  id: string
+  sections: FormSection[]
+}) {
   const session = await getSession()
 
   if (!session?.user) {
@@ -117,9 +126,21 @@ export async function deleteFormAction(id: string) {
   }
 }
 
-export async function submitFormAction(id: string, sections: FormSection[]) {
+export async function submitFormAction({
+  id,
+  responses,
+  respondantName,
+  respondantEmail
+}: {
+  id: string
+  responses: FormFieldResponses
+  respondantName: string | null
+  respondantEmail: string | null
+}) {
   return await receiveSubmission({
     id,
-    fields: sections.flatMap((section) => section.fields)
+    responses,
+    respondantName,
+    respondantEmail
   })
 }

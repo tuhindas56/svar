@@ -10,7 +10,7 @@ import {
   uuid
 } from "drizzle-orm/pg-core"
 import type { AdapterAccountType } from "next-auth/adapters"
-import { FieldType, FormSection } from "../definitions"
+import { FormSection } from "../definitions"
 
 const url = process.env.DATABASE_URL
 
@@ -111,6 +111,7 @@ export const formsTable = pgTable("forms", {
   modified: timestamp("modified").$onUpdateFn(() => new Date()),
   sections: jsonb("sections").notNull().$type<FormSection[]>(),
   published: boolean().default(false),
+  allowAnonymousSubmissions: boolean().default(false),
   userId: uuid("userId")
     .references(() => users.id, { onDelete: "cascade" })
     .notNull()
@@ -118,13 +119,21 @@ export const formsTable = pgTable("forms", {
 
 export const submissionsTable = pgTable("submissions", {
   id: uuid("id").primaryKey().defaultRandom(),
-  submitted: timestamp("submitted").default(new Date()),
-  modified: timestamp("modified").$onUpdateFn(() => new Date()),
-  fieldId: uuid("fieldId").notNull(),
-  fieldType: text("fieldType").$type<FieldType>().notNull(),
-  value: text("value").notNull(),
   formId: uuid("formId")
     .references(() => formsTable.id, { onDelete: "cascade" })
     .notNull(),
-  isCustomAnswer: boolean().default(false)
+  submitted: timestamp("submitted").default(new Date()),
+  modified: timestamp("modified").$onUpdateFn(() => new Date()),
+  respondantName: text("respondantName"),
+  respondantEmail: text("respondantEmail")
+})
+
+export const responsesTable = pgTable("responses", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  submissionId: uuid("submissionId").references(() => submissionsTable.id, {
+    onDelete: "cascade"
+  }),
+  fieldId: uuid("fieldId").notNull(),
+  value: jsonb("value").notNull(),
+  customAnswer: text("customAnswer")
 })
