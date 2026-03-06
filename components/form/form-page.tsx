@@ -1,10 +1,16 @@
 "use client"
 
-import { SubmitEvent, useState } from "react"
+import { SubmitEvent, useCallback, useEffect, useMemo, useState } from "react"
 import { toast } from "sonner"
 
 import { submitFormAction } from "@/lib/actions/form"
-import { FormSchema, FormSection as FormSectionType } from "@/lib/definitions"
+import type {
+  FormFieldErrors,
+  FormFieldResponses,
+  FormSchema,
+  FormSection as FormSectionType
+} from "@/lib/definitions"
+import { CUSTOM_ANSWER } from "@/lib/constants"
 import Header from "./header"
 import FormSection from "./form-section"
 import SubmissionSuccess from "./submission-success"
@@ -13,49 +19,73 @@ interface Props {
   form: FormSchema
 }
 
+function prepareResponses(sections: FormSectionType[]) {
+  const state: FormFieldResponses = {}
+
+  for (const section of sections) {
+    for (const field of section.fields) {
+      state[field.id] = { value: null, customAnswer: null, file: null }
+    }
+  }
+
+  return state
+}
+
+function prepareErrors(sections: FormSectionType[]) {
+  const state: FormFieldErrors = {}
+
+  for (const section of sections) {
+    for (const field of section.fields) {
+      state[field.id] = null
+    }
+  }
+
+  return state
+}
+
 function FormPage({ form }: Props) {
   const [activeSection, setActiveSection] = useState(0)
-  const [sections, setSections] = useState<FormSectionType[]>(form.sections)
+  const [responses, setResponses] = useState<FormFieldResponses>(() =>
+    prepareResponses(form.sections)
+  )
+  const [errors, setErrors] = useState<FormFieldErrors>(() =>
+    prepareErrors(form.sections)
+  )
   const [submitted, setSubmitted] = useState(false)
 
-  function validate() {
-    const validated = sections[activeSection].fields
-      .filter((field) => field.required)
-      .every((field) => field.value && field.value.length > 0)
+  const requiredFieldsInSection = useMemo(
+    () =>
+      new Set(
+        form.sections[activeSection].fields
+          .filter((field) => field.required)
+          .map((field) => field.id)
+      ),
+    [activeSection, form.sections]
+  )
 
-    if (!validated) {
-      setSections((prev) =>
-        prev.map((section, index) => {
-          if (index !== activeSection) return section
+  const validate = useCallback(() => {
+    let hasErrors = false
+    const nextErrorState: FormFieldErrors = {}
 
-          return {
-            ...section,
-            fields: section.fields.map((field) => {
-              if (field.required && field?.value?.length === 0) {
-                return { ...field, error: "This is a required question" }
-              }
-              return { ...field, error: null }
-            })
-          }
-        })
-      )
-    } else {
-      setSections((prev) =>
-        prev.map((section, index) => {
-          if (index !== activeSection) return section
-
-          return {
-            ...section,
-            fields: section.fields.map((field) => {
-              return { ...field, error: null }
-            })
-          }
-        })
-      )
+    for (const [fieldId, response] of Object.entries(responses)) {
+      if (requiredFieldsInSection.has(fieldId)) {
+        if (
+          response.value == null ||
+          response.value.length === 0 ||
+          (response.value === CUSTOM_ANSWER && !response.customAnswer)
+        ) {
+          nextErrorState[fieldId] = "This question is required."
+          hasErrors = true
+        } else {
+          nextErrorState[fieldId] = null
+        }
+      }
     }
 
-    return validated
-  }
+    setErrors(nextErrorState)
+
+    return !hasErrors
+  }, [responses, requiredFieldsInSection])
 
   function onNextClick() {
     if (!validate()) return
@@ -67,36 +97,12 @@ function FormPage({ form }: Props) {
     setActiveSection((prev) => prev - 1)
   }
 
-  function onUpdateField({
-    fieldId,
-    value,
-    isCustomAnswer,
-    customAnswer
-  }: {
-    fieldId: string
-    value?: string | string[]
-    isCustomAnswer?: boolean
-    customAnswer?: string
-  }) {
-    setSections((prev) => {
-      return prev.map((section) => ({
-        ...section,
-        fields: section.fields.map((field) => {
-          if (field.id !== fieldId) return field
-          if (isCustomAnswer) return { ...field, customAnswer }
-
-          return { ...field, value }
-        })
-      }))
-    })
-  }
-
   async function onSubmit(e: SubmitEvent) {
     e.preventDefault()
 
     if (!validate()) return
 
-    const result = await submitFormAction(form.id, sections)
+    const result = await submitFormAction(form.id, form.sections)
 
     if (result.success) {
       setSubmitted(true)
@@ -104,6 +110,14 @@ function FormPage({ form }: Props) {
       toast.error("Failed to submit")
     }
   }
+
+  useEffect(() => {
+    const timeout = setTimeout(validate, 200)
+
+    return () => {
+      clearTimeout(timeout)
+    }
+  }, [validate])
 
   return (
     <form
@@ -114,8 +128,10 @@ function FormPage({ form }: Props) {
 
       {!submitted && (
         <FormSection
-          section={sections[activeSection]}
-          onUpdateField={onUpdateField}
+          section={form.sections[activeSection]}
+          responses={responses}
+          setResponses={setResponses}
+          errors={errors}
           isFirstSection={activeSection === 0}
           isLastSection={activeSection === form.sections.length - 1}
           onNextClick={onNextClick}

@@ -1,11 +1,11 @@
 import { FIELD_TYPE } from "./constants"
 
+export type FieldType = (typeof FIELD_TYPE)[keyof typeof FIELD_TYPE]
+
 interface BaseField {
   id: string
   question: string
   required: boolean
-  error?: string | null
-  value?: string | string[]
 }
 
 interface TextField extends BaseField {
@@ -19,7 +19,6 @@ interface TextField extends BaseField {
 interface CheckboxOrRadioField extends BaseField {
   type: typeof FIELD_TYPE.CHECKBOX | typeof FIELD_TYPE.RADIO
   allowCustomAnswer: boolean
-  customAnswer?: string
   options: {
     value: string
     toSection?: string
@@ -51,4 +50,14 @@ export interface FormSchema {
   published: boolean
 }
 
-export type FieldType = (typeof FIELD_TYPE)[keyof typeof FIELD_TYPE]
+export interface FormFieldResponses {
+  [key: string]: {
+    value: string | string[] | null
+    customAnswer: string | null
+    file: File | null
+  }
+}
+
+export interface FormFieldErrors {
+  [key: string]: string | null
+}

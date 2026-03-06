@@ -1,4 +1,10 @@
-import { FormSection as FormSectionType } from "@/lib/definitions"
+import { Dispatch, SetStateAction } from "react"
+
+import type {
+  FormFieldErrors,
+  FormFieldResponses,
+  FormSection as FormSectionType
+} from "@/lib/definitions"
 import { Button } from "@/components/ui/button"
 import FormField from "./form-field"
 import Header from "./header"
@@ -7,16 +13,9 @@ interface SectionProps {
   section: FormSectionType
   isFirstSection: boolean
   isLastSection: boolean
-  onUpdateField: ({
-    fieldId,
-    value,
-    isCustomAnswer
-  }: {
-    fieldId: string
-    value?: string | string[]
-    isCustomAnswer?: boolean
-    customAnswer?: string
-  }) => void
+  responses: FormFieldResponses
+  setResponses: Dispatch<SetStateAction<FormFieldResponses>>
+  errors: FormFieldErrors
   onNextClick: () => void
   onPreviousClick: () => void
 }
@@ -25,7 +24,9 @@ function FormSection({
   section,
   isFirstSection,
   isLastSection,
-  onUpdateField,
+  responses,
+  setResponses,
+  errors,
   onNextClick,
   onPreviousClick
 }: SectionProps) {
@@ -40,7 +41,9 @@ function FormSection({
           <FormField
             key={field.id}
             field={field}
-            onUpdateField={onUpdateField}
+            responses={responses}
+            setResponses={setResponses}
+            errors={errors}
           />
         )
       })}

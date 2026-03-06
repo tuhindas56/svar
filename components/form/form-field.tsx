@@ -1,30 +1,31 @@
 "use client"
+import { Dispatch, SetStateAction, useMemo } from "react"
 
 import { CUSTOM_ANSWER, FIELD_TYPE } from "@/lib/constants"
-import { FormField as FormFieldType } from "@/lib/definitions"
+import type {
+  FormFieldErrors,
+  FormFieldResponses,
+  FormField as FormFieldType
+} from "@/lib/definitions"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
 import FormCard from "./form-card"
-import { Badge } from "../ui/badge"
 
 interface FormFieldProps {
   field: FormFieldType
-  onUpdateField: ({
-    fieldId,
-    value,
-    isCustomAnswer
-  }: {
-    fieldId: string
-    value?: string | string[]
-    isCustomAnswer?: boolean
-    customAnswer?: string
-  }) => void
+  responses: FormFieldResponses
+  setResponses: Dispatch<SetStateAction<FormFieldResponses>>
+  errors: FormFieldErrors
 }
 
-function FormField({ field, onUpdateField = () => {} }: FormFieldProps) {
+function FormField({ field, responses, setResponses, errors }: FormFieldProps) {
+  const response = useMemo(() => responses[field.id], [responses, field])
+  const error = useMemo(() => errors[field.id], [errors, field])
+
   return (
     <FormCard>
       <h2 className="text-sm font-medium">{field.question}</h2>
@@ -37,10 +38,16 @@ function FormField({ field, onUpdateField = () => {} }: FormFieldProps) {
             className="w-1/2 rounded-xs border p-1"
             type={field.type}
             required={field.required}
-            defaultValue={field.value}
-            aria-invalid={Boolean(field.error)}
-            onBlur={(e) =>
-              onUpdateField({ fieldId: field.id, value: e.target.value })
+            aria-invalid={Boolean(error)}
+            value={response.value ?? ""}
+            onChange={(e) =>
+              setResponses((prev) => ({
+                ...prev,
+                [field.id]: {
+                  ...prev[field.id],
+                  value: e.target.value || null
+                }
+              }))
             }
           />
         )}
@@ -49,21 +56,32 @@ function FormField({ field, onUpdateField = () => {} }: FormFieldProps) {
           <Textarea
             className="w-1/2 resize-none rounded-xs border p-1"
             required={field.required}
-            defaultValue={field.value}
-            onBlur={(e) =>
-              onUpdateField({ fieldId: field.id, value: e.target.value })
+            value={response.value ?? ""}
+            aria-invalid={Boolean(error)}
+            onChange={(e) =>
+              setResponses((prev) => ({
+                ...prev,
+                [field.id]: {
+                  ...prev[field.id],
+                  value: e.target.value || null
+                }
+              }))
             }
           />
         )}
 
-        {(field.type === FIELD_TYPE.RADIO ||
-          field.type === FIELD_TYPE.CHECKBOX) && (
+        {field.type === FIELD_TYPE.RADIO && (
           <>
             <RadioGroup
-              required={field.required}
-              defaultValue={field.value as string}
+              value={typeof response.value == "string" ? response.value : ""}
               onValueChange={(value) =>
-                onUpdateField({ fieldId: field.id, value })
+                setResponses((prev) => ({
+                  ...prev,
+                  [field.id]: {
+                    ...prev[field.id],
+                    value: value || null
+                  }
+                }))
               }
             >
               {Array.isArray(field.options) &&
@@ -71,34 +89,12 @@ function FormField({ field, onUpdateField = () => {} }: FormFieldProps) {
                   return (
                     <div className="flex items-center gap-2" key={index}>
                       <Label className="text-sm">
-                        {field.type === FIELD_TYPE.RADIO && (
-                          <RadioGroupItem value={option.value} />
-                        )}
-
-                        {field.type === FIELD_TYPE.CHECKBOX && (
-                          <Checkbox
-                            defaultChecked={field.value?.includes(option.value)}
-                            onCheckedChange={(checked) => {
-                              if (checked) {
-                                onUpdateField({
-                                  fieldId: field.id,
-                                  value: Array.isArray(field.value)
-                                    ? [...field.value, option.value]
-                                    : [option.value]
-                                })
-                              } else {
-                                onUpdateField({
-                                  fieldId: field.id,
-                                  value: Array.isArray(field.value)
-                                    ? field.value.filter(
-                                        (a) => a !== option.value
-                                      )
-                                    : []
-                                })
-                              }
-                            }}
-                          />
-                        )}
+                        <RadioGroupItem
+                          value={option.value}
+                          aria-invalid={
+                            Boolean(error) && response.value !== CUSTOM_ANSWER
+                          }
+                        />
 
                         {option.value}
                       </Label>
@@ -109,53 +105,109 @@ function FormField({ field, onUpdateField = () => {} }: FormFieldProps) {
               {field.allowCustomAnswer && (
                 <div className="flex items-center gap-2">
                   <Label className="text-sm">
-                    {field.type === FIELD_TYPE.RADIO && (
-                      <RadioGroupItem value={CUSTOM_ANSWER} />
-                    )}
-                    {field.type === FIELD_TYPE.CHECKBOX && (
-                      <Checkbox
-                        defaultChecked={field.value?.includes(CUSTOM_ANSWER)}
-                        onCheckedChange={(checked) => {
-                          if (checked) {
-                            onUpdateField({
-                              fieldId: field.id,
-                              value: Array.isArray(field.value)
-                                ? [...field.value, CUSTOM_ANSWER]
-                                : [CUSTOM_ANSWER]
-                            })
-                          } else {
-                            onUpdateField({
-                              fieldId: field.id,
-                              value: Array.isArray(field.value)
-                                ? field.value.filter((a) => a !== CUSTOM_ANSWER)
-                                : []
-                            })
-                          }
-                        }}
-                      />
-                    )}
+                    <RadioGroupItem
+                      value={CUSTOM_ANSWER}
+                      aria-invalid={
+                        Boolean(error) && response.value !== CUSTOM_ANSWER
+                      }
+                    />
                     Other
                   </Label>
                 </div>
               )}
             </RadioGroup>
-
-            {field.allowCustomAnswer &&
-              (field.value === CUSTOM_ANSWER ||
-                field.value?.includes(CUSTOM_ANSWER)) && (
-                <Input
-                  defaultValue={field.customAnswer}
-                  onBlur={(e) =>
-                    onUpdateField({
-                      fieldId: field.id,
-                      customAnswer: e.target.value,
-                      isCustomAnswer: true
-                    })
-                  }
-                  className="mt-6"
-                />
-              )}
           </>
+        )}
+
+        {field.type === FIELD_TYPE.CHECKBOX && (
+          <>
+            <div className="space-y-3">
+              {Array.isArray(field.options) &&
+                field.options.map((option, index) => {
+                  return (
+                    <div className="flex items-center gap-2" key={index}>
+                      <Label className="text-sm">
+                        <Checkbox
+                          checked={response.value?.includes(option.value)}
+                          aria-invalid={
+                            Boolean(error) && response.value !== CUSTOM_ANSWER
+                          }
+                          onCheckedChange={(checked) => {
+                            setResponses((prev) => {
+                              const prevField = prev[field.id]
+                              const next = Array.isArray(prevField.value)
+                                ? prevField.value.filter(
+                                    (v) => v !== option.value
+                                  )
+                                : []
+
+                              if (checked) {
+                                next.push(option.value)
+                              }
+
+                              return {
+                                ...prev,
+                                [field.id]: { ...prevField, value: next }
+                              }
+                            })
+                          }}
+                        />
+
+                        {option.value}
+                      </Label>
+                    </div>
+                  )
+                })}
+
+              {field.allowCustomAnswer && (
+                <div className="flex items-center gap-2">
+                  <Label className="text-sm">
+                    <Checkbox
+                      checked={response.value?.includes(CUSTOM_ANSWER)}
+                      aria-invalid={
+                        Boolean(error) && response.value !== CUSTOM_ANSWER
+                      }
+                      onCheckedChange={(checked) => {
+                        setResponses((prev) => {
+                          const prevField = prev[field.id]
+                          const next = Array.isArray(prevField.value)
+                            ? prevField.value.filter((v) => v !== CUSTOM_ANSWER)
+                            : []
+
+                          if (checked) {
+                            next.push(CUSTOM_ANSWER)
+                          }
+
+                          return {
+                            ...prev,
+                            [field.id]: { ...prevField, value: next }
+                          }
+                        })
+                      }}
+                    />
+                    Other
+                  </Label>
+                </div>
+              )}
+            </div>
+          </>
+        )}
+
+        {response.value?.includes(CUSTOM_ANSWER) && (
+          <Input
+            value={response.customAnswer ?? ""}
+            aria-invalid={Boolean(error)}
+            onChange={(e) =>
+              setResponses((prev) => ({
+                ...prev,
+                [field.id]: {
+                  ...prev[field.id],
+                  customAnswer: e.target.value || null
+                }
+              }))
+            }
+            className="mt-6"
+          />
         )}
 
         {field.type === FIELD_TYPE.FILE && (
@@ -175,9 +227,7 @@ function FormField({ field, onUpdateField = () => {} }: FormFieldProps) {
           </>
         )}
 
-        {field?.error && (
-          <p className="mt-2 text-sm text-red-400">{field.error}</p>
-        )}
+        {Boolean(error) && <p className="mt-4 text-sm text-red-400">{error}</p>}
       </div>
 
       {field.required && (
