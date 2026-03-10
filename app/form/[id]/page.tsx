@@ -1,9 +1,9 @@
-import { redirect } from "next/navigation"
+import { notFound } from "next/navigation"
 
-import { auth } from "@/auth"
 import { getFormSchema } from "@/lib/db/data"
-import FormPage from "@/components/form/form-page"
 import { FormSchema } from "@/lib/definitions"
+import FormPage from "@/components/form/form-page"
+import NotReceivingSubmissions from "@/components/form/not-receiving-submissions"
 
 interface FormProps {
   params: Promise<{ id: string }>
@@ -21,6 +21,14 @@ async function Form({ params }: FormProps) {
   }
 
   const form = data.form
+
+  if (!form.published) {
+    notFound()
+  }
+
+  if (!form.receivingSubmissions) {
+    return <NotReceivingSubmissions title={form.name} />
+  }
 
   return <FormPage form={form as FormSchema} />
 }

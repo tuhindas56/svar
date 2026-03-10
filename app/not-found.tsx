@@ -1,15 +1,11 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
 import {
   Card,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle
 } from "@/components/ui/card"
-import { Home } from "lucide-react"
-import { redirect } from "next/navigation"
 
 function NotFound() {
   return (
@@ -21,12 +17,6 @@ function NotFound() {
             The page you&apos;re looking for does not exist.
           </CardDescription>
         </CardHeader>
-
-        <CardFooter className="gap-4">
-          <Button onClick={() => redirect("/")} size="lg" variant="outline">
-            <Home /> Go home
-          </Button>
-        </CardFooter>
       </Card>
     </div>
   )

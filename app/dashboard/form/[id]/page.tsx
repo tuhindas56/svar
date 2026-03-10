@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation"
-import { Trash2 } from "lucide-react"
+import { ExternalLink, Pickaxe, Trash2 } from "lucide-react"
 
 import { getSession } from "@/lib/actions/auth"
 import {
@@ -25,6 +25,7 @@ import {
 import { deleteFormAction } from "@/lib/actions/form"
 import { convertDate } from "@/lib/utils"
 import Link from "next/link"
+import SubmissionsList from "@/components/dashboard/form/submissions-list"
 
 interface Props {
   params: Promise<{ id: string }>
@@ -57,9 +58,17 @@ async function ViewForm(props: Props) {
         <CardFooter className="gap-4">
           <Link href={`/form/create/${id}`} className="ml-auto">
             <Button variant="outline" size="sm">
-              Open in builder
+              <Pickaxe /> Open in builder
             </Button>
           </Link>
+
+          {data.published && (
+            <Link href={`/form/${id}`}>
+              <Button variant="outline" size="sm">
+                <ExternalLink /> Open form
+              </Button>
+            </Link>
+          )}
 
           <AlertDialog>
             <AlertDialogTrigger asChild>
@@ -91,6 +100,7 @@ async function ViewForm(props: Props) {
           </AlertDialog>
         </CardFooter>
       </Card>
+
       <div className="grid grid-cols-[repeat(auto-fill,200px)] gap-4">
         <Card className="w-50 gap-0 rounded-xs p-4 shadow-none">
           <CardHeader className="p-0">
@@ -126,6 +136,8 @@ async function ViewForm(props: Props) {
           </CardContent>
         </Card>
       </div>
+
+      <SubmissionsList submissions={data.submissions} />
     </>
   )
 }

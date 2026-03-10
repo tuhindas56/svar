@@ -48,6 +48,8 @@ export interface FormSchema {
   modified: Date
   sections: FormSection[]
   published: boolean
+  allowAnonymousSubmissions: boolean
+  receivingSubmissions: boolean
 }
 
 export interface FormFieldResponses {
