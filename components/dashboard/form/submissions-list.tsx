@@ -2,13 +2,7 @@
 
 import { Eye, Form } from "lucide-react"
 
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from "@/components/ui/card"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Table,
   TableHead,
@@ -29,11 +23,9 @@ interface SubmissionType {
 
 interface Props {
   submissions: SubmissionType[]
-  total: number
 }
 
 function SubmissionsList({ submissions = [] }: Props) {
-
   return (
     <>
       <Card className="rounded-xs p-6 shadow-none">
@@ -70,28 +62,19 @@ function SubmissionsList({ submissions = [] }: Props) {
                   {submissions.map((submission, index) => {
                     return (
                       <TableRow key={index}>
-                        
                         <TableCell>
                           {convertDate(submission.submitted, "DD MMM YYYY, hh:mm a")}
                         </TableCell>
-                       
-                       
-                        <TableCell className="flex items-center justify-center">
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Button
-                                  size="icon-sm"
-                                  variant="ghost"
-                                >
-                                  <Eye />
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent side="left">
-                                View submission
-                              </TooltipContent>
-                            </Tooltip>
 
-                          
+                        <TableCell className="flex items-center justify-center">
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button size="icon-sm" variant="ghost">
+                                <Eye />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent side="left">View submission</TooltipContent>
+                          </Tooltip>
                         </TableCell>
                       </TableRow>
                     )
@@ -100,7 +83,9 @@ function SubmissionsList({ submissions = [] }: Props) {
               </Table>
             </CardContent>
             <CardFooter className="p-0">
-              <Badge variant="outline">{submissions.length} response{submissions.length > 1 && "s"}</Badge>
+              <Badge variant="outline">
+                {submissions.length} response{submissions.length > 1 && "s"}
+              </Badge>
             </CardFooter>
           </>
         )}

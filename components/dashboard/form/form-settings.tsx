@@ -1,5 +1,4 @@
 function FormSettings() {
-  let a = ""
   /**
    * Limit to one response toggle
    * Response acceptance toggle
