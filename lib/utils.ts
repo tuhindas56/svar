@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from "clsx"
-import dayjs from "dayjs"
 import { twMerge } from "tailwind-merge"
+import dayjs from "dayjs"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -24,9 +24,6 @@ export function getInitials(name = "") {
     .join("")
 }
 
-export function convertDate(
-  date: Date | string | number | null,
-  format = "DD MMM YYYY"
-) {
+export function convertDate(date: Date | string | number | null, format = "DD MMM YYYY") {
   return date == null ? "-" : dayjs(date).format(format)
 }

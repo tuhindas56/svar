@@ -1,21 +1,10 @@
 import { and, count, desc, eq } from "drizzle-orm"
 
-import {
-  db,
-  formsTable,
-  responsesTable,
-  submissionsTable,
-  users
-} from "./schema"
+import { db, formsTable, responsesTable, submissionsTable } from "./schema"
 import { FormFieldResponses, FormSection } from "../definitions"
+import { user } from "@/auth-schema"
 
-export async function createForm({
-  name,
-  userId
-}: {
-  name: string
-  userId: string
-}) {
+export async function createForm({ name, userId }: { name: string; userId: string }) {
   try {
     const result = await db
       .insert(formsTable)
@@ -39,13 +28,7 @@ export async function createForm({
   }
 }
 
-export async function getFormDetails({
-  id,
-  userId
-}: {
-  id: string
-  userId: string
-}) {
+export async function getFormDetails({ id, userId }: { id: string; userId: string }) {
   try {
     const result = await db
       .select({
@@ -110,9 +93,7 @@ export async function getForms({
   userId: string
 }) {
   try {
-    const totalRowsResult = await db
-      .select({ total: count(formsTable.id) })
-      .from(formsTable)
+    const totalRowsResult = await db.select({ total: count(formsTable.id) }).from(formsTable)
 
     const result = await db
       .select({
@@ -178,18 +159,13 @@ export async function updateFormSections({
   }
 }
 
-export async function publishForm({
-  id,
-  userId
-}: {
-  id: string
-  userId: string
-}) {
+export async function publishForm({ id, userId }: { id: string; userId: string }) {
   try {
     await db
       .update(formsTable)
       .set({
-        published: true
+        published: true,
+        receivingSubmissions: true
       })
       .where(and(eq(formsTable.id, id), eq(formsTable.userId, userId)))
 
@@ -206,17 +182,9 @@ export async function publishForm({
   }
 }
 
-export async function deleteForm({
-  id,
-  userId
-}: {
-  id: string
-  userId: string
-}) {
+export async function deleteForm({ id, userId }: { id: string; userId: string }) {
   try {
-    await db
-      .delete(formsTable)
-      .where(and(eq(formsTable.id, id), eq(formsTable.userId, userId)))
+    await db.delete(formsTable).where(and(eq(formsTable.id, id), eq(formsTable.userId, userId)))
 
     return {
       success: true
@@ -274,5 +242,5 @@ export async function receiveSubmission({
 }
 
 export async function deleteUserData({ id }: { id: string }) {
-  await db.delete(users).where(eq(users.id, id))
+  await db.delete(user).where(eq(user.id, id))
 }

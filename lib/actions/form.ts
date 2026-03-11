@@ -10,7 +10,7 @@ import {
   receiveSubmission,
   updateFormSections
 } from "@/lib/db/data"
-import { getSession } from "./auth"
+import { getSession } from "@/auth"
 import { FormFieldResponses, FormSection } from "../definitions"
 
 export type CreateFormState = {
@@ -24,7 +24,7 @@ export async function submitCreateFormAction(
 ): Promise<CreateFormState> {
   const session = await getSession()
 
-  if (!session?.user) {
+  if (!session) {
     redirect("/")
   }
 
@@ -60,7 +60,7 @@ export async function saveFormSectionsAction({
 }) {
   const session = await getSession()
 
-  if (!session?.user) {
+  if (!session) {
     redirect("/")
   }
 
@@ -77,16 +77,10 @@ export async function saveFormSectionsAction({
   return result
 }
 
-export async function publishFormAction({
-  id,
-  sections
-}: {
-  id: string
-  sections: FormSection[]
-}) {
+export async function publishFormAction({ id, sections }: { id: string; sections: FormSection[] }) {
   const session = await getSession()
 
-  if (!session?.user) {
+  if (!session) {
     redirect("/")
   }
 
@@ -110,7 +104,7 @@ export async function publishFormAction({
 export async function deleteFormAction(id: string) {
   const session = await getSession()
 
-  if (!session?.user) {
+  if (!session) {
     redirect("/")
   }
 
@@ -121,6 +115,7 @@ export async function deleteFormAction(id: string) {
 
   if (success) {
     revalidatePath("/dashboard")
+    redirect("/dashboard")
   } else {
     throw new Error(error)
   }

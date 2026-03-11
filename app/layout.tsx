@@ -6,7 +6,6 @@ import { cn } from "@/lib/utils"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { Toaster } from "@/components/ui/sonner"
 import "./globals.css"
-import { SessionProvider } from "next-auth/react"
 
 interface RootLayoutProps {
   children: ReactNode
@@ -35,18 +34,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={cn(
-          lora.variable,
-          inter.variable,
-          "custom-pattern font-sans antialiased"
-        )}
-      >
-        <SessionProvider>
-          <TooltipProvider>
-            <div className="mx-auto w-full">{children}</div>
-          </TooltipProvider>
-        </SessionProvider>
+      <body className={cn(lora.variable, inter.variable, "custom-pattern font-sans antialiased")}>
+        <TooltipProvider>
+          <div className="mx-auto w-full">{children}</div>
+        </TooltipProvider>
         <Toaster
           position="top-right"
           offset={{

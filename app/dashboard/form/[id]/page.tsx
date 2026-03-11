@@ -1,14 +1,8 @@
 import { redirect } from "next/navigation"
 import { ExternalLink, Pickaxe, Trash2 } from "lucide-react"
 
-import { getSession } from "@/lib/actions/auth"
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from "@/components/ui/card"
+import { getSession } from "@/auth"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { getFormDetails } from "@/lib/db/data"
 import {
@@ -36,7 +30,7 @@ async function ViewForm(props: Props) {
 
   const session = await getSession()
 
-  if (!session?.user) {
+  if (!session) {
     redirect("/")
   }
 
@@ -63,7 +57,7 @@ async function ViewForm(props: Props) {
           </Link>
 
           {data.published && (
-            <Link href={`/form/${id}`}>
+            <Link href={`/form/${id}`} target="_blank">
               <Button variant="outline" size="sm">
                 <ExternalLink /> Open form
               </Button>
@@ -80,8 +74,8 @@ async function ViewForm(props: Props) {
               <AlertDialogHeader>
                 <AlertDialogTitle>Delete this form?</AlertDialogTitle>
                 <AlertDialogDescription>
-                  This form and all associated submissions will be permanently
-                  deleted. This action can’t be undone.
+                  This form and all associated submissions will be permanently deleted. This action
+                  can’t be undone.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
