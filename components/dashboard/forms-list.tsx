@@ -4,13 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { Form, Share, Trash2 } from "lucide-react"
 
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from "@/components/ui/card"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Table,
   TableHead,
@@ -77,7 +71,7 @@ function FormsList({ forms = [], total = 0 }: Props) {
             <CardContent className="p-0">
               <Table className="border">
                 <TableHeader>
-                  <TableRow className="bg-zinc-100">
+                  <TableRow className="bg-zinc-50">
                     <TableHead className="font-semibold">Form</TableHead>
                     <TableHead className="font-semibold">Created at</TableHead>
                     <TableHead className="font-semibold">Modified at</TableHead>
@@ -92,20 +86,12 @@ function FormsList({ forms = [], total = 0 }: Props) {
                     return (
                       <TableRow key={index}>
                         <TableCell>
-                          <Link href={`dashboard/form/${form.id}`}>
-                            {form.name}
-                          </Link>
+                          <Link href={`dashboard/form/${form.id}`}>{form.name}</Link>
                         </TableCell>
+                        <TableCell>{convertDate(form.created, "DD MMM YYYY, hh:mm a")}</TableCell>
+                        <TableCell>{convertDate(form.modified, "DD MMM YYYY, hh:mm a")}</TableCell>
                         <TableCell>
-                          {convertDate(form.created, "DD MMM YYYY, hh:mm a")}
-                        </TableCell>
-                        <TableCell>
-                          {convertDate(form.modified, "DD MMM YYYY, hh:mm a")}
-                        </TableCell>
-                        <TableCell>
-                          <Badge
-                            variant={form.published ? "default" : "outline"}
-                          >
+                          <Badge variant={form.published ? "default" : "outline"}>
                             {form.published ? "Published" : "Not published"}
                           </Badge>
                         </TableCell>
@@ -127,9 +113,7 @@ function FormsList({ forms = [], total = 0 }: Props) {
                                   <Share />
                                 </Button>
                               </TooltipTrigger>
-                              <TooltipContent side="left">
-                                Share form link
-                              </TooltipContent>
+                              <TooltipContent side="left">Share form link</TooltipContent>
                             </Tooltip>
                           )}
 
@@ -137,28 +121,19 @@ function FormsList({ forms = [], total = 0 }: Props) {
                             <Tooltip>
                               <TooltipTrigger asChild>
                                 <AlertDialogTrigger asChild>
-                                  <Button
-                                    size="icon-sm"
-                                    variant="ghost"
-                                    disabled={deleting}
-                                  >
+                                  <Button size="icon-sm" variant="ghost" disabled={deleting}>
                                     <Trash2 />
                                   </Button>
                                 </AlertDialogTrigger>
                               </TooltipTrigger>
-                              <TooltipContent side="right">
-                                Delete form
-                              </TooltipContent>
+                              <TooltipContent side="right">Delete form</TooltipContent>
                             </Tooltip>
                             <AlertDialogContent>
                               <AlertDialogHeader>
-                                <AlertDialogTitle>
-                                  Delete this form?
-                                </AlertDialogTitle>
+                                <AlertDialogTitle>Delete this form?</AlertDialogTitle>
                                 <AlertDialogDescription>
-                                  This form and all associated submissions will
-                                  be permanently deleted. This action can’t be
-                                  undone.
+                                  This form and all associated submissions will be permanently
+                                  deleted. This action can’t be undone.
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>

@@ -35,7 +35,9 @@ export async function getFormDetails({ id, userId }: { id: string; userId: strin
         name: formsTable.name,
         created: formsTable.created,
         modified: formsTable.modified,
-        published: formsTable.published
+        published: formsTable.published,
+        allowAnonymousSubmissions: formsTable.allowAnonymousSubmissions,
+        receivingSubmissions: formsTable.receivingSubmissions
       })
       .from(formsTable)
       .where(and(eq(formsTable.id, id), eq(formsTable.userId, userId)))
@@ -223,6 +225,7 @@ export async function receiveSubmission({
     const values = Object.entries(responses).map(([fieldId, response]) => ({
       submissionId: submissionResult[0].id,
       fieldId,
+      question: response.question,
       value: response.value,
       customAnswer: response.customAnswer
     }))
@@ -237,6 +240,26 @@ export async function receiveSubmission({
     return {
       success: false,
       error: "Failed to submit form"
+    }
+  }
+}
+
+export async function getSubmission({id}: {id: string}) {
+  try {
+    const result = await db.select().from(submissionsTable).where(eq(submissionsTable.id, id)).innerJoin(responsesTable, eq(responsesTable.submissionId, id))
+    
+    return {
+      success: true,
+      data: {
+        responses: result[0].responses
+      }
+    }
+
+  } catch (err) {
+    console.error(err)
+    return {
+      success: false,
+      error: "Failed to retrieve submission"
     }
   }
 }

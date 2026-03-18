@@ -3,9 +3,9 @@ export const FIELD_TYPE = {
   LONG: "long",
   RADIO: "radio",
   CHECKBOX: "checkbox",
-  FILE: "file",
-  DATE: "date",
-  TIME: "time"
+  // FILE: "file",
+  // DATE: "date",
+  // TIME: "time"
 } as const
 
 const FIELD_LABEL = {
@@ -13,9 +13,9 @@ const FIELD_LABEL = {
   long: "Paragraph",
   radio: "Multiple choice",
   checkbox: "Checkboxes",
-  file: "File upload",
-  date: "Date",
-  time: "Time"
+  // file: "File upload",
+  // date: "Date",
+  // time: "Time"
 }
 
 export const CUSTOM_ANSWER = "custom-answer"

@@ -31,7 +31,7 @@ function prepareResponses(sections: FormSectionType[]) {
 
   for (const section of sections) {
     for (const field of section.fields) {
-      state[field.id] = { value: null, customAnswer: null, file: null }
+      state[field.id] = { question: field.question, value: null, customAnswer: null, file: null }
     }
   }
 

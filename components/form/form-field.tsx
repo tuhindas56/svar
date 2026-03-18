@@ -31,9 +31,12 @@ function FormField({ field, responses, setResponses, errors }: FormFieldProps) {
       <h2 className="text-sm font-medium">{field.question}</h2>
 
       <div>
-        {(field.type === FIELD_TYPE.SHORT ||
-          field.type === FIELD_TYPE.DATE ||
-          field.type === FIELD_TYPE.TIME) && (
+        {(
+          field.type === FIELD_TYPE.SHORT 
+          // || field.type === FIELD_TYPE.DATE 
+          // || field.type === FIELD_TYPE.TIME
+        ) 
+          && (
           <Input
             className="w-1/2 rounded-xs border p-1"
             type={field.type}
@@ -208,7 +211,7 @@ function FormField({ field, responses, setResponses, errors }: FormFieldProps) {
           />
         )}
 
-        {field.type === FIELD_TYPE.FILE && (
+        {/* {field.type === FIELD_TYPE.FILE && (
           <>
             <div>
               <div
@@ -223,7 +226,7 @@ function FormField({ field, responses, setResponses, errors }: FormFieldProps) {
               </div>
             </div>
           </>
-        )}
+        )} */}
 
         {Boolean(error) && <p className="mt-4 text-sm text-red-400">{error}</p>}
       </div>

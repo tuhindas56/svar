@@ -12,8 +12,8 @@ interface TextField extends BaseField {
   type:
     | typeof FIELD_TYPE.SHORT
     | typeof FIELD_TYPE.LONG
-    | typeof FIELD_TYPE.DATE
-    | typeof FIELD_TYPE.TIME
+    // | typeof FIELD_TYPE.DATE
+    // | typeof FIELD_TYPE.TIME
 }
 
 interface CheckboxOrRadioField extends BaseField {
@@ -25,12 +25,13 @@ interface CheckboxOrRadioField extends BaseField {
   }[]
 }
 
-interface FileField extends BaseField {
-  type: typeof FIELD_TYPE.FILE
-  maxAllowedFiles: number
-}
+// interface FileField extends BaseField {
+//   type: typeof FIELD_TYPE.FILE
+//   maxAllowedFiles: number
+// }
 
-export type FormField = TextField | CheckboxOrRadioField | FileField
+export type FormField = TextField | CheckboxOrRadioField 
+// | FileField
 
 export interface FormSection {
   id: string
@@ -54,6 +55,7 @@ export interface FormSchema {
 
 export interface FormFieldResponses {
   [key: string]: {
+    question: string
     value: string | string[] | null
     customAnswer: string | null
     file: File | null

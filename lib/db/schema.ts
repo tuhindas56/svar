@@ -15,12 +15,14 @@ export const formsTable = pgTable("forms", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: text("name").notNull(),
   description: text("description"),
-  created: timestamp("created").$default(() => new Date()),
-  modified: timestamp("modified").$onUpdateFn(() => new Date()),
+  created: timestamp("created").default(new Date()).notNull(),
+  modified: timestamp("modified")
+    .$onUpdateFn(() => new Date())
+    .notNull(),
   sections: jsonb("sections").notNull().$type<FormSection[]>(),
-  published: boolean().default(false),
-  allowAnonymousSubmissions: boolean().default(false),
-  receivingSubmissions: boolean().default(false),
+  published: boolean("published").default(false).notNull(),
+  allowAnonymousSubmissions: boolean("allowAnonymousSubmissions").default(true).notNull(),
+  receivingSubmissions: boolean("receivingSubmissions").default(false).notNull(),
   userId: text("userId")
     .references(() => user.id, { onDelete: "cascade" })
     .notNull()
@@ -49,6 +51,7 @@ export const responsesTable = pgTable("responses", {
     })
     .notNull(),
   fieldId: uuid("fieldId").notNull(),
+  question: text("question"),
   value: jsonb("value").notNull(),
   customAnswer: text("customAnswer")
 })

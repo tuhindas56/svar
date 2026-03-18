@@ -131,7 +131,11 @@ async function ViewForm(props: Props) {
         </Card>
       </div>
 
-      <SubmissionsList submissions={data.submissions} />
+      <SubmissionsList
+        submissions={data.submissions}
+        anonymousSubmissions={data.allowAnonymousSubmissions}
+        published={data.published}
+      />
     </>
   )
 }
