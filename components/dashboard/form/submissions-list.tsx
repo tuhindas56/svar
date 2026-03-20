@@ -33,9 +33,14 @@ interface Props {
   published: boolean
 }
 
+export type SubmissionData = {
+  id: string
+  by: string | null
+} | null
+
 function SubmissionsList({ submissions = [], anonymousSubmissions, published }: Props) {
   const [viewSubmissionModalOpen, setViewSubmissionModalOpen] = useState(false)
-  const [viewSubmissionId, setViewSubmissionId] = useState<string | null>(null)
+  const [viewSubmissionData, setViewSubmissionData] = useState<SubmissionData | null>(null)
 
   return (
     <>
@@ -112,7 +117,10 @@ function SubmissionsList({ submissions = [], anonymousSubmissions, published }: 
                                 size="icon-sm"
                                 variant="ghost"
                                 onClick={() => {
-                                  setViewSubmissionId(submission.id)
+                                  setViewSubmissionData({
+                                    id: submission.id,
+                                    by: submission.respondantName
+                                  })
                                   setViewSubmissionModalOpen(true)
                                 }}
                               >
@@ -138,8 +146,8 @@ function SubmissionsList({ submissions = [], anonymousSubmissions, published }: 
       </Card>
 
       <ViewSubmissionModal
-        id={viewSubmissionId}
-        setId={setViewSubmissionId}
+        submissionData={viewSubmissionData}
+        setViewSubmissionData={setViewSubmissionData}
         open={viewSubmissionModalOpen}
         setOpen={setViewSubmissionModalOpen}
       />

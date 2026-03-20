@@ -244,17 +244,25 @@ export async function receiveSubmission({
   }
 }
 
-export async function getSubmission({id}: {id: string}) {
+export async function getSubmission({ id }: { id: string }) {
   try {
-    const result = await db.select().from(submissionsTable).where(eq(submissionsTable.id, id)).innerJoin(responsesTable, eq(responsesTable.submissionId, id))
-    
+    const result = await db
+      .select({
+        submitted: submissionsTable.submitted,
+        question: responsesTable.question,
+        value: responsesTable.value,
+        customAnswer: responsesTable.customAnswer
+      })
+      .from(submissionsTable)
+      .where(eq(submissionsTable.id, id))
+      .innerJoin(responsesTable, eq(responsesTable.submissionId, id))
+
     return {
       success: true,
       data: {
-        responses: result[0].responses
+        responses: result
       }
     }
-
   } catch (err) {
     console.error(err)
     return {

@@ -52,6 +52,6 @@ export const responsesTable = pgTable("responses", {
     .notNull(),
   fieldId: uuid("fieldId").notNull(),
   question: text("question"),
-  value: jsonb("value").notNull(),
+  value: jsonb("value"),
   customAnswer: text("customAnswer")
 })
