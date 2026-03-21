@@ -13,11 +13,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Checkbox } from "@/components/ui/checkbox"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger
-} from "@/components/ui/tooltip"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { Slider } from "@/components/ui/slider"
 import FormCard from "../form-card"
 import FieldTypeSelect from "./field-type-select"
@@ -90,15 +86,18 @@ function FormField({
       </div>
 
       <div>
-        {(field.type === FIELD_TYPE.SHORT ||
-          field.type === FIELD_TYPE.DATE ||
-          field.type === FIELD_TYPE.TIME) && (
-          <Input
-            className="w-2/3 rounded-lg border-2 border-dotted border-gray-200 bg-gray-50 p-1"
-            disabled
-            type={field.type}
-          />
-        )}
+        {
+          // (
+          field.type === FIELD_TYPE.SHORT && (
+            // || field.type === FIELD_TYPE.DATE
+            // || field.type === FIELD_TYPE.TIME)
+            <Input
+              className="w-2/3 rounded-lg border-2 border-dotted border-gray-200 bg-gray-50 p-1"
+              disabled
+              type={field.type}
+            />
+          )
+        }
 
         {field.type === FIELD_TYPE.LONG && (
           <Textarea
@@ -107,8 +106,7 @@ function FormField({
           />
         )}
 
-        {(field.type === FIELD_TYPE.RADIO ||
-          field.type === FIELD_TYPE.CHECKBOX) && (
+        {(field.type === FIELD_TYPE.RADIO || field.type === FIELD_TYPE.CHECKBOX) && (
           <>
             <RadioGroup>
               {Array.isArray(field.options) &&
@@ -119,9 +117,7 @@ function FormField({
                         <RadioGroupItem value={option.value} disabled />
                       )}
 
-                      {field.type === FIELD_TYPE.CHECKBOX && (
-                        <Checkbox disabled />
-                      )}
+                      {field.type === FIELD_TYPE.CHECKBOX && <Checkbox disabled />}
 
                       <ContentEditable
                         value={option.value}
@@ -173,7 +169,7 @@ function FormField({
           </>
         )}
 
-        {field.type === FIELD_TYPE.FILE && (
+        {/* {field.type === FIELD_TYPE.FILE && (
           <>
             <div>
               <div
@@ -188,13 +184,12 @@ function FormField({
               </div>
             </div>
           </>
-        )}
+        )} */}
       </div>
 
       <div className="mt-4 flex items-center justify-between gap-2">
         <div className="flex flex-wrap items-center gap-6">
-          {(field.type === FIELD_TYPE.RADIO ||
-            field.type === FIELD_TYPE.CHECKBOX) && (
+          {(field.type === FIELD_TYPE.RADIO || field.type === FIELD_TYPE.CHECKBOX) && (
             <>
               <Switch
                 onCheckedChange={(checked) => {
@@ -211,7 +206,7 @@ function FormField({
             </>
           )}
 
-          {field.type === FIELD_TYPE.FILE && (
+          {/* {field.type === FIELD_TYPE.FILE && (
             <div className="flex w-54 gap-4">
               <Label>Max no. of files: {field.maxAllowedFiles}</Label>
               <Slider
@@ -224,7 +219,7 @@ function FormField({
                 }}
               />
             </div>
-          )}
+          )} */}
 
           <div className="flex gap-2">
             <Switch
@@ -247,11 +242,7 @@ function FormField({
 
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button
-                onClick={confirmDeleteSection}
-                variant="ghost"
-                size="icon-sm"
-              >
+              <Button onClick={confirmDeleteSection} variant="ghost" size="icon-sm">
                 <Trash2 />
               </Button>
             </TooltipTrigger>
@@ -270,10 +261,7 @@ function FormField({
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel onClick={onCancel}>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              variant="destructive"
-              onClick={onConfirmDeleteField}
-            >
+            <AlertDialogAction variant="destructive" onClick={onConfirmDeleteField}>
               Delete question
             </AlertDialogAction>
           </AlertDialogFooter>

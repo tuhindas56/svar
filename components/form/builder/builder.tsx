@@ -5,15 +5,10 @@ import { toast } from "sonner"
 
 import { publishFormAction, saveFormSectionsAction } from "@/lib/actions/form"
 import { FIELD_TYPE } from "@/lib/constants"
-import {
-  FieldType,
-  FormField,
-  FormSchema,
-  FormSection as FormSectionType
-} from "@/lib/definitions"
+import { FieldType, FormField, FormSchema, FormSection as FormSectionType } from "@/lib/definitions"
 import { addAt } from "@/lib/utils"
-import FormSection from "./form-section"
 import { useBuilderMode } from "@/lib/contexts/builder-mode"
+import FormSection from "./form-section"
 
 interface BuilderProps {
   form: FormSchema
@@ -93,13 +88,13 @@ export function addField(type: FieldType): FormField {
     required: false
   }
 
-  if (type === FIELD_TYPE.FILE) {
-    return {
-      ...base,
-      type,
-      maxAllowedFiles: 1
-    }
-  }
+  // if (type === FIELD_TYPE.FILE) {
+  //   return {
+  //     ...base,
+  //     type,
+  //     maxAllowedFiles: 1
+  //   }
+  // }
 
   if (type === FIELD_TYPE.CHECKBOX || type === FIELD_TYPE.RADIO) {
     return {
@@ -160,9 +155,7 @@ function formSectionsReducer(state: FormSectionType[], action: Action) {
           ? {
               ...section,
               fields: section.fields.map((field) =>
-                field.id === action.payload.field.id
-                  ? action.payload.field
-                  : field
+                field.id === action.payload.field.id ? action.payload.field : field
               )
             }
           : section
@@ -177,8 +170,7 @@ function formSectionsReducer(state: FormSectionType[], action: Action) {
                 ...action.payload.field,
                 id: crypto.randomUUID(),
                 question: `Copy of ${
-                  action.payload.field.question ||
-                  "question" + (action.payload.after + 1)
+                  action.payload.field.question || "question" + (action.payload.after + 1)
                 }`
               })
             }
@@ -190,9 +182,7 @@ function formSectionsReducer(state: FormSectionType[], action: Action) {
         return section.id === action.payload.sectionID
           ? {
               ...section,
-              fields: section.fields.filter(
-                (field) => field.id !== action.payload.fieldID
-              )
+              fields: section.fields.filter((field) => field.id !== action.payload.fieldID)
             }
           : section
       })
@@ -203,14 +193,8 @@ function formSectionsReducer(state: FormSectionType[], action: Action) {
 }
 
 function Builder({ form }: BuilderProps) {
-  const {
-    setActions,
-    setIsPublished,
-    setIsBuilderMode,
-    setFormName,
-    setSaving,
-    setPublishing
-  } = useBuilderMode()
+  const { setActions, setIsPublished, setIsBuilderMode, setFormName, setSaving, setPublishing } =
+    useBuilderMode()
 
   const [modified, setModified] = useState(false)
   const [formSections, dispatch] = useReducer(formSectionsReducer, null, () =>
@@ -281,15 +265,7 @@ function Builder({ form }: BuilderProps) {
       setIsBuilderMode(false)
       setActions(null)
     }
-  }, [
-    form,
-    onPublishForm,
-    onSaveForm,
-    setActions,
-    setFormName,
-    setIsBuilderMode,
-    setIsPublished
-  ])
+  }, [form, onPublishForm, onSaveForm, setActions, setFormName, setIsBuilderMode, setIsPublished])
 
   return (
     <>

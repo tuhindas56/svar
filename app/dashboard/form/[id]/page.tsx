@@ -20,6 +20,7 @@ import { deleteFormAction } from "@/lib/actions/form"
 import { convertDate } from "@/lib/utils"
 import Link from "next/link"
 import SubmissionsList from "@/components/dashboard/form/submissions-list"
+import FormSettings from "@/components/dashboard/form/form-settings"
 
 interface Props {
   params: Promise<{ id: string }>
@@ -63,6 +64,8 @@ async function ViewForm(props: Props) {
               </Button>
             </Link>
           )}
+
+          <FormSettings formDetails={data} />
 
           <AlertDialog>
             <AlertDialogTrigger asChild>
