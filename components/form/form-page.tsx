@@ -1,13 +1,6 @@
 "use client"
 
-import {
-  SubmitEvent,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState
-} from "react"
+import { SubmitEvent, useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { toast } from "sonner"
 
 import { submitFormAction } from "@/lib/actions/form"
@@ -59,9 +52,7 @@ function FormPage({ form }: Props) {
   const [responses, setResponses] = useState<FormFieldResponses>(() =>
     prepareResponses(form.sections)
   )
-  const [errors, setErrors] = useState<FormFieldErrors>(() =>
-    prepareErrors(form.sections)
-  )
+  const [errors, setErrors] = useState<FormFieldErrors>(() => prepareErrors(form.sections))
   const [submitted, setSubmitted] = useState(false)
 
   const initialRenderOfSection = useRef(true)
@@ -116,6 +107,8 @@ function FormPage({ form }: Props) {
 
     if (!validate()) return
 
+    if (activeSection !== form.sections.length - 1) return
+
     const result = await submitFormAction({
       id: form.id,
       responses,
@@ -144,10 +137,7 @@ function FormPage({ form }: Props) {
   }, [validate])
 
   return (
-    <form
-      onSubmit={onSubmit}
-      className="mx-auto flex flex-col gap-8 px-4 py-8 md:w-10/12 lg:w-3xl"
-    >
+    <form onSubmit={onSubmit} className="mx-auto flex flex-col gap-8 px-4 py-8 md:w-10/12 lg:w-3xl">
       <Header title={form.name} description={form.description} isFormHeader />
 
       {!submitted && (

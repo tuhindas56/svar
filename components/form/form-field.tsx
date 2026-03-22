@@ -31,12 +31,9 @@ function FormField({ field, responses, setResponses, errors }: FormFieldProps) {
       <h2 className="text-sm font-medium">{field.question}</h2>
 
       <div>
-        {(
-          field.type === FIELD_TYPE.SHORT 
-          // || field.type === FIELD_TYPE.DATE 
+        {field.type === FIELD_TYPE.SHORT && (
+          // || field.type === FIELD_TYPE.DATE
           // || field.type === FIELD_TYPE.TIME
-        ) 
-          && (
           <Input
             className="w-1/2 rounded-xs border p-1"
             type={field.type}
@@ -92,9 +89,7 @@ function FormField({ field, responses, setResponses, errors }: FormFieldProps) {
                       <Label className="text-sm">
                         <RadioGroupItem
                           value={option.value}
-                          aria-invalid={
-                            Boolean(error) && response.value !== CUSTOM_ANSWER
-                          }
+                          aria-invalid={Boolean(error) && response.value !== CUSTOM_ANSWER}
                         />
 
                         {option.value}
@@ -108,9 +103,7 @@ function FormField({ field, responses, setResponses, errors }: FormFieldProps) {
                   <Label className="text-sm">
                     <RadioGroupItem
                       value={CUSTOM_ANSWER}
-                      aria-invalid={
-                        Boolean(error) && response.value !== CUSTOM_ANSWER
-                      }
+                      aria-invalid={Boolean(error) && response.value !== CUSTOM_ANSWER}
                     />
                     Other
                   </Label>
@@ -130,16 +123,12 @@ function FormField({ field, responses, setResponses, errors }: FormFieldProps) {
                       <Label className="text-sm">
                         <Checkbox
                           checked={response.value?.includes(option.value)}
-                          aria-invalid={
-                            Boolean(error) && response.value !== CUSTOM_ANSWER
-                          }
+                          aria-invalid={Boolean(error) && response.value !== CUSTOM_ANSWER}
                           onCheckedChange={(checked) => {
                             setResponses((prev) => {
                               const prevField = prev[field.id]
                               const next = Array.isArray(prevField.value)
-                                ? prevField.value.filter(
-                                    (v) => v !== option.value
-                                  )
+                                ? prevField.value.filter((v) => v !== option.value)
                                 : []
 
                               if (checked) {
@@ -165,9 +154,7 @@ function FormField({ field, responses, setResponses, errors }: FormFieldProps) {
                   <Label className="text-sm">
                     <Checkbox
                       checked={response.value?.includes(CUSTOM_ANSWER)}
-                      aria-invalid={
-                        Boolean(error) && response.value !== CUSTOM_ANSWER
-                      }
+                      aria-invalid={Boolean(error) && response.value !== CUSTOM_ANSWER}
                       onCheckedChange={(checked) => {
                         setResponses((prev) => {
                           const prevField = prev[field.id]

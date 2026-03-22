@@ -44,21 +44,23 @@ function CreateFormDialog() {
           </DialogDescription>
         </DialogHeader>
 
-         <form action={action} id={formId}>
-           <Label className="flex flex-col items-start">
-             Name
-             <Input
-               type="text"
-               name="name"
-               placeholder="eg: Product survey"
-               disabled={pending}
-               defaultValue={state.name}
-               aria-describedby={state?.error ? `form-error-${formId}` : undefined}
-             />
-           </Label>
-           {state?.error && (
-             <p id={`form-error-${formId}`} className="mt-2 text-xs text-red-400">{state.error}</p>
-           )}
+        <form action={action} id={formId}>
+          <Label className="flex flex-col items-start">
+            Name
+            <Input
+              type="text"
+              name="name"
+              placeholder="eg: Product survey"
+              disabled={pending}
+              defaultValue={state.name}
+              aria-describedby={state?.error ? `form-error-${formId}` : undefined}
+            />
+          </Label>
+          {state?.error && (
+            <p id={`form-error-${formId}`} className="mt-2 text-xs text-red-400">
+              {state.error}
+            </p>
+          )}
         </form>
 
         <DialogFooter>

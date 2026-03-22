@@ -9,12 +9,7 @@ interface HeaderProps {
 
 function Header({ title = "", description = "", isFormHeader }: HeaderProps) {
   return (
-    <FormBlockCard
-      className={cn(
-        "border-t-primary border-t-2",
-        isFormHeader && "border-t-4"
-      )}
-    >
+    <FormBlockCard className={cn("border-t-primary border-t-2", isFormHeader && "border-t-4")}>
       <h1
         className={cn("font-lora text-2xl font-bold", {
           "text-3xl": isFormHeader

@@ -72,9 +72,5 @@ export function BuilderModeProvider({ children }: Props) {
     [actions, formName, isBuilderMode, isPublished, saving, publishing]
   )
 
-  return (
-    <BuilderModeContext.Provider value={value}>
-      {children}
-    </BuilderModeContext.Provider>
-  )
+  return <BuilderModeContext.Provider value={value}>{children}</BuilderModeContext.Provider>
 }

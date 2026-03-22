@@ -1,10 +1,6 @@
 import { Plus } from "lucide-react"
 
-import {
-  FormField as Field,
-  FieldType,
-  FormSection as FormSectionType
-} from "@/lib/definitions"
+import { FormField as Field, FieldType, FormSection as FormSectionType } from "@/lib/definitions"
 import { fieldTypes } from "@/lib/constants"
 import { Button } from "@/components/ui/button"
 import FormField from "./form-field"
@@ -70,11 +66,7 @@ function FormSection({
       <FormCard className="flex-row flex-wrap justify-center">
         {fieldTypes.map((type, index) => {
           return (
-            <Button
-              key={index}
-              variant="outline"
-              onClick={() => onAddField(type.value)}
-            >
+            <Button key={index} variant="outline" onClick={() => onAddField(type.value)}>
               <Plus /> {type.label}
             </Button>
           )

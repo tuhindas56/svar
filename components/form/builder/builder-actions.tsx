@@ -4,8 +4,7 @@ import { useBuilderMode } from "@/lib/contexts/builder-mode"
 import { Button } from "@/components/ui/button"
 
 function BuilderActions() {
-  const { formName, actions, isPublished, isBuilderMode, saving, publishing } =
-    useBuilderMode()
+  const { formName, actions, isPublished, isBuilderMode, saving, publishing } = useBuilderMode()
 
   if (!isBuilderMode) {
     return null
@@ -18,12 +17,7 @@ function BuilderActions() {
       </p>
 
       <div className="flex gap-4">
-        <Button
-          onClick={actions?.save}
-          size="sm"
-          variant="outline"
-          disabled={saving || publishing}
-        >
+        <Button onClick={actions?.save} size="sm" variant="outline" disabled={saving || publishing}>
           {saving ? "Saving.." : "Save"}
         </Button>
         <Button

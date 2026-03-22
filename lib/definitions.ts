@@ -9,11 +9,9 @@ interface BaseField {
 }
 
 interface TextField extends BaseField {
-  type:
-    | typeof FIELD_TYPE.SHORT
-    | typeof FIELD_TYPE.LONG
-    // | typeof FIELD_TYPE.DATE
-    // | typeof FIELD_TYPE.TIME
+  type: typeof FIELD_TYPE.SHORT | typeof FIELD_TYPE.LONG
+  // | typeof FIELD_TYPE.DATE
+  // | typeof FIELD_TYPE.TIME
 }
 
 interface CheckboxOrRadioField extends BaseField {
@@ -30,7 +28,7 @@ interface CheckboxOrRadioField extends BaseField {
 //   maxAllowedFiles: number
 // }
 
-export type FormField = TextField | CheckboxOrRadioField 
+export type FormField = TextField | CheckboxOrRadioField
 // | FileField
 
 export interface FormSection {

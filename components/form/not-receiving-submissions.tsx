@@ -10,9 +10,7 @@ function NotReceivingSubmissions({ title }: Props) {
       <Card className="bg-background mt-24 h-max w-xs rounded-sm shadow-none sm:w-md">
         <CardHeader className="">
           <CardTitle className="font-lora text-2xl">{title}</CardTitle>
-          <CardDescription>
-            This form is no longer receiving submissions.
-          </CardDescription>
+          <CardDescription>This form is no longer receiving submissions.</CardDescription>
         </CardHeader>
       </Card>
     </div>

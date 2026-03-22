@@ -2,7 +2,7 @@ export const FIELD_TYPE = {
   SHORT: "short",
   LONG: "long",
   RADIO: "radio",
-  CHECKBOX: "checkbox",
+  CHECKBOX: "checkbox"
   // FILE: "file",
   // DATE: "date",
   // TIME: "time"
@@ -12,7 +12,7 @@ const FIELD_LABEL = {
   short: "Short answer",
   long: "Paragraph",
   radio: "Multiple choice",
-  checkbox: "Checkboxes",
+  checkbox: "Checkboxes"
   // file: "File upload",
   // date: "Date",
   // time: "Time"
