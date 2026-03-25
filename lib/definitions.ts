@@ -47,7 +47,7 @@ export interface FormSchema {
   modified: Date
   sections: FormSection[]
   published: boolean
-  allowAnonymousSubmissions: boolean
+  anonymousSubmissions: boolean
   receivingSubmissions: boolean
 }
 

@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation"
 import { ExternalLink, Pickaxe, Trash2 } from "lucide-react"
+import Link from "next/link"
 
 import { getSession } from "@/auth"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -18,7 +19,6 @@ import {
 } from "@/components/ui/alert-dialog"
 import { deleteFormAction } from "@/lib/actions/form"
 import { convertDate } from "@/lib/utils"
-import Link from "next/link"
 import SubmissionsList from "@/components/dashboard/form/submissions-list"
 import FormSettings from "@/components/dashboard/form/form-settings"
 
@@ -136,7 +136,7 @@ async function ViewForm(props: Props) {
 
       <SubmissionsList
         submissions={data.submissions}
-        anonymousSubmissions={data.allowAnonymousSubmissions}
+        anonymousSubmissions={data.anonymousSubmissions}
         published={data.published}
       />
     </>

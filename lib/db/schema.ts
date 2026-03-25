@@ -21,8 +21,9 @@ export const formsTable = pgTable("forms", {
     .notNull(),
   sections: jsonb("sections").notNull().$type<FormSection[]>(),
   published: boolean("published").default(false).notNull(),
-  allowAnonymousSubmissions: boolean("allowAnonymousSubmissions").default(true).notNull(),
+  anonymousSubmissions: boolean("anonymousSubmissions").default(true).notNull(),
   receivingSubmissions: boolean("receivingSubmissions").default(false).notNull(),
+  limitResponses: boolean("receivingSubmissions").default(false).notNull(),
   userId: text("userId")
     .references(() => user.id, { onDelete: "cascade" })
     .notNull()

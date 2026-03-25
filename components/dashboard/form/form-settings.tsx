@@ -1,23 +1,27 @@
 "use client"
 
 import { useId, useState } from "react"
-import { CircleQuestionMark } from "lucide-react"
+import { CircleQuestionMark, Cog } from "lucide-react"
 
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
-  DialogTitle
+  DialogTitle,
+  DialogTrigger
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import { Button } from "@/components/ui/button"
 
 interface ToggleProps {
   label: string
   description?: string
+  checked: boolean
   onCheckedChange: (checked: boolean) => void
+  disabled?: boolean
 }
 
 interface FormDetails {
@@ -33,8 +37,9 @@ interface FormDetails {
   created: Date
   modified: Date
   published: boolean
-  allowAnonymousSubmissions: boolean
+  anonymousSubmissions: boolean
   receivingSubmissions: boolean
+  limitResponses: boolean
 }
 
 interface FormSettingsProps {
@@ -42,7 +47,13 @@ interface FormSettingsProps {
   isBuilderMode?: boolean
 }
 
-function Toggle({ label, description, onCheckedChange }: ToggleProps) {
+interface FormSettings {
+  anonymousSubmissions: boolean
+  receivingSubmissions: boolean
+  limitResponses: boolean
+}
+
+function Toggle({ label, description, checked, onCheckedChange, disabled }: ToggleProps) {
   const id = useId()
 
   return (
@@ -52,7 +63,7 @@ function Toggle({ label, description, onCheckedChange }: ToggleProps) {
           {label}
           {description && (
             <Tooltip>
-              <TooltipTrigger className="ml-1" aria-label="Information about this option">
+              <TooltipTrigger className="ml-2" aria-label={description}>
                 <CircleQuestionMark size={14} className="text-foreground/50" />
               </TooltipTrigger>
               <TooltipContent>{description}</TooltipContent>
@@ -60,7 +71,18 @@ function Toggle({ label, description, onCheckedChange }: ToggleProps) {
           )}
         </span>
       </Label>
-      <Switch id={id} onCheckedChange={onCheckedChange} />
+      {!disabled && <Switch id={id} onCheckedChange={onCheckedChange} checked={checked} />}
+
+      {disabled && (
+        <Tooltip>
+          <TooltipTrigger className="ml-2" aria-label={description}>
+            <Switch disabled={disabled} />
+          </TooltipTrigger>
+          <TooltipContent>
+            Cannot limit responses when accepting anonoymous responses
+          </TooltipContent>
+        </Tooltip>
+      )}
     </div>
   )
 }
@@ -75,33 +97,58 @@ function FormSettings({ formDetails, isBuilderMode }: FormSettingsProps) {
    * Response edit toggle (later)
    * Require authentication toggle (later)
    */
-  const [settings, setSettings] = useState(null)
+  const [settings, setSettings] = useState<FormSettings | null>(null)
 
   function onOpenChange(open: boolean) {
     if (open) {
+      setSettings({
+        receivingSubmissions: formDetails.receivingSubmissions,
+        anonymousSubmissions: formDetails.anonymousSubmissions,
+        limitResponses: formDetails.limitResponses
+      })
+    } else {
+      setSettings(null)
     }
   }
 
+  //   function onSave() {
+  //     "use server"
+  //   }
+
   return (
     <Dialog onOpenChange={onOpenChange}>
+      <DialogTrigger asChild>
+        <Button variant="outline" size="sm">
+          <Cog /> Settings
+        </Button>
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Form settings</DialogTitle>
           <DialogDescription>Configure your form</DialogDescription>
         </DialogHeader>
-        <div className="border-border flex flex-col gap-4 rounded-sm border px-4 py-3">
-          {!isBuilderMode && <Toggle label="Accepting responses" onCheckedChange={() => {}} />}
-
-          <Toggle
-            label="Limit to one response"
-            description="Enabling this will make the form unable to receive anonymous submissions"
-            onCheckedChange={() => {}}
-          />
+        <div className="border-border flex flex-col gap-6 rounded-xs border px-3 py-3">
+          {!isBuilderMode && (
+            <Toggle
+              label="Accepting responses"
+              onCheckedChange={() => {}}
+              checked={formDetails.receivingSubmissions}
+            />
+          )}
 
           <Toggle
             label="Allow anonymous submissions"
             description="Adds mandatory 'name' and 'email' fields to the form when disabled"
             onCheckedChange={() => {}}
+            checked={!!settings?.anonymousSubmissions}
+          />
+
+          <Toggle
+            label="Limit to one response"
+            description="Enabling this will make the form unable to receive anonymous submissions"
+            onCheckedChange={() => {}}
+            checked={!!settings?.limitResponses}
+            disabled={!!settings?.anonymousSubmissions}
           />
         </div>
       </DialogContent>

@@ -105,7 +105,7 @@ export async function getForms({
         created: formsTable.created,
         modified: formsTable.modified,
         published: formsTable.published,
-        allowAnonymousSubmissions: formsTable.anonymousSubmissions
+        anonymousSubmissions: formsTable.anonymousSubmissions
       })
       .from(formsTable)
       .where(eq(formsTable.userId, userId))
