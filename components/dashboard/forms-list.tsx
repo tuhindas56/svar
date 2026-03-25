@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { Form, Share, Trash2 } from "lucide-react"
+import { Eye, Form, Share, Trash2 } from "lucide-react"
 
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import {
@@ -29,6 +29,7 @@ import {
 } from "../ui/alert-dialog"
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip"
 import { convertDate } from "@/lib/utils"
+import { toast } from "sonner"
 
 interface FormType {
   id: string
@@ -85,9 +86,7 @@ function FormsList({ forms = [], total = 0 }: Props) {
                   {forms.map((form, index) => {
                     return (
                       <TableRow key={index}>
-                        <TableCell>
-                          <Link href={`dashboard/form/${form.id}`}>{form.name}</Link>
-                        </TableCell>
+                        <TableCell>{form.name}</TableCell>
                         <TableCell>{convertDate(form.created, "DD MMM YYYY, hh:mm a")}</TableCell>
                         <TableCell>{convertDate(form.modified, "DD MMM YYYY, hh:mm a")}</TableCell>
                         <TableCell>
@@ -96,6 +95,17 @@ function FormsList({ forms = [], total = 0 }: Props) {
                           </Badge>
                         </TableCell>
                         <TableCell className="flex items-center justify-center">
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Link href={`dashboard/form/${form.id}`}>
+                                <Button size="icon-sm" variant="ghost">
+                                  <Eye />
+                                </Button>
+                              </Link>
+                            </TooltipTrigger>
+                            <TooltipContent>View form details</TooltipContent>
+                          </Tooltip>
+
                           {form.published && (
                             <Tooltip>
                               <TooltipTrigger asChild>
@@ -103,17 +113,16 @@ function FormsList({ forms = [], total = 0 }: Props) {
                                   size="icon-sm"
                                   variant="ghost"
                                   onClick={async () => {
-                                    await navigator.share({
-                                      title: form.name,
-                                      text: `${form.name} | svar`,
-                                      url: `${window.location.origin}/form/${form.id}`
-                                    })
+                                    await navigator.clipboard.writeText(
+                                      `${window.location.origin}/form/${form.id}`
+                                    )
+                                    toast.info("Link copied to clipboard")
                                   }}
                                 >
                                   <Share />
                                 </Button>
                               </TooltipTrigger>
-                              <TooltipContent side="left">Share form link</TooltipContent>
+                              <TooltipContent>Share form link</TooltipContent>
                             </Tooltip>
                           )}
 
@@ -126,7 +135,7 @@ function FormsList({ forms = [], total = 0 }: Props) {
                                   </Button>
                                 </AlertDialogTrigger>
                               </TooltipTrigger>
-                              <TooltipContent side="right">Delete form</TooltipContent>
+                              <TooltipContent>Delete form</TooltipContent>
                             </Tooltip>
                             <AlertDialogContent>
                               <AlertDialogHeader>

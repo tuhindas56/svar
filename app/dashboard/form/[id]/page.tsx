@@ -50,51 +50,52 @@ async function ViewForm(props: Props) {
         <CardHeader>
           <CardTitle className="text-2xl">{data.name}</CardTitle>
         </CardHeader>
-        <CardFooter className="gap-4">
-          <Link href={`/form/create/${id}`} className="ml-auto">
-            <Button variant="outline" size="sm">
-              <Pickaxe /> Open in builder
-            </Button>
-          </Link>
-
-          {data.published && (
-            <Link href={`/form/${id}`} target="_blank">
-              <Button variant="outline" size="sm">
-                <ExternalLink /> Open form
-              </Button>
-            </Link>
-          )}
-
-          <FormSettings formDetails={data} />
-
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button size="icon-sm" variant="outline">
-                <Trash2 />
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Delete this form?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This form and all associated submissions will be permanently deleted. This action
-                  can’t be undone.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction
-                  variant="destructive"
-                  onClick={async () => {
-                    "use server"
-                    await deleteFormAction(id)
-                  }}
-                >
-                  Delete form
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+        <CardFooter>
+          <div className="ml-auto flex flex-wrap gap-4">
+            {!data.published && (
+              <Link href={`/form/create/${id}`}>
+                <Button variant="outline" size="sm">
+                  <Pickaxe /> Open in builder
+                </Button>
+              </Link>
+            )}
+            {data.published && (
+              <Link href={`/form/${id}`} target="_blank">
+                <Button variant="outline" size="sm">
+                  <ExternalLink /> Open form
+                </Button>
+              </Link>
+            )}
+            <FormSettings formDetails={data} />
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button size="icon-sm" variant="outline">
+                  <Trash2 />
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Delete this form?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This form and all associated submissions will be permanently deleted. This
+                    action can’t be undone.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    variant="destructive"
+                    onClick={async () => {
+                      "use server"
+                      await deleteFormAction(id)
+                    }}
+                  >
+                    Delete form
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
         </CardFooter>
       </Card>
 
