@@ -28,7 +28,8 @@ export const auth = betterAuth({
 export async function loginWithGithub() {
   "use server"
   const { url, redirect: shouldRedirect } = await auth.api.signInSocial({
-    body: { provider: "github" }
+    body: { provider: "github" },
+    headers: await headers()
   })
 
   if (shouldRedirect && url) {
@@ -39,7 +40,8 @@ export async function loginWithGithub() {
 export async function loginWithGoogle() {
   "use server"
   const { url, redirect: shouldRedirect } = await auth.api.signInSocial({
-    body: { provider: "google" }
+    body: { provider: "google" },
+    headers: await headers()
   })
 
   if (shouldRedirect && url) {
