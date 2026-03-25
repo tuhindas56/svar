@@ -1,7 +1,7 @@
 import { Suspense } from "react"
 import { redirect } from "next/navigation"
 
-import { getSession } from "@/auth"
+import { getSession } from "@/lib/actions/auth"
 import { getForms } from "@/lib/db/data"
 import FormsList from "@/components/dashboard/forms-list"
 import FormsListSkeleton from "@/components/dashboard/forms-list-skeleton"

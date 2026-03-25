@@ -168,7 +168,9 @@ export async function publishForm({ id, userId }: { id: string; userId: string }
       .update(formsTable)
       .set({
         published: true,
-        receivingSubmissions: true
+        receivingSubmissions: true,
+        anonymousSubmissions: true,
+        limitResponses: false
       })
       .where(and(eq(formsTable.id, id), eq(formsTable.userId, userId)))
 
@@ -269,22 +271,6 @@ export async function getSubmission({ id }: { id: string }) {
     return {
       success: false,
       error: "Failed to retrieve submission"
-    }
-  }
-}
-
-export async function deleteUserData({ id }: { id: string }) {
-  try {
-    await db.delete(user).where(eq(user.id, id))
-
-    return {
-      success: true
-    }
-  } catch (err) {
-    console.error(err)
-    return {
-      success: false,
-      error: "Failed to delete account and associated data"
     }
   }
 }

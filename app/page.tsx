@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation"
 
-import { getSession, loginWithGithub, loginWithGoogle } from "@/auth"
+import { getSession, loginWithGithub, loginWithGoogle } from "@/lib/actions/auth"
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 

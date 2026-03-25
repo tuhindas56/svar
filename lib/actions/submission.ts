@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation"
 
-import { getSession } from "@/auth"
+import { getSession } from "@/lib/actions/auth"
 import { getSubmission } from "../db/data"
 
 export async function getSubmissionAction({ id }: { id: string }) {

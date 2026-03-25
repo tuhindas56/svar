@@ -10,7 +10,7 @@ import {
   receiveSubmission,
   updateFormSections
 } from "@/lib/db/data"
-import { getSession } from "@/auth"
+import { getSession } from "@/lib/actions/auth"
 import { FormFieldResponses, FormSection } from "../definitions"
 
 export type CreateFormState = {

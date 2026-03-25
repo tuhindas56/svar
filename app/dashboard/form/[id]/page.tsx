@@ -2,7 +2,7 @@ import { redirect } from "next/navigation"
 import { ExternalLink, Pickaxe, Trash2 } from "lucide-react"
 import Link from "next/link"
 
-import { getSession } from "@/auth"
+import { getSession } from "@/lib/actions/auth"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { getFormDetails } from "@/lib/db/data"

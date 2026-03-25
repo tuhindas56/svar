@@ -23,7 +23,7 @@ export const formsTable = pgTable("forms", {
   published: boolean("published").default(false).notNull(),
   anonymousSubmissions: boolean("anonymousSubmissions").default(true).notNull(),
   receivingSubmissions: boolean("receivingSubmissions").default(false).notNull(),
-  limitResponses: boolean("receivingSubmissions").default(false).notNull(),
+  limitResponses: boolean("limitResponses").default(false).notNull(),
   userId: text("userId")
     .references(() => user.id, { onDelete: "cascade" })
     .notNull()

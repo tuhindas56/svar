@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation"
 
-import { getSession } from "@/auth"
+import { getSession } from "@/lib/actions/auth"
 import { getFormSchema } from "@/lib/db/data"
 import { FormSchema } from "@/lib/definitions"
 import Builder from "@/components/form/builder/builder"
