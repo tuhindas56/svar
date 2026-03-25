@@ -36,8 +36,9 @@ export async function getFormDetails({ id, userId }: { id: string; userId: strin
         created: formsTable.created,
         modified: formsTable.modified,
         published: formsTable.published,
-        allowAnonymousSubmissions: formsTable.allowAnonymousSubmissions,
-        receivingSubmissions: formsTable.receivingSubmissions
+        anonymousSubmissions: formsTable.anonymousSubmissions,
+        receivingSubmissions: formsTable.receivingSubmissions,
+        limitResponses: formsTable.limitResponses
       })
       .from(formsTable)
       .where(and(eq(formsTable.id, id), eq(formsTable.userId, userId)))
@@ -104,7 +105,7 @@ export async function getForms({
         created: formsTable.created,
         modified: formsTable.modified,
         published: formsTable.published,
-        allowAnonymousSubmissions: formsTable.allowAnonymousSubmissions
+        allowAnonymousSubmissions: formsTable.anonymousSubmissions
       })
       .from(formsTable)
       .where(eq(formsTable.userId, userId))
@@ -273,5 +274,17 @@ export async function getSubmission({ id }: { id: string }) {
 }
 
 export async function deleteUserData({ id }: { id: string }) {
-  await db.delete(user).where(eq(user.id, id))
+  try {
+    await db.delete(user).where(eq(user.id, id))
+
+    return {
+      success: true
+    }
+  } catch (err) {
+    console.error(err)
+    return {
+      success: false,
+      error: "Failed to delete account and associated data"
+    }
+  }
 }

@@ -54,7 +54,7 @@ export async function logout() {
 
 export async function deleteAccount() {
   "use server"
-  const session = await auth.api.getSession()
+  const session = await auth.api.getSession({ headers: await headers() })
   await deleteUserData({ id: session?.user?.id as string })
 }
 
