@@ -22,9 +22,7 @@ function CreateFormDialog() {
   const pathname = usePathname()
   const formId = useId()
 
-  const [state, action, pending] = useActionState(submitCreateFormAction, {
-    name: ""
-  })
+  const [state, action, pending] = useActionState(submitCreateFormAction, { name: "" })
 
   if (!pathname.endsWith("dashboard")) {
     return null

@@ -156,7 +156,6 @@ function FormsList({ formsPromise }: Props) {
                                   onClick={async () => {
                                     setDeleting(true)
                                     await deleteFormAction(form.id)
-                                    console.log("i ran")
                                     setDeleting(false)
                                   }}
                                 >
