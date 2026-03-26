@@ -87,8 +87,12 @@ function FormsList({ forms = [], total = 0 }: Props) {
                     return (
                       <TableRow key={index}>
                         <TableCell>{form.name}</TableCell>
-                        <TableCell>{convertDate(form.created, "DD MMM YYYY, hh:mm a")}</TableCell>
-                        <TableCell>{convertDate(form.modified, "DD MMM YYYY, hh:mm a")}</TableCell>
+                        <TableCell suppressHydrationWarning>
+                          {convertDate(form.created, "DD MMM YYYY, hh:mm a")}
+                        </TableCell>
+                        <TableCell suppressHydrationWarning>
+                          {convertDate(form.modified, "DD MMM YYYY, hh:mm a")}
+                        </TableCell>
                         <TableCell>
                           <Badge variant={form.published ? "default" : "outline"}>
                             {form.published ? "Published" : "Not published"}
