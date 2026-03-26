@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { unparse } from "papaparse"
 
 import {
   Dialog,
@@ -11,6 +12,9 @@ import { getSubmissionAction } from "@/lib/actions/submission"
 import { CUSTOM_ANSWER } from "@/lib/constants"
 import { Skeleton } from "@/components/ui/skeleton"
 import type { SubmissionData } from "./submissions-list"
+import { convertDate } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import { Download } from "lucide-react"
 
 type Props = {
   submissionData: SubmissionData | null
@@ -24,6 +28,27 @@ type ResponseData = {
   question: string | null
   value: unknown
   customAnswer: string | null
+}
+
+function exportCSV(data: ResponseData[]) {
+  if (!Array.isArray(data)) return
+
+  const csv = unparse(
+    data.map((v) => ({
+      question: v.question,
+      value: v.value === CUSTOM_ANSWER ? v.customAnswer : v.value,
+      submitted_on: convertDate(v.submitted)
+    }))
+  )
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" })
+  const url = URL.createObjectURL(blob)
+
+  const a = document.createElement("a")
+  a.href = url
+  a.download = "submissions.csv"
+  a.click()
+  a.remove()
+  URL.revokeObjectURL(url)
 }
 
 function ViewSubmissionModal({ submissionData, setViewSubmissionData, open, setOpen }: Props) {
@@ -66,7 +91,7 @@ function ViewSubmissionModal({ submissionData, setViewSubmissionData, open, setO
           <DialogDescription>by {submissionData?.by || "Anonymous"}</DialogDescription>
         </DialogHeader>
 
-        <div className="flex max-h-[60vh] flex-col gap-6 overflow-y-auto">
+        <div className="flex max-h-[60vh] flex-col gap-4 overflow-y-auto">
           {loading && (
             <>
               {Array.from({ length: 3 }, (_, index) => {
@@ -101,6 +126,15 @@ function ViewSubmissionModal({ submissionData, setViewSubmissionData, open, setO
               )
             })}
         </div>
+
+        <Button
+          size="sm"
+          variant="outline"
+          className="mt-4 w-max"
+          onClick={() => exportCSV(responses)}
+        >
+          <Download /> Export as CSV
+        </Button>
       </DialogContent>
     </Dialog>
   )
