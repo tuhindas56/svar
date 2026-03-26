@@ -18,7 +18,7 @@ import { Badge } from "@/components/ui/badge"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import ViewSubmissionModal from "./view-submission"
 
-interface SubmissionType {
+type SubmissionType = {
   id: string
   formId: string
   submitted: Date
@@ -27,7 +27,7 @@ interface SubmissionType {
   respondantEmail: string | null
 }
 
-interface Props {
+type Props = {
   submissions: SubmissionType[]
   anonymousSubmissions: boolean
   published: boolean

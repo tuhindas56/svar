@@ -1,6 +1,6 @@
 import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card"
 
-interface Props {
+type Props = {
   title: string
 }
 

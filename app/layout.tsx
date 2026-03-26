@@ -7,7 +7,7 @@ import { TooltipProvider } from "@/components/ui/tooltip"
 import { Toaster } from "@/components/ui/sonner"
 import "./globals.css"
 
-interface RootLayoutProps {
+type RootLayoutProps = {
   children: ReactNode
 }
 

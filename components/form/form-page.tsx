@@ -15,7 +15,7 @@ import Header from "./header"
 import FormSection from "./form-section"
 import SubmissionSuccess from "./submission-success"
 
-interface Props {
+type Props = {
   form: FormSchema
 }
 
@@ -123,6 +123,11 @@ function FormPage({ form }: Props) {
     }
   }
 
+  function onClear() {
+    setResponses(prepareResponses(form.sections))
+    setActiveSection(0)
+  }
+
   useEffect(() => {
     if (initialRenderOfSection.current) {
       initialRenderOfSection.current = false
@@ -150,6 +155,7 @@ function FormPage({ form }: Props) {
           isLastSection={activeSection === form.sections.length - 1}
           onNextClick={onNextClick}
           onPreviousClick={onPreviousClick}
+          onClear={onClear}
         />
       )}
 

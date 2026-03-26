@@ -8,7 +8,7 @@ import {
   SelectValue
 } from "@/components/ui/select"
 
-interface NextSectionSelectProps {
+type NextSectionSelectProps = {
   sections: FormSection[]
   selectedSection: string
   onSelect: (selectedSection: string) => void

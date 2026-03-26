@@ -22,7 +22,7 @@ import { convertDate } from "@/lib/utils"
 import SubmissionsList from "@/components/dashboard/form/submissions-list"
 import FormSettings from "@/components/dashboard/form/form-settings"
 
-interface Props {
+type Props = {
   params: Promise<{ id: string }>
 }
 
@@ -35,14 +35,16 @@ async function ViewForm(props: Props) {
     redirect("/")
   }
 
-  const { success, data } = await getFormDetails({
+  const result = await getFormDetails({
     id,
     userId: session.user.id as string
   })
 
-  if (!success || !data) {
+  if (!result.success || !result.data) {
     return null
   }
+
+  const { data } = result
 
   return (
     <>
@@ -87,7 +89,7 @@ async function ViewForm(props: Props) {
                     variant="destructive"
                     onClick={async () => {
                       "use server"
-                      await deleteFormAction(id)
+                      await deleteFormAction(id, true)
                     }}
                   >
                     Delete form

@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils"
 import FormBlockCard from "./form-card"
 
-interface HeaderProps {
+type HeaderProps = {
   title: string
   description?: string
   isFormHeader?: boolean

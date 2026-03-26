@@ -14,7 +14,7 @@ import { logout } from "@/lib/actions/auth"
 import { getInitials } from "@/lib/utils"
 import DeleteAccount from "./delete-account"
 
-interface Props {
+type Props = {
   session: { user: User; session: Session } | null
 }
 

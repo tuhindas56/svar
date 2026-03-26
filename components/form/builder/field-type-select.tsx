@@ -9,7 +9,7 @@ import {
   SelectValue
 } from "@/components/ui/select"
 
-interface FieldTypeSelectProps {
+type FieldTypeSelectProps = {
   selectedType: FieldType
   onUpdateField: (selectedType: FieldType) => void
 }

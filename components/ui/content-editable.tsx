@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react"
 
 import { cn } from "@/lib/utils"
 
-interface ContentEditableProps {
+type ContentEditableProps = {
   onChange: (value: string) => void
   value: string
   className?: string

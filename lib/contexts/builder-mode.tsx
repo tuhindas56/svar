@@ -3,7 +3,7 @@
 import { createContext, use, useMemo, useState } from "react"
 import type { Dispatch, ReactNode, SetStateAction } from "react"
 
-interface Props {
+type Props = {
   children: ReactNode
 }
 
@@ -12,7 +12,7 @@ type Actions = {
   publish: () => Promise<void>
 } | null
 
-interface ContextValue {
+type ContextValue = {
   isBuilderMode: boolean
   setIsBuilderMode: Dispatch<SetStateAction<boolean>>
   isPublished: boolean

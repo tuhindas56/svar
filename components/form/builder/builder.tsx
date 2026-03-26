@@ -10,7 +10,7 @@ import { addAt } from "@/lib/utils"
 import { useBuilderMode } from "@/lib/contexts/builder-mode"
 import FormSection from "./form-section"
 
-interface BuilderProps {
+type BuilderProps = {
   form: FormSchema
 }
 
@@ -213,18 +213,18 @@ function Builder({ form }: BuilderProps) {
   const onSaveForm = useCallback(async () => {
     setSaving(true)
 
-    const { success, error } = await saveFormSectionsAction({
+    const result = await saveFormSectionsAction({
       id: form.id,
       sections: formSections
     })
 
     setSaving(false)
 
-    if (success) {
+    if (result.success) {
       setModified(false)
       toast.success("Form saved")
     } else {
-      toast.error(error)
+      toast.error(result.error)
     }
   }, [form.id, formSections, setSaving])
 

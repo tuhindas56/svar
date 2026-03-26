@@ -1,4 +1,4 @@
-import { Card, CardContent } from "@/components/ui/card"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Table,
   TableHead,
@@ -11,21 +11,30 @@ import { Skeleton } from "@/components/ui/skeleton"
 
 function FormsListSkeleton() {
   return (
-    <div className="mx-auto flex flex-col gap-8 px-4 py-8 md:w-10/12 lg:w-3xl">
-      <Card className="rounded-xs shadow-none">
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Form</TableHead>
-                <TableHead>Created at</TableHead>
-                <TableHead>Modified at</TableHead>
-                <TableHead>Options</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {Array.from({ length: 3 }, (_, i) => (
-                <TableRow key={i}>
+    <Card className="rounded-xs p-6 shadow-none">
+      <CardHeader className="p-0">
+        <CardTitle>Your Forms</CardTitle>
+      </CardHeader>
+      <CardContent className="p-0">
+        <Table className="border">
+          <TableHeader>
+            <TableRow className="bg-zinc-50">
+              <TableHead className="font-semibold">Form</TableHead>
+              <TableHead className="font-semibold">Created at</TableHead>
+              <TableHead className="font-semibold">Modified at</TableHead>
+              <TableHead className="font-semibold">Status</TableHead>
+              <TableHead className="flex items-center justify-center font-semibold">
+                Options
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {Array.from({ length: 3 }, (_, index) => {
+              return (
+                <TableRow key={index}>
+                  <TableCell>
+                    <Skeleton className="h-4 w-full rounded-xs" />
+                  </TableCell>
                   <TableCell>
                     <Skeleton className="h-4 w-full rounded-xs" />
                   </TableCell>
@@ -39,12 +48,15 @@ function FormsListSkeleton() {
                     <Skeleton className="h-4 w-full rounded-xs" />
                   </TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
-    </div>
+              )
+            })}
+          </TableBody>
+        </Table>
+      </CardContent>
+      <CardFooter className="p-0">
+        <Skeleton />
+      </CardFooter>
+    </Card>
   )
 }
 

@@ -5,22 +5,22 @@ import { FormSchema } from "@/lib/definitions"
 import FormPage from "@/components/form/form-page"
 import NotReceivingSubmissions from "@/components/form/not-receiving-submissions"
 
-interface FormProps {
+type FormProps = {
   params: Promise<{ id: string }>
 }
 
 async function Form({ params }: FormProps) {
   const { id } = await params
 
-  const { success, data, error } = await getFormSchema({
+  const result = await getFormSchema({
     id
   })
 
-  if (!success || !data) {
-    throw new Error(error)
+  if (!result.success) {
+    throw new Error(result.error)
   }
 
-  const form = data.form
+  const { form } = result.data!
 
   if (!form.published) {
     notFound()

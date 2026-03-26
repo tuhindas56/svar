@@ -8,8 +8,9 @@ import type {
 import { Button } from "@/components/ui/button"
 import FormField from "./form-field"
 import Header from "./header"
+import ClearForm from "./clear-form"
 
-interface SectionProps {
+type SectionProps = {
   section: FormSectionType
   isFirstSection: boolean
   isLastSection: boolean
@@ -18,6 +19,7 @@ interface SectionProps {
   errors: FormFieldErrors
   onNextClick: () => void
   onPreviousClick: () => void
+  onClear: () => void
 }
 
 function FormSection({
@@ -28,7 +30,8 @@ function FormSection({
   setResponses,
   errors,
   onNextClick,
-  onPreviousClick
+  onPreviousClick,
+  onClear
 }: SectionProps) {
   return (
     <>
@@ -61,9 +64,7 @@ function FormSection({
 
         {isLastSection && <Button type="submit">Submit</Button>}
 
-        <Button className="ml-auto" variant="ghost" type="button">
-          Clear form
-        </Button>
+        <ClearForm onClear={onClear} />
       </div>
     </>
   )

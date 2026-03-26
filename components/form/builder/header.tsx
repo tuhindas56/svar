@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import FormBlockCard from "../form-card"
 
-interface HeaderProps {
+type HeaderProps = {
   title: string
   onTitleChange: (value: string) => void
   description?: string

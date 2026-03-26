@@ -2,19 +2,19 @@ import { FIELD_TYPE } from "./constants"
 
 export type FieldType = (typeof FIELD_TYPE)[keyof typeof FIELD_TYPE]
 
-interface BaseField {
+type BaseField = {
   id: string
   question: string
   required: boolean
 }
 
-interface TextField extends BaseField {
+type TextField = BaseField & {
   type: typeof FIELD_TYPE.SHORT | typeof FIELD_TYPE.LONG
   // | typeof FIELD_TYPE.DATE
   // | typeof FIELD_TYPE.TIME
 }
 
-interface CheckboxOrRadioField extends BaseField {
+type CheckboxOrRadioField = BaseField & {
   type: typeof FIELD_TYPE.CHECKBOX | typeof FIELD_TYPE.RADIO
   allowCustomAnswer: boolean
   options: {
@@ -23,7 +23,7 @@ interface CheckboxOrRadioField extends BaseField {
   }[]
 }
 
-// interface FileField extends BaseField {
+// type FileField = BaseField & {
 //   type: typeof FIELD_TYPE.FILE
 //   maxAllowedFiles: number
 // }
@@ -31,14 +31,14 @@ interface CheckboxOrRadioField extends BaseField {
 export type FormField = TextField | CheckboxOrRadioField
 // | FileField
 
-export interface FormSection {
+export type FormSection = {
   id: string
   title: string
   description?: string
   fields: FormField[]
 }
 
-export interface FormSchema {
+export type FormSchema = {
   id: string
   name: string
   description?: string
@@ -51,7 +51,7 @@ export interface FormSchema {
   receivingSubmissions: boolean
 }
 
-export interface FormFieldResponses {
+export type FormFieldResponses = {
   [key: string]: {
     question: string
     value: string | string[] | null
@@ -60,6 +60,6 @@ export interface FormFieldResponses {
   }
 }
 
-export interface FormFieldErrors {
+export type FormFieldErrors = {
   [key: string]: string | null
 }

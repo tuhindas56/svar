@@ -2,7 +2,7 @@ import type { ComponentProps, ReactNode } from "react"
 
 import { cn } from "@/lib/utils"
 
-interface FormBlockCardProps extends ComponentProps<"div"> {
+type FormBlockCardProps = ComponentProps<"div"> & {
   children: ReactNode
 }
 

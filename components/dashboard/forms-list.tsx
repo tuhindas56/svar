@@ -1,8 +1,9 @@
 "use client"
 
-import { useState } from "react"
+import { use, useState } from "react"
 import Link from "next/link"
 import { Eye, Form, Share, Trash2 } from "lucide-react"
+import { toast } from "sonner"
 
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import {
@@ -29,23 +30,22 @@ import {
 } from "../ui/alert-dialog"
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip"
 import { convertDate } from "@/lib/utils"
-import { toast } from "sonner"
+import { GetFormsResult } from "@/lib/db/data"
 
-interface FormType {
-  id: string
-  name: string
-  created: Date
-  modified: Date
-  published: boolean
+type Props = {
+  formsPromise: GetFormsResult
 }
 
-interface Props {
-  forms: FormType[]
-  total: number
-}
-
-function FormsList({ forms = [], total = 0 }: Props) {
+function FormsList({ formsPromise }: Props) {
   const [deleting, setDeleting] = useState(false)
+  const result = use(formsPromise) || []
+
+  const forms = result.success ? result.data!.forms : []
+  const total = result.success ? result.data!.total : 0
+
+  if (!result.success) {
+    throw new Error(result.error)
+  }
 
   return (
     <>
@@ -156,6 +156,7 @@ function FormsList({ forms = [], total = 0 }: Props) {
                                   onClick={async () => {
                                     setDeleting(true)
                                     await deleteFormAction(form.id)
+                                    console.log("i ran")
                                     setDeleting(false)
                                   }}
                                 >

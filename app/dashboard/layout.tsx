@@ -4,7 +4,7 @@ import type { ReactNode } from "react"
 import PageHeader from "@/components/page-header"
 import PageHeaderSkeleton from "@/components/page-header-skeleton"
 
-interface Props {
+type Props = {
   children: ReactNode
 }
 

@@ -5,14 +5,7 @@ import { getSession } from "@/lib/actions/auth"
 import { getForms } from "@/lib/db/data"
 import FormsList from "@/components/dashboard/forms-list"
 import FormsListSkeleton from "@/components/dashboard/forms-list-skeleton"
-
-interface FormType {
-  id: string
-  name: string
-  created: Date
-  modified: Date
-  published: boolean
-}
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
 async function Dashboard() {
   const session = await getSession()
@@ -21,23 +14,24 @@ async function Dashboard() {
     redirect("/")
   }
 
-  const { success, data, error } = await getForms({
+  const formsPromise = getForms({
     userId: session.user.id as string,
     page: 0,
     pageSize: 10
   })
 
-  if (!success || !data) {
-    throw new Error(error)
-  }
-
-  const forms = data.forms
-  const total = data.total
-
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-8">
+      <Card>
+        <CardHeader className="">
+          <CardTitle className="text-lg font-medium">
+            Welcome to svar, {session.user.name.split(" ")[0]}!
+          </CardTitle>
+          <CardDescription>Manage your existing forms or start building a new one.</CardDescription>
+        </CardHeader>
+      </Card>
       <Suspense fallback={<FormsListSkeleton />}>
-        <FormsList forms={forms as FormType[]} total={total} />
+        <FormsList formsPromise={formsPromise} />
       </Suspense>
     </div>
   )

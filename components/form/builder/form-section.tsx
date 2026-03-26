@@ -1,13 +1,13 @@
 import { Plus } from "lucide-react"
 
 import { FormField as Field, FieldType, FormSection as FormSectionType } from "@/lib/definitions"
-import { fieldTypes } from "@/lib/constants"
+import { FIELD_TYPE } from "@/lib/constants"
 import { Button } from "@/components/ui/button"
 import FormField from "./form-field"
 import FormCard from "../form-card"
 import Header from "./header"
 
-interface SectionProps {
+type SectionProps = {
   section: FormSectionType
   isFirstSection: boolean
   showDeleteSection: boolean
@@ -63,19 +63,14 @@ function FormSection({
         )
       })}
 
-      <FormCard className="flex-row flex-wrap justify-center">
-        {fieldTypes.map((type, index) => {
-          return (
-            <Button key={index} variant="outline" onClick={() => onAddField(type.value)}>
-              <Plus /> {type.label}
-            </Button>
-          )
-        })}
+      <FormCard className="border-0 p-0">
+        <Button variant="outline" className="flex-1" onClick={() => onAddField(FIELD_TYPE.SHORT)}>
+          <Plus /> Add Question
+        </Button>
+        <Button variant="outline" className="flex-1" onClick={onAddSection}>
+          <Plus /> Section
+        </Button>
       </FormCard>
-
-      <Button variant="ghost" className="mt-8 w-full" onClick={onAddSection}>
-        <Plus /> Section
-      </Button>
     </>
   )
 }

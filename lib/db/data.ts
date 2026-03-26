@@ -2,9 +2,29 @@ import { and, count, desc, eq } from "drizzle-orm"
 
 import { db, formsTable, responsesTable, submissionsTable } from "./schema"
 import { FormFieldResponses, FormSection } from "../definitions"
-import { user } from "@/auth-schema"
 
-export async function createForm({ name, userId }: { name: string; userId: string }) {
+type Result<T = undefined> = Promise<
+  | {
+      success: true
+      data?: T
+    }
+  | {
+      success: false
+      error: string
+    }
+>
+
+type Form = typeof formsTable.$inferSelect
+type Submission = typeof submissionsTable.$inferSelect
+type Responses = typeof responsesTable.$inferSelect
+
+export async function createForm({
+  name,
+  userId
+}: {
+  name: string
+  userId: string
+}): Result<{ id: string }> {
   try {
     const result = await db
       .insert(formsTable)
@@ -28,7 +48,16 @@ export async function createForm({ name, userId }: { name: string; userId: strin
   }
 }
 
-export async function getFormDetails({ id, userId }: { id: string; userId: string }) {
+type GetFormDetailsResult = Omit<Form, "userId" | "id" | "description" | "sections"> & {
+  submissions: Submission[]
+}
+export async function getFormDetails({
+  id,
+  userId
+}: {
+  id: string
+  userId: string
+}): Result<GetFormDetailsResult> {
   try {
     const result = await db
       .select({
@@ -65,7 +94,9 @@ export async function getFormDetails({ id, userId }: { id: string; userId: strin
   }
 }
 
-export async function getFormSchema({ id }: { id: string; userId?: string }) {
+export async function getFormSchema({ id }: { id: string; userId?: string }): Result<{
+  form: Form
+}> {
   try {
     const result = await db
       .select()
@@ -86,6 +117,13 @@ export async function getFormSchema({ id }: { id: string; userId?: string }) {
   }
 }
 
+export type GetFormsResult = Result<{
+  total: number
+  forms: Omit<
+    Form,
+    "userId" | "description" | "sections" | "limitResponses" | "receivingSubmissions"
+  >[]
+}>
 export async function getForms({
   page = 0,
   pageSize = 15,
@@ -94,7 +132,7 @@ export async function getForms({
   page: number
   pageSize: number
   userId: string
-}) {
+}): GetFormsResult {
   try {
     const totalRowsResult = await db.select({ total: count(formsTable.id) }).from(formsTable)
 
@@ -138,7 +176,7 @@ export async function updateFormSections({
   id: string
   sections: FormSection[]
   userId: string
-}) {
+}): Result {
   try {
     await db
       .update(formsTable)
@@ -162,7 +200,7 @@ export async function updateFormSections({
   }
 }
 
-export async function publishForm({ id, userId }: { id: string; userId: string }) {
+export async function publishForm({ id, userId }: { id: string; userId: string }): Result {
   try {
     await db
       .update(formsTable)
@@ -187,7 +225,7 @@ export async function publishForm({ id, userId }: { id: string; userId: string }
   }
 }
 
-export async function deleteForm({ id, userId }: { id: string; userId: string }) {
+export async function deleteForm({ id, userId }: { id: string; userId: string }): Result {
   try {
     await db.delete(formsTable).where(and(eq(formsTable.id, id), eq(formsTable.userId, userId)))
 
@@ -214,7 +252,7 @@ export async function receiveSubmission({
   responses: FormFieldResponses
   respondantEmail: string | null
   respondantName: string | null
-}) {
+}): Result {
   try {
     const submissionResult = await db
       .insert(submissionsTable)
@@ -247,7 +285,10 @@ export async function receiveSubmission({
   }
 }
 
-export async function getSubmission({ id }: { id: string }) {
+type GetSubmissionResult = {
+  responses: (Omit<Responses, "id" | "submissionId" | "fieldId"> & Pick<Submission, "submitted">)[]
+}
+export async function getSubmission({ id }: { id: string }): Result<GetSubmissionResult> {
   try {
     const result = await db
       .select({

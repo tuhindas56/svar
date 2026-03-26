@@ -9,12 +9,10 @@ import ContentEditable from "@/components/ui/content-editable"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
-import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
-import { Slider } from "@/components/ui/slider"
 import FormCard from "../form-card"
 import FieldTypeSelect from "./field-type-select"
 import {
@@ -28,7 +26,7 @@ import {
   AlertDialogTitle
 } from "@/components/ui/alert-dialog"
 
-interface FormFieldProps {
+type FormFieldProps = {
   field: FormFieldType
   onUpdateField: (field: FormFieldType) => void
   onDuplicateField: () => void

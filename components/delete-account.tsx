@@ -10,7 +10,7 @@ import {
 } from "./ui/alert-dialog"
 import { deleteAccount } from "@/lib/actions/auth"
 
-interface Props {
+type Props = {
   open: boolean
   onOpenChange: (open: boolean) => void
 }

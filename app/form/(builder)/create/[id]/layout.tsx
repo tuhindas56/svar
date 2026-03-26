@@ -6,7 +6,7 @@ import PageHeader from "@/components/page-header"
 import PageHeaderSkeleton from "@/components/page-header-skeleton"
 import { BuilderModeProvider } from "@/lib/contexts/builder-mode"
 
-interface Props {
+type Props = {
   children: ReactNode
 }
 

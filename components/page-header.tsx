@@ -6,7 +6,7 @@ import { Card } from "./ui/card"
 import BuilderActions from "./form/builder/builder-actions"
 import { getSession } from "@/lib/actions/auth"
 
-interface Props {
+type Props = {
   children?: ReactNode
 }
 

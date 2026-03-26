@@ -43,9 +43,9 @@ export async function submitCreateFormAction(
     userId: session.user.id as string
   })
 
-  if (result.success && result.data) {
+  if (result.success) {
     revalidatePath("/dashboard")
-    redirect(`/form/create/${result.data.id}`)
+    redirect(`/form/create/${result.data!.id}`)
   } else {
     throw new Error(result.error)
   }
@@ -101,23 +101,25 @@ export async function publishFormAction({ id, sections }: { id: string; sections
   }
 }
 
-export async function deleteFormAction(id: string) {
+export async function deleteFormAction(id: string, shouldRedirect = false) {
   const session = await getSession()
 
   if (!session) {
     redirect("/")
   }
 
-  const { success, error } = await deleteForm({
+  const result = await deleteForm({
     id,
     userId: session.user.id as string
   })
 
-  if (success) {
+  if (result.success) {
     revalidatePath("/dashboard")
-    redirect("/dashboard")
+    if (shouldRedirect) {
+      redirect("/dashboard")
+    }
   } else {
-    throw new Error(error)
+    throw new Error(result.error)
   }
 }
 

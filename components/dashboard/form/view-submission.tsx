@@ -12,14 +12,14 @@ import { CUSTOM_ANSWER } from "@/lib/constants"
 import { Skeleton } from "@/components/ui/skeleton"
 import type { SubmissionData } from "./submissions-list"
 
-interface Props {
+type Props = {
   submissionData: SubmissionData | null
   setViewSubmissionData: (data: SubmissionData | null) => void
   open: boolean
   setOpen: (open: boolean) => void
 }
 
-interface ResponseData {
+type ResponseData = {
   submitted: Date
   question: string | null
   value: unknown

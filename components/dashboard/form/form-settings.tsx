@@ -16,7 +16,7 @@ import { Switch } from "@/components/ui/switch"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { Button } from "@/components/ui/button"
 
-interface ToggleProps {
+type ToggleProps = {
   label: string
   description?: string
   checked: boolean
@@ -24,7 +24,7 @@ interface ToggleProps {
   disabled?: boolean
 }
 
-interface FormDetails {
+type FormDetails = {
   submissions: {
     id: string
     formId: string
@@ -42,12 +42,12 @@ interface FormDetails {
   limitResponses: boolean
 }
 
-interface FormSettingsProps {
+type FormSettingsProps = {
   formDetails: FormDetails
   isBuilderMode?: boolean
 }
 
-interface FormSettings {
+type FormSettings = {
   anonymousSubmissions: boolean
   receivingSubmissions: boolean
   limitResponses: boolean

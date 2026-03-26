@@ -15,7 +15,7 @@ import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
 import FormCard from "./form-card"
 
-interface FormFieldProps {
+type FormFieldProps = {
   field: FormFieldType
   responses: FormFieldResponses
   setResponses: Dispatch<SetStateAction<FormFieldResponses>>

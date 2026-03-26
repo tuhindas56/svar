@@ -5,7 +5,7 @@ import { getFormSchema } from "@/lib/db/data"
 import { FormSchema } from "@/lib/definitions"
 import Builder from "@/components/form/builder/builder"
 
-interface Props {
+type Props = {
   params: Promise<{ id: string }>
 }
 
@@ -17,16 +17,16 @@ async function Create(props: Props) {
     redirect("/")
   }
 
-  const { success, data, error } = await getFormSchema({
+  const result = await getFormSchema({
     id,
     userId: session.user.id as string
   })
 
-  if (!success || !data) {
-    throw new Error(error)
+  if (!result.success) {
+    throw new Error(result.error)
   }
 
-  return <Builder form={data.form as FormSchema} />
+  return <Builder form={result.data!.form as FormSchema} />
 }
 
 export default Create

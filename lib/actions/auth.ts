@@ -5,7 +5,6 @@ import { redirect } from "next/navigation"
 import { auth } from "@/auth"
 
 export async function loginWithGithub() {
-  "use server"
   const { url, redirect: shouldRedirect } = await auth.api.signInSocial({
     body: { provider: "github" },
     headers: await headers()
@@ -17,7 +16,6 @@ export async function loginWithGithub() {
 }
 
 export async function loginWithGoogle() {
-  "use server"
   const { url, redirect: shouldRedirect } = await auth.api.signInSocial({
     body: { provider: "google" },
     headers: await headers()
@@ -29,12 +27,10 @@ export async function loginWithGoogle() {
 }
 
 export async function logout() {
-  "use server"
   await auth.api.signOut({ headers: await headers() })
 }
 
 export async function deleteAccount() {
-  "use server"
   const session = await auth.api.getSession({ headers: await headers() })
 
   if (session) {
