@@ -85,10 +85,7 @@ function FormField({
 
       <div>
         {
-          // (
           field.type === FIELD_TYPE.SHORT && (
-            // || field.type === FIELD_TYPE.DATE
-            // || field.type === FIELD_TYPE.TIME)
             <Input
               className="w-2/3 rounded-lg border-2 border-dotted border-gray-200 bg-gray-50 p-1"
               disabled
@@ -166,58 +163,19 @@ function FormField({
             </Button>
           </>
         )}
-
-        {/* {field.type === FIELD_TYPE.FILE && (
-          <>
-            <div>
-              <div
-                className="border-border bg-muted/40 text-muted-foreground relative mt-5 flex h-40 cursor-not-allowed flex-col items-center justify-center rounded-xs border border-dashed opacity-70 grayscale transition-colors select-none"
-                aria-disabled="true"
-              >
-                <div className="relative z-10 flex flex-col items-center gap-3 px-4 text-center">
-                  <p className="text-muted-foreground/70 text-[10px] tracking-wider uppercase">
-                    Size limit: 10 MB
-                  </p>
-                </div>
-              </div>
-            </div>
-          </>
-        )} */}
       </div>
 
       <div className="mt-4 flex items-center justify-between gap-2">
         <div className="flex flex-wrap items-center gap-6">
           {(field.type === FIELD_TYPE.RADIO || field.type === FIELD_TYPE.CHECKBOX) && (
-            <>
-              <Switch
-                onCheckedChange={(checked) => {
-                  onChange("allowCustomAnswer", checked)
-                }}
-                checked={field.allowCustomAnswer}
-                label="Allow custom answer"
-              />
-
-              {/* <Switch
-                checked={field.allowCustomAnswer}
-                label="Go to section based on answer"
-              /> */}
-            </>
+            <Switch
+              onCheckedChange={(checked) => {
+                onChange("allowCustomAnswer", checked)
+              }}
+              checked={field.allowCustomAnswer}
+              label="Allow custom answer"
+            />
           )}
-
-          {/* {field.type === FIELD_TYPE.FILE && (
-            <div className="flex w-54 gap-4">
-              <Label>Max no. of files: {field.maxAllowedFiles}</Label>
-              <Slider
-                min={1}
-                max={5}
-                step={1}
-                className="w-20"
-                onValueChange={([count]) => {
-                  onChange("maxAllowedFiles", count)
-                }}
-              />
-            </div>
-          )} */}
 
           <div className="flex gap-2">
             <Switch
