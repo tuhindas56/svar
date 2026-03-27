@@ -10,8 +10,6 @@ type BaseField = {
 
 type TextField = BaseField & {
   type: typeof FIELD_TYPE.SHORT | typeof FIELD_TYPE.LONG
-  // | typeof FIELD_TYPE.DATE
-  // | typeof FIELD_TYPE.TIME
 }
 
 type CheckboxOrRadioField = BaseField & {
@@ -23,13 +21,7 @@ type CheckboxOrRadioField = BaseField & {
   }[]
 }
 
-// type FileField = BaseField & {
-//   type: typeof FIELD_TYPE.FILE
-//   maxAllowedFiles: number
-// }
-
 export type FormField = TextField | CheckboxOrRadioField
-// | FileField
 
 export type FormSection = {
   id: string
