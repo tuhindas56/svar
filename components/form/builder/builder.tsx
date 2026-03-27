@@ -88,14 +88,6 @@ export function addField(type: FieldType): FormField {
     required: false
   }
 
-  // if (type === FIELD_TYPE.FILE) {
-  //   return {
-  //     ...base,
-  //     type,
-  //     maxAllowedFiles: 1
-  //   }
-  // }
-
   if (type === FIELD_TYPE.CHECKBOX || type === FIELD_TYPE.RADIO) {
     return {
       ...base,
