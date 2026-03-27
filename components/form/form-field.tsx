@@ -32,8 +32,6 @@ function FormField({ field, responses, setResponses, errors }: FormFieldProps) {
 
       <div>
         {field.type === FIELD_TYPE.SHORT && (
-          // || field.type === FIELD_TYPE.DATE
-          // || field.type === FIELD_TYPE.TIME
           <Input
             className="w-1/2 rounded-xs border p-1"
             type={field.type}
@@ -197,23 +195,6 @@ function FormField({ field, responses, setResponses, errors }: FormFieldProps) {
             className="mt-6"
           />
         )}
-
-        {/* {field.type === FIELD_TYPE.FILE && (
-          <>
-            <div>
-              <div
-                className="border-border bg-muted/40 text-muted-foreground relative mt-5 flex h-40 cursor-not-allowed flex-col items-center justify-center rounded-xs border border-dashed opacity-70 grayscale transition-colors select-none"
-                aria-disabled="true"
-              >
-                <div className="relative z-10 flex flex-col items-center gap-3 px-4 text-center">
-                  <p className="text-muted-foreground/70 text-[10px] tracking-wider uppercase">
-                    Size limit: 10 MB
-                  </p>
-                </div>
-              </div>
-            </div>
-          </>
-        )} */}
 
         {Boolean(error) && <p className="mt-4 text-sm text-red-400">{error}</p>}
       </div>
