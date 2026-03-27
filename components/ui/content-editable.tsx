@@ -68,7 +68,10 @@ const ContentEditable = ({
   }, [disableNewLine])
 
   return (
-    <div className={cn("bg-background relative h-fit overflow-hidden")} style={{ width }}>
+    <div
+      className={cn("bg-background relative h-fit overflow-hidden")}
+      style={{ width }}
+    >
       <div
         className={cn(
           "text-md border-border/0 hover:border-border/50 focus:border-border w-full rounded-xs border p-2 text-pretty duration-100 ease-out focus:outline-0",

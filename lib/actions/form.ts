@@ -77,7 +77,13 @@ export async function saveFormSectionsAction({
   return result
 }
 
-export async function publishFormAction({ id, sections }: { id: string; sections: FormSection[] }) {
+export async function publishFormAction({
+  id,
+  sections
+}: {
+  id: string
+  sections: FormSection[]
+}) {
   const session = await getSession()
 
   if (!session) {

@@ -22,7 +22,9 @@ function CreateFormDialog() {
   const pathname = usePathname()
   const formId = useId()
 
-  const [state, action, pending] = useActionState(submitCreateFormAction, { name: "" })
+  const [state, action, pending] = useActionState(submitCreateFormAction, {
+    name: ""
+  })
 
   if (!pathname.endsWith("dashboard")) {
     return null
@@ -51,11 +53,16 @@ function CreateFormDialog() {
               placeholder="eg: Product survey"
               disabled={pending}
               defaultValue={state.name}
-              aria-describedby={state?.error ? `form-error-${formId}` : undefined}
+              aria-describedby={
+                state?.error ? `form-error-${formId}` : undefined
+              }
             />
           </Label>
           {state?.error && (
-            <p id={`form-error-${formId}`} className="mt-2 text-xs text-red-400">
+            <p
+              id={`form-error-${formId}`}
+              className="mt-2 text-xs text-red-400"
+            >
               {state.error}
             </p>
           )}

@@ -13,7 +13,11 @@ import {
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger
+} from "@/components/ui/tooltip"
 import { Button } from "@/components/ui/button"
 
 type ToggleProps = {
@@ -53,7 +57,13 @@ type FormSettings = {
   limitResponses: boolean
 }
 
-function Toggle({ label, description, checked, onCheckedChange, disabled }: ToggleProps) {
+function Toggle({
+  label,
+  description,
+  checked,
+  onCheckedChange,
+  disabled
+}: ToggleProps) {
   const id = useId()
 
   return (
@@ -71,7 +81,9 @@ function Toggle({ label, description, checked, onCheckedChange, disabled }: Togg
           )}
         </span>
       </Label>
-      {!disabled && <Switch id={id} onCheckedChange={onCheckedChange} checked={checked} />}
+      {!disabled && (
+        <Switch id={id} onCheckedChange={onCheckedChange} checked={checked} />
+      )}
 
       {disabled && (
         <Tooltip>

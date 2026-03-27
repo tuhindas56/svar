@@ -14,7 +14,9 @@ function Layout({ children }: Props) {
       <Suspense fallback={<PageHeaderSkeleton />}>
         <PageHeader />
       </Suspense>
-      <div className="mx-auto flex w-full flex-col gap-6 px-4 py-8 xl:w-3/4">{children}</div>
+      <div className="mx-auto flex w-full flex-col gap-6 px-4 py-8 xl:w-3/4">
+        {children}
+      </div>
     </>
   )
 }

@@ -35,7 +35,9 @@ function FormSection({
 }: SectionProps) {
   return (
     <>
-      {!isFirstSection && <Header title={section.title} description={section.description} />}
+      {!isFirstSection && (
+        <Header title={section.title} description={section.description} />
+      )}
 
       {section.fields.map((field) => {
         return (

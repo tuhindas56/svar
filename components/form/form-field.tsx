@@ -89,7 +89,9 @@ function FormField({ field, responses, setResponses, errors }: FormFieldProps) {
                       <Label className="text-sm">
                         <RadioGroupItem
                           value={option.value}
-                          aria-invalid={Boolean(error) && response.value !== CUSTOM_ANSWER}
+                          aria-invalid={
+                            Boolean(error) && response.value !== CUSTOM_ANSWER
+                          }
                         />
 
                         {option.value}
@@ -103,7 +105,9 @@ function FormField({ field, responses, setResponses, errors }: FormFieldProps) {
                   <Label className="text-sm">
                     <RadioGroupItem
                       value={CUSTOM_ANSWER}
-                      aria-invalid={Boolean(error) && response.value !== CUSTOM_ANSWER}
+                      aria-invalid={
+                        Boolean(error) && response.value !== CUSTOM_ANSWER
+                      }
                     />
                     Other
                   </Label>
@@ -123,12 +127,16 @@ function FormField({ field, responses, setResponses, errors }: FormFieldProps) {
                       <Label className="text-sm">
                         <Checkbox
                           checked={response.value?.includes(option.value)}
-                          aria-invalid={Boolean(error) && response.value !== CUSTOM_ANSWER}
+                          aria-invalid={
+                            Boolean(error) && response.value !== CUSTOM_ANSWER
+                          }
                           onCheckedChange={(checked) => {
                             setResponses((prev) => {
                               const prevField = prev[field.id]
                               const next = Array.isArray(prevField.value)
-                                ? prevField.value.filter((v) => v !== option.value)
+                                ? prevField.value.filter(
+                                    (v) => v !== option.value
+                                  )
                                 : []
 
                               if (checked) {
@@ -154,7 +162,9 @@ function FormField({ field, responses, setResponses, errors }: FormFieldProps) {
                   <Label className="text-sm">
                     <Checkbox
                       checked={response.value?.includes(CUSTOM_ANSWER)}
-                      aria-invalid={Boolean(error) && response.value !== CUSTOM_ANSWER}
+                      aria-invalid={
+                        Boolean(error) && response.value !== CUSTOM_ANSWER
+                      }
                       onCheckedChange={(checked) => {
                         setResponses((prev) => {
                           const prevField = prev[field.id]

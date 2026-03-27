@@ -14,7 +14,10 @@ type FieldTypeSelectProps = {
   onUpdateField: (selectedType: FieldType) => void
 }
 
-function FieldTypeSelect({ selectedType, onUpdateField }: FieldTypeSelectProps) {
+function FieldTypeSelect({
+  selectedType,
+  onUpdateField
+}: FieldTypeSelectProps) {
   return (
     <Select onValueChange={onUpdateField} value={selectedType}>
       <SelectTrigger className="min-w-50">

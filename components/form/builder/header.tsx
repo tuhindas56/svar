@@ -6,7 +6,11 @@ import { Copy, Trash2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import ContentEditable from "@/components/ui/content-editable"
 import { Button } from "@/components/ui/button"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger
+} from "@/components/ui/tooltip"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -87,7 +91,11 @@ function Header({
         {showDeleteSection && (
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon-sm" onClick={confirmDeleteSection}>
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                onClick={confirmDeleteSection}
+              >
                 <Trash2 />
               </Button>
             </TooltipTrigger>
@@ -100,8 +108,8 @@ function Header({
             <AlertDialogHeader>
               <AlertDialogTitle>Delete this section?</AlertDialogTitle>
               <AlertDialogDescription>
-                This section and all its questions will be permanently deleted. This action can’t be
-                undone.
+                This section and all its questions will be permanently deleted.
+                This action can’t be undone.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>

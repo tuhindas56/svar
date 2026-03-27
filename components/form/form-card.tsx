@@ -9,7 +9,10 @@ type FormBlockCardProps = ComponentProps<"div"> & {
 function FormCard({ children, className, ...props }: FormBlockCardProps) {
   return (
     <div
-      className={cn("bg-background flex w-full flex-col gap-4 rounded border p-6", className)}
+      className={cn(
+        "bg-background flex w-full flex-col gap-4 rounded border p-6",
+        className
+      )}
       {...props}
     >
       {children}

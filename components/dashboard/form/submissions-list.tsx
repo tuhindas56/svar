@@ -4,7 +4,13 @@ import { useState } from "react"
 import { Eye, Form } from "lucide-react"
 
 import { convertDate } from "@/lib/utils"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle
+} from "@/components/ui/card"
 import {
   Table,
   TableHead,
@@ -15,7 +21,11 @@ import {
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger
+} from "@/components/ui/tooltip"
 import ViewSubmissionModal from "./view-submission"
 
 type SubmissionType = {
@@ -38,9 +48,14 @@ export type SubmissionData = {
   by: string | null
 } | null
 
-function SubmissionsList({ submissions = [], anonymousSubmissions, published }: Props) {
+function SubmissionsList({
+  submissions = [],
+  anonymousSubmissions,
+  published
+}: Props) {
   const [viewSubmissionModalOpen, setViewSubmissionModalOpen] = useState(false)
-  const [viewSubmissionData, setViewSubmissionData] = useState<SubmissionData | null>(null)
+  const [viewSubmissionData, setViewSubmissionData] =
+    useState<SubmissionData | null>(null)
 
   return (
     <>
@@ -89,7 +104,9 @@ function SubmissionsList({ submissions = [], anonymousSubmissions, published }: 
                       </>
                     )}
                     {anonymousSubmissions && <TableHead>Responder</TableHead>}
-                    <TableHead className="font-semibold">Submitted on</TableHead>
+                    <TableHead className="font-semibold">
+                      Submitted on
+                    </TableHead>
                     <TableHead className="flex items-center justify-center font-semibold">
                       Options
                     </TableHead>
@@ -99,7 +116,9 @@ function SubmissionsList({ submissions = [], anonymousSubmissions, published }: 
                   {submissions.map((submission, index) => {
                     return (
                       <TableRow key={index}>
-                        {anonymousSubmissions && <TableCell>Anonymous</TableCell>}
+                        {anonymousSubmissions && (
+                          <TableCell>Anonymous</TableCell>
+                        )}
                         {!anonymousSubmissions && (
                           <>
                             <TableCell>{submission.respondantName}</TableCell>
@@ -107,7 +126,10 @@ function SubmissionsList({ submissions = [], anonymousSubmissions, published }: 
                           </>
                         )}
                         <TableCell>
-                          {convertDate(submission.submitted, "DD MMM YYYY, hh:mm a")}
+                          {convertDate(
+                            submission.submitted,
+                            "DD MMM YYYY, hh:mm a"
+                          )}
                         </TableCell>
 
                         <TableCell className="flex items-center justify-center">
@@ -127,7 +149,9 @@ function SubmissionsList({ submissions = [], anonymousSubmissions, published }: 
                                 <Eye />
                               </Button>
                             </TooltipTrigger>
-                            <TooltipContent side="left">View submission</TooltipContent>
+                            <TooltipContent side="left">
+                              View submission
+                            </TooltipContent>
                           </Tooltip>
                         </TableCell>
                       </TableRow>

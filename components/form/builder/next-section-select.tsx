@@ -30,7 +30,8 @@ function NextSectionSelect({
           {sections.map((section, index) => {
             return (
               <SelectItem value={section.id} key={section.id}>
-                Go to section {index + 1} ({section.title || "Untitled section"})
+                Go to section {index + 1} ({section.title || "Untitled section"}
+                )
               </SelectItem>
             )
           })}

@@ -12,7 +12,11 @@ import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger
+} from "@/components/ui/tooltip"
 import FormCard from "../form-card"
 import FieldTypeSelect from "./field-type-select"
 import {
@@ -104,7 +108,8 @@ function FormField({
           />
         )}
 
-        {(field.type === FIELD_TYPE.RADIO || field.type === FIELD_TYPE.CHECKBOX) && (
+        {(field.type === FIELD_TYPE.RADIO ||
+          field.type === FIELD_TYPE.CHECKBOX) && (
           <>
             <RadioGroup>
               {Array.isArray(field.options) &&
@@ -115,7 +120,9 @@ function FormField({
                         <RadioGroupItem value={option.value} disabled />
                       )}
 
-                      {field.type === FIELD_TYPE.CHECKBOX && <Checkbox disabled />}
+                      {field.type === FIELD_TYPE.CHECKBOX && (
+                        <Checkbox disabled />
+                      )}
 
                       <ContentEditable
                         value={option.value}
@@ -187,7 +194,8 @@ function FormField({
 
       <div className="mt-4 flex items-center justify-between gap-2">
         <div className="flex flex-wrap items-center gap-6">
-          {(field.type === FIELD_TYPE.RADIO || field.type === FIELD_TYPE.CHECKBOX) && (
+          {(field.type === FIELD_TYPE.RADIO ||
+            field.type === FIELD_TYPE.CHECKBOX) && (
             <>
               <Switch
                 onCheckedChange={(checked) => {
@@ -240,7 +248,11 @@ function FormField({
 
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button onClick={confirmDeleteSection} variant="ghost" size="icon-sm">
+              <Button
+                onClick={confirmDeleteSection}
+                variant="ghost"
+                size="icon-sm"
+              >
                 <Trash2 />
               </Button>
             </TooltipTrigger>
@@ -259,7 +271,10 @@ function FormField({
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel onClick={onCancel}>Cancel</AlertDialogCancel>
-            <AlertDialogAction variant="destructive" onClick={onConfirmDeleteField}>
+            <AlertDialogAction
+              variant="destructive"
+              onClick={onConfirmDeleteField}
+            >
               Delete question
             </AlertDialogAction>
           </AlertDialogFooter>

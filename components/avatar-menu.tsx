@@ -31,7 +31,9 @@ function AvatarMenu({ session }: Props) {
         <DropdownMenuTrigger asChild>
           <Avatar className="cursor-pointer">
             <AvatarImage src={session.user.image || ""} alt="" />
-            <AvatarFallback>{getInitials(session.user.name || "")}</AvatarFallback>
+            <AvatarFallback>
+              {getInitials(session.user.name || "")}
+            </AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">

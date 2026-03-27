@@ -5,7 +5,13 @@ import Link from "next/link"
 import { Eye, Form, Share, Trash2 } from "lucide-react"
 import { toast } from "sonner"
 
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle
+} from "@/components/ui/card"
 import {
   Table,
   TableHead,
@@ -94,7 +100,9 @@ function FormsList({ formsPromise }: Props) {
                           {convertDate(form.modified, "DD MMM YYYY, hh:mm a")}
                         </TableCell>
                         <TableCell>
-                          <Badge variant={form.published ? "default" : "outline"}>
+                          <Badge
+                            variant={form.published ? "default" : "outline"}
+                          >
                             {form.published ? "Published" : "Not published"}
                           </Badge>
                         </TableCell>
@@ -134,7 +142,11 @@ function FormsList({ formsPromise }: Props) {
                             <Tooltip>
                               <TooltipTrigger asChild>
                                 <AlertDialogTrigger asChild>
-                                  <Button size="icon-sm" variant="ghost" disabled={deleting}>
+                                  <Button
+                                    size="icon-sm"
+                                    variant="ghost"
+                                    disabled={deleting}
+                                  >
                                     <Trash2 />
                                   </Button>
                                 </AlertDialogTrigger>
@@ -143,10 +155,13 @@ function FormsList({ formsPromise }: Props) {
                             </Tooltip>
                             <AlertDialogContent>
                               <AlertDialogHeader>
-                                <AlertDialogTitle>Delete this form?</AlertDialogTitle>
+                                <AlertDialogTitle>
+                                  Delete this form?
+                                </AlertDialogTitle>
                                 <AlertDialogDescription>
-                                  This form and all associated submissions will be permanently
-                                  deleted. This action can’t be undone.
+                                  This form and all associated submissions will
+                                  be permanently deleted. This action can’t be
+                                  undone.
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>

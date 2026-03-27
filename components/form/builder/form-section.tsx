@@ -1,6 +1,10 @@
 import { Plus } from "lucide-react"
 
-import { FormField as Field, FieldType, FormSection as FormSectionType } from "@/lib/definitions"
+import {
+  FormField as Field,
+  FieldType,
+  FormSection as FormSectionType
+} from "@/lib/definitions"
 import { FIELD_TYPE } from "@/lib/constants"
 import { Button } from "@/components/ui/button"
 import FormField from "./form-field"
@@ -64,7 +68,11 @@ function FormSection({
       })}
 
       <FormCard className="border-0 p-0">
-        <Button variant="outline" className="flex-1" onClick={() => onAddField(FIELD_TYPE.SHORT)}>
+        <Button
+          variant="outline"
+          className="flex-1"
+          onClick={() => onAddField(FIELD_TYPE.SHORT)}
+        >
           <Plus /> Add Question
         </Button>
         <Button variant="outline" className="flex-1" onClick={onAddSection}>

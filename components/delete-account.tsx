@@ -22,8 +22,8 @@ function DeleteAccount({ open, onOpenChange }: Props) {
         <AlertDialogHeader>
           <AlertDialogTitle>Delete account?</AlertDialogTitle>
           <AlertDialogDescription>
-            Your account and all associated forms and responses will be permanently deleted. This
-            action can’t be undone.
+            Your account and all associated forms and responses will be
+            permanently deleted. This action can’t be undone.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

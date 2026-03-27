@@ -3,7 +3,13 @@ import { ExternalLink, Pickaxe, Trash2 } from "lucide-react"
 import Link from "next/link"
 
 import { getSession } from "@/lib/actions/auth"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle
+} from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { getFormDetails } from "@/lib/db/data"
 import {
@@ -79,8 +85,8 @@ async function ViewForm(props: Props) {
                 <AlertDialogHeader>
                   <AlertDialogTitle>Delete this form?</AlertDialogTitle>
                   <AlertDialogDescription>
-                    This form and all associated submissions will be permanently deleted. This
-                    action can’t be undone.
+                    This form and all associated submissions will be permanently
+                    deleted. This action can’t be undone.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
