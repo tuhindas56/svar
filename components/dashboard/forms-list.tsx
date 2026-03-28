@@ -37,14 +37,16 @@ import {
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip"
 import { convertDate } from "@/lib/utils"
 import { GetFormsResult } from "@/lib/db/data"
+import useMounted from "@/lib/hooks/useMounted"
 
 type Props = {
   formsPromise: GetFormsResult
 }
 
 function FormsList({ formsPromise }: Props) {
-  const [deleting, setDeleting] = useState(false)
   const result = use(formsPromise) || []
+  const mounted = useMounted()
+  const [deleting, setDeleting] = useState(false)
 
   const forms = result.success ? result.data!.forms : []
   const total = result.success ? result.data!.total : 0
@@ -93,11 +95,11 @@ function FormsList({ formsPromise }: Props) {
                     return (
                       <TableRow key={index}>
                         <TableCell>{form.name}</TableCell>
-                        <TableCell suppressHydrationWarning>
-                          {convertDate(form.created, "DD MMM YYYY, hh:mm a")}
+                        <TableCell>
+                          {mounted ? convertDate(form.created, "DD MMM YYYY, hh:mm a") : "-"}
                         </TableCell>
-                        <TableCell suppressHydrationWarning>
-                          {convertDate(form.modified, "DD MMM YYYY, hh:mm a")}
+                        <TableCell>
+                          {mounted ? convertDate(form.modified, "DD MMM YYYY, hh:mm a") : "-"}
                         </TableCell>
                         <TableCell>
                           <Badge

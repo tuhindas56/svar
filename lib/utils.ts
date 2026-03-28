@@ -24,9 +24,6 @@ export function getInitials(name = "") {
     .join("")
 }
 
-export function convertDate(
-  date: Date | string | number | null,
-  format = "DD MMM YYYY"
-) {
+export function convertDate(date: Date | string | number | null, format = "DD MMM YYYY") {
   return date == null ? "-" : dayjs(date).format(format)
 }

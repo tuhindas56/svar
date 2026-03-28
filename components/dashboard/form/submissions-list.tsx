@@ -27,6 +27,7 @@ import {
   TooltipTrigger
 } from "@/components/ui/tooltip"
 import ViewSubmissionModal from "./view-submission"
+import useMounted from "@/lib/hooks/useMounted"
 
 type SubmissionType = {
   id: string
@@ -48,14 +49,10 @@ export type SubmissionData = {
   by: string | null
 } | null
 
-function SubmissionsList({
-  submissions = [],
-  anonymousSubmissions,
-  published
-}: Props) {
+function SubmissionsList({ submissions = [], anonymousSubmissions, published }: Props) {
+  const mounted = useMounted()
   const [viewSubmissionModalOpen, setViewSubmissionModalOpen] = useState(false)
-  const [viewSubmissionData, setViewSubmissionData] =
-    useState<SubmissionData | null>(null)
+  const [viewSubmissionData, setViewSubmissionData] = useState<SubmissionData | null>(null)
 
   return (
     <>
@@ -126,10 +123,9 @@ function SubmissionsList({
                           </>
                         )}
                         <TableCell>
-                          {convertDate(
-                            submission.submitted,
-                            "DD MMM YYYY, hh:mm a"
-                          )}
+                          {mounted
+                            ? convertDate(submission.submitted, "DD MMM YYYY, hh:mm a")
+                            : "-"}
                         </TableCell>
 
                         <TableCell className="flex items-center justify-center">
