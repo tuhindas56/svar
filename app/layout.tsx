@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { Toaster } from "@/components/ui/sonner"
 import "./globals.css"
+import { LoginStatusProvider } from "@/lib/contexts/login-status"
 
 type RootLayoutProps = {
   children: ReactNode
@@ -35,9 +36,11 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
       <body className={cn(lora.variable, inter.variable, "custom-pattern font-sans antialiased")}>
-        <TooltipProvider>
-          <div className="mx-auto w-full">{children}</div>
-        </TooltipProvider>
+        <LoginStatusProvider>
+          <TooltipProvider>
+            <div className="mx-auto w-full">{children}</div>
+          </TooltipProvider>
+        </LoginStatusProvider>
         <Toaster
           position="top-right"
           offset={{
