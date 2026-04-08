@@ -1,4 +1,4 @@
-import { Cog, ExternalLink, Pickaxe, Trash2 } from "lucide-react"
+import { ExternalLink, Pickaxe, Trash2 } from "lucide-react"
 
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -24,9 +24,9 @@ async function Loading() {
               <ExternalLink /> Open form
             </Button>
 
-            <Button variant="outline" size="sm" disabled>
+            {/* <Button variant="outline" size="sm" disabled>
               <Cog /> Form Settings
-            </Button>
+            </Button> */}
 
             <Button size="icon-sm" variant="outline" disabled>
               <Trash2 />
