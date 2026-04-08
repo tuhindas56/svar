@@ -1,12 +1,5 @@
 import { drizzle } from "drizzle-orm/node-postgres"
-import {
-  pgTable,
-  text,
-  timestamp,
-  boolean,
-  jsonb,
-  uuid
-} from "drizzle-orm/pg-core"
+import { pgTable, text, timestamp, boolean, jsonb, uuid } from "drizzle-orm/pg-core"
 import { user } from "@/auth-schema"
 import { FormSection } from "../definitions"
 
@@ -29,9 +22,7 @@ export const formsTable = pgTable("forms", {
   sections: jsonb("sections").notNull().$type<FormSection[]>(),
   published: boolean("published").default(false).notNull(),
   anonymousSubmissions: boolean("anonymousSubmissions").default(true).notNull(),
-  receivingSubmissions: boolean("receivingSubmissions")
-    .default(false)
-    .notNull(),
+  receivingSubmissions: boolean("receivingSubmissions").default(false).notNull(),
   limitResponses: boolean("limitResponses").default(false).notNull(),
   userId: text("userId")
     .references(() => user.id, { onDelete: "cascade" })

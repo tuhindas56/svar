@@ -1,5 +1,6 @@
 import { betterAuth } from "better-auth"
 import { nextCookies } from "better-auth/next-js"
+import { testUtils } from "better-auth/plugins"
 import { drizzleAdapter } from "better-auth/adapters/drizzle"
 import { db } from "@/lib/db/schema"
 import * as schema from "@/auth-schema"
@@ -9,7 +10,7 @@ export const auth = betterAuth({
     provider: "pg",
     schema
   }),
-  plugins: [nextCookies()],
+  plugins: [nextCookies(), testUtils()],
   socialProviders: {
     github: {
       clientId: process.env.GITHUB_CLIENT_ID as string,

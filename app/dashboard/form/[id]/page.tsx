@@ -3,13 +3,7 @@ import { ExternalLink, Pickaxe, Trash2 } from "lucide-react"
 import Link from "next/link"
 
 import { getSession } from "@/lib/actions/auth"
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from "@/components/ui/card"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { getFormDetails } from "@/lib/db/data"
 import {
@@ -26,7 +20,7 @@ import {
 import { deleteFormAction } from "@/lib/actions/form"
 import { convertDate } from "@/lib/utils"
 import SubmissionsList from "@/components/dashboard/form/submissions-list"
-import FormSettings from "@/components/dashboard/form/form-settings"
+// import FormSettings from "@/components/dashboard/form/form-settings"
 
 type Props = {
   params: Promise<{ id: string }>
@@ -74,7 +68,7 @@ async function ViewForm(props: Props) {
                 </Button>
               </Link>
             )}
-            <FormSettings formDetails={data} />
+            {/* <FormSettings id={id} formDetails={data} /> */}
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button size="icon-sm" variant="outline">
@@ -85,8 +79,8 @@ async function ViewForm(props: Props) {
                 <AlertDialogHeader>
                   <AlertDialogTitle>Delete this form?</AlertDialogTitle>
                   <AlertDialogDescription>
-                    This form and all associated submissions will be permanently
-                    deleted. This action can’t be undone.
+                    This form and all associated submissions will be permanently deleted. This
+                    action can’t be undone.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>

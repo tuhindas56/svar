@@ -48,10 +48,7 @@ export async function createForm({
   }
 }
 
-type GetFormDetailsResult = Omit<
-  Form,
-  "userId" | "id" | "description" | "sections"
-> & {
+type GetFormDetailsResult = Omit<Form, "userId" | "id" | "description" | "sections"> & {
   submissions: Submission[]
 }
 export async function getFormDetails({
@@ -97,12 +94,7 @@ export async function getFormDetails({
   }
 }
 
-export async function getFormSchema({
-  id
-}: {
-  id: string
-  userId?: string
-}): Result<{
+export async function getFormSchema({ id }: { id: string; userId?: string }): Result<{
   form: Form
 }> {
   try {
@@ -129,11 +121,7 @@ export type GetFormsResult = Result<{
   total: number
   forms: Omit<
     Form,
-    | "userId"
-    | "description"
-    | "sections"
-    | "limitResponses"
-    | "receivingSubmissions"
+    "userId" | "description" | "sections" | "limitResponses" | "receivingSubmissions"
   >[]
 }>
 export async function getForms({
@@ -146,9 +134,7 @@ export async function getForms({
   userId: string
 }): GetFormsResult {
   try {
-    const totalRowsResult = await db
-      .select({ total: count(formsTable.id) })
-      .from(formsTable)
+    const totalRowsResult = await db.select({ total: count(formsTable.id) }).from(formsTable)
 
     const result = await db
       .select({
@@ -214,13 +200,7 @@ export async function updateFormSections({
   }
 }
 
-export async function publishForm({
-  id,
-  userId
-}: {
-  id: string
-  userId: string
-}): Result {
+export async function publishForm({ id, userId }: { id: string; userId: string }): Result {
   try {
     await db
       .update(formsTable)
@@ -245,17 +225,45 @@ export async function publishForm({
   }
 }
 
-export async function deleteForm({
+export async function saveFormSettings({
   id,
-  userId
+  userId,
+  receivingSubmissions,
+  anonymousSubmissions,
+  limitResponses
 }: {
   id: string
   userId: string
+  receivingSubmissions: boolean
+  anonymousSubmissions: boolean
+  limitResponses: boolean
 }): Result {
   try {
     await db
-      .delete(formsTable)
+      .update(formsTable)
+      .set({
+        receivingSubmissions,
+        anonymousSubmissions,
+        limitResponses
+      })
       .where(and(eq(formsTable.id, id), eq(formsTable.userId, userId)))
+
+    return {
+      success: true
+    }
+  } catch (err) {
+    console.error(err)
+
+    return {
+      success: false,
+      error: "Failed to publish form"
+    }
+  }
+}
+
+export async function deleteForm({ id, userId }: { id: string; userId: string }): Result {
+  try {
+    await db.delete(formsTable).where(and(eq(formsTable.id, id), eq(formsTable.userId, userId)))
 
     return {
       success: true
@@ -314,14 +322,9 @@ export async function receiveSubmission({
 }
 
 type GetSubmissionResult = {
-  responses: (Omit<Responses, "id" | "submissionId" | "fieldId"> &
-    Pick<Submission, "submitted">)[]
+  responses: (Omit<Responses, "id" | "submissionId" | "fieldId"> & Pick<Submission, "submitted">)[]
 }
-export async function getSubmission({
-  id
-}: {
-  id: string
-}): Result<GetSubmissionResult> {
+export async function getSubmission({ id }: { id: string }): Result<GetSubmissionResult> {
   try {
     const result = await db
       .select({

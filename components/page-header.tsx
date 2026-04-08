@@ -13,14 +13,14 @@ type Props = {
 async function PageHeader({ children }: Props) {
   const session = await getSession()
   return (
-    <Card className="sticky top-0 z-25 flex-row flex-wrap items-center justify-between gap-2 px-2 py-2">
+    <Card className="bg-background sticky top-0 z-25 flex-row flex-wrap items-center justify-between gap-2 px-2 py-2">
       <p className="font-lora w-max rounded px-2 text-xl font-medium">svar</p>
 
       <div className="ml-auto flex flex-wrap-reverse items-center justify-end gap-5 md:gap-3">
         {children}
-        <CreateFormDialog />
         <BuilderActions />
         <AvatarMenu session={session} />
+        <CreateFormDialog />
       </div>
     </Card>
   )

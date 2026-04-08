@@ -33,14 +33,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={cn(
-          lora.variable,
-          inter.variable,
-          "custom-pattern font-sans antialiased"
-        )}
-      >
+    <html lang="en">
+      <body className={cn(lora.variable, inter.variable, "custom-pattern font-sans antialiased")}>
         <TooltipProvider>
           <div className="mx-auto w-full">{children}</div>
         </TooltipProvider>

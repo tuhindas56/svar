@@ -5,13 +5,7 @@ import Link from "next/link"
 import { Eye, Form, Share, Trash2 } from "lucide-react"
 import { toast } from "sonner"
 
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from "@/components/ui/card"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Table,
   TableHead,
@@ -80,31 +74,32 @@ function FormsList({ formsPromise }: Props) {
             <CardContent className="p-0">
               <Table className="border">
                 <TableHeader>
-                  <TableRow className="bg-zinc-50">
-                    <TableHead className="font-semibold">Form</TableHead>
-                    <TableHead className="font-semibold">Created at</TableHead>
-                    <TableHead className="font-semibold">Modified at</TableHead>
-                    <TableHead className="font-semibold">Status</TableHead>
-                    <TableHead className="flex items-center justify-center font-semibold">
-                      Options
-                    </TableHead>
+                  <TableRow>
+                    <TableHead>Form</TableHead>
+                    <TableHead>Created at</TableHead>
+                    <TableHead>Modified at</TableHead>
+                    <TableHead className="text-center">Status</TableHead>
+                    <TableHead className="text-center">Options</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {forms.map((form, index) => {
                     return (
                       <TableRow key={index}>
-                        <TableCell>{form.name}</TableCell>
-                        <TableCell>
+                        <TableCell
+                          className="max-w-50 min-w-50 overflow-hidden text-ellipsis"
+                          title={form.name}
+                        >
+                          {form.name}
+                        </TableCell>
+                        <TableCell className="min-w-50">
                           {mounted ? convertDate(form.created, "DD MMM YYYY, hh:mm a") : "-"}
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="min-w-50">
                           {mounted ? convertDate(form.modified, "DD MMM YYYY, hh:mm a") : "-"}
                         </TableCell>
-                        <TableCell>
-                          <Badge
-                            variant={form.published ? "default" : "outline"}
-                          >
+                        <TableCell className="min-w-40 text-center">
+                          <Badge variant={form.published ? "default" : "outline"}>
                             {form.published ? "Published" : "Not published"}
                           </Badge>
                         </TableCell>
@@ -144,11 +139,7 @@ function FormsList({ formsPromise }: Props) {
                             <Tooltip>
                               <TooltipTrigger asChild>
                                 <AlertDialogTrigger asChild>
-                                  <Button
-                                    size="icon-sm"
-                                    variant="ghost"
-                                    disabled={deleting}
-                                  >
+                                  <Button size="icon-sm" variant="ghost" disabled={deleting}>
                                     <Trash2 />
                                   </Button>
                                 </AlertDialogTrigger>
@@ -157,13 +148,10 @@ function FormsList({ formsPromise }: Props) {
                             </Tooltip>
                             <AlertDialogContent>
                               <AlertDialogHeader>
-                                <AlertDialogTitle>
-                                  Delete this form?
-                                </AlertDialogTitle>
+                                <AlertDialogTitle>Delete this form?</AlertDialogTitle>
                                 <AlertDialogDescription>
-                                  This form and all associated submissions will
-                                  be permanently deleted. This action can’t be
-                                  undone.
+                                  This form and all associated submissions will be permanently
+                                  deleted. This action can’t be undone.
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>

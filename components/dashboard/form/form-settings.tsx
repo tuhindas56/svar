@@ -2,23 +2,22 @@
 
 import { useId, useState } from "react"
 import { CircleQuestionMark, Cog } from "lucide-react"
+import { toast } from "sonner"
 
 import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger
-} from "@/components/ui/tooltip"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { Button } from "@/components/ui/button"
+import { saveFormSettingsAction } from "@/lib/actions/form"
 
 type ToggleProps = {
   label: string
@@ -47,6 +46,7 @@ type FormDetails = {
 }
 
 type FormSettingsProps = {
+  id: string
   formDetails: FormDetails
   isBuilderMode?: boolean
 }
@@ -57,13 +57,7 @@ type FormSettings = {
   limitResponses: boolean
 }
 
-function Toggle({
-  label,
-  description,
-  checked,
-  onCheckedChange,
-  disabled
-}: ToggleProps) {
+function Toggle({ label, description, checked, onCheckedChange, disabled }: ToggleProps) {
   const id = useId()
 
   return (
@@ -81,13 +75,11 @@ function Toggle({
           )}
         </span>
       </Label>
-      {!disabled && (
-        <Switch id={id} onCheckedChange={onCheckedChange} checked={checked} />
-      )}
+      {!disabled && <Switch id={id} onCheckedChange={onCheckedChange} checked={checked} />}
 
       {disabled && (
         <Tooltip>
-          <TooltipTrigger className="ml-2" aria-label={description}>
+          <TooltipTrigger className="ml-2" aria-label={description} asChild>
             <Switch disabled={disabled} />
           </TooltipTrigger>
           <TooltipContent>
@@ -99,36 +91,61 @@ function Toggle({
   )
 }
 
-function FormSettings({ formDetails, isBuilderMode }: FormSettingsProps) {
+function FormSettings({ id, formDetails, isBuilderMode }: FormSettingsProps) {
   /**
-   * Limit to one response toggle
+   * Anon submissions toggle
+   * Limit to one response toggle if not anon
    * Response acceptance toggle
-   * Custom closing message
-   * Custom confirmation message
+   * Custom closing message (later)
+   * Custom confirmation message (later)
    * Expiration (later)
    * Response edit toggle (later)
    * Require authentication toggle (later)
    */
-  const [settings, setSettings] = useState<FormSettings | null>(null)
+
+  const [open, setOpen] = useState(false)
+  const [settings, setSettings] = useState<FormSettings>({
+    receivingSubmissions: false,
+    anonymousSubmissions: false,
+    limitResponses: false
+  })
+  const [saving, setSaving] = useState(false)
 
   function onOpenChange(open: boolean) {
-    if (open) {
-      setSettings({
-        receivingSubmissions: formDetails.receivingSubmissions,
-        anonymousSubmissions: formDetails.anonymousSubmissions,
-        limitResponses: formDetails.limitResponses
-      })
+    if (!open) {
+      setOpen(false)
+      return
+    }
+
+    setOpen(true)
+    setSettings({
+      receivingSubmissions: formDetails.receivingSubmissions,
+      anonymousSubmissions: formDetails.anonymousSubmissions,
+      limitResponses: formDetails.limitResponses
+    })
+  }
+
+  async function onSave() {
+    setSaving(true)
+
+    const result = await saveFormSettingsAction({
+      id,
+      ...settings,
+      limitResponses: !settings.anonymousSubmissions && settings.limitResponses
+    })
+
+    setSaving(false)
+
+    if (result.success) {
+      setOpen(false)
+      toast.success("Form settings saved")
     } else {
-      setSettings(null)
+      toast.error("Failed to save form settings")
     }
   }
 
-  //   function onSave() {
-  //     "use server"
-  //   }
-
   return (
-    <Dialog onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
         <Button variant="outline" size="sm">
           <Cog /> Settings
@@ -143,26 +160,42 @@ function FormSettings({ formDetails, isBuilderMode }: FormSettingsProps) {
           {!isBuilderMode && (
             <Toggle
               label="Accepting responses"
-              onCheckedChange={() => {}}
-              checked={formDetails.receivingSubmissions}
+              onCheckedChange={(checked) =>
+                setSettings((prev) => ({ ...prev, receivingSubmissions: checked }))
+              }
+              checked={settings.receivingSubmissions}
             />
           )}
 
           <Toggle
             label="Allow anonymous submissions"
             description="Adds mandatory 'name' and 'email' fields to the form when disabled"
-            onCheckedChange={() => {}}
-            checked={!!settings?.anonymousSubmissions}
+            onCheckedChange={(checked) =>
+              setSettings((prev) => ({ ...prev, anonymousSubmissions: checked }))
+            }
+            checked={settings.anonymousSubmissions}
           />
 
-          <Toggle
-            label="Limit to one response"
-            description="Enabling this will make the form unable to receive anonymous submissions"
-            onCheckedChange={() => {}}
-            checked={!!settings?.limitResponses}
-            disabled={!!settings?.anonymousSubmissions}
-          />
+          {!settings.anonymousSubmissions && (
+            <Toggle
+              label="Limit to one response"
+              description="Enabling this will make the form unable to receive anonymous submissions"
+              onCheckedChange={(checked) =>
+                setSettings((prev) => ({ ...prev, limitResponses: checked }))
+              }
+              checked={settings.limitResponses}
+            />
+          )}
         </div>
+
+        <DialogFooter className="gap-4">
+          <Button variant="outline" size="sm" disabled={saving} onClick={() => setOpen(false)}>
+            Cancel
+          </Button>
+          <Button size="sm" disabled={saving} onClick={onSave}>
+            {saving ? "Saving.." : "Save"}
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   )

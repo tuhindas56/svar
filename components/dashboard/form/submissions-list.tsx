@@ -4,13 +4,7 @@ import { useState } from "react"
 import { Eye, Form } from "lucide-react"
 
 import { convertDate } from "@/lib/utils"
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from "@/components/ui/card"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Table,
   TableHead,
@@ -21,11 +15,7 @@ import {
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger
-} from "@/components/ui/tooltip"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import ViewSubmissionModal from "./view-submission"
 import useMounted from "@/lib/hooks/useMounted"
 
@@ -80,7 +70,7 @@ function SubmissionsList({ submissions = [], anonymousSubmissions, published }: 
               There are no submissions for this form
             </h3>
             <p className="text-muted-foreground mt-1 max-w-xs text-sm">
-              Share your form via the link to encourage submissions
+              Share your form via the link to receive submissions
             </p>
           </div>
         )}
@@ -101,9 +91,7 @@ function SubmissionsList({ submissions = [], anonymousSubmissions, published }: 
                       </>
                     )}
                     {anonymousSubmissions && <TableHead>Responder</TableHead>}
-                    <TableHead className="font-semibold">
-                      Submitted on
-                    </TableHead>
+                    <TableHead className="w-60 font-semibold">Submitted on</TableHead>
                     <TableHead className="flex items-center justify-center font-semibold">
                       Options
                     </TableHead>
@@ -113,9 +101,7 @@ function SubmissionsList({ submissions = [], anonymousSubmissions, published }: 
                   {submissions.map((submission, index) => {
                     return (
                       <TableRow key={index}>
-                        {anonymousSubmissions && (
-                          <TableCell>Anonymous</TableCell>
-                        )}
+                        {anonymousSubmissions && <TableCell>Anonymous</TableCell>}
                         {!anonymousSubmissions && (
                           <>
                             <TableCell>{submission.respondantName}</TableCell>
@@ -145,9 +131,7 @@ function SubmissionsList({ submissions = [], anonymousSubmissions, published }: 
                                 <Eye />
                               </Button>
                             </TooltipTrigger>
-                            <TooltipContent side="left">
-                              View submission
-                            </TooltipContent>
+                            <TooltipContent side="left">View submission</TooltipContent>
                           </Tooltip>
                         </TableCell>
                       </TableRow>

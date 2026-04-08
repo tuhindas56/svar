@@ -8,6 +8,7 @@ import {
   deleteForm,
   publishForm,
   receiveSubmission,
+  saveFormSettings,
   updateFormSections
 } from "@/lib/db/data"
 import { getSession } from "@/lib/actions/auth"
@@ -77,13 +78,7 @@ export async function saveFormSectionsAction({
   return result
 }
 
-export async function publishFormAction({
-  id,
-  sections
-}: {
-  id: string
-  sections: FormSection[]
-}) {
+export async function publishFormAction({ id, sections }: { id: string; sections: FormSection[] }) {
   const session = await getSession()
 
   if (!session) {
@@ -146,4 +141,36 @@ export async function submitFormAction({
     respondantName,
     respondantEmail
   })
+}
+
+export async function saveFormSettingsAction({
+  id,
+  anonymousSubmissions,
+  receivingSubmissions,
+  limitResponses
+}: {
+  id: string
+  anonymousSubmissions: boolean
+  receivingSubmissions: boolean
+  limitResponses: boolean
+}) {
+  const session = await getSession()
+
+  if (!session) {
+    redirect("/")
+  }
+
+  const result = await saveFormSettings({
+    id,
+    userId: session.user.id as string,
+    anonymousSubmissions,
+    receivingSubmissions,
+    limitResponses
+  })
+
+  if (result.success) {
+    revalidatePath(`/dashboard/form/${id}`)
+  }
+
+  return result
 }
